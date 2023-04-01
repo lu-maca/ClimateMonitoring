@@ -1,6 +1,6 @@
 package ClimateMonitoring;
 
-public class Main{
+public class ClimateMonitor{
     public static void main(String[] args) {
         System.out.println("Progetto");
     }
