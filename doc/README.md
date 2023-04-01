@@ -1,0 +1,1 @@
+Documentation shall be generated using *javadoc* (see https://www.baeldung.com/javadoc) and distributed in pdf format.
