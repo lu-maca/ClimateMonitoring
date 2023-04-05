@@ -3,12 +3,14 @@ package uni.climatemonitor;
 import uni.climatemonitor.graphics.MainWindow;
 
 public class Main {
-    private static Main app;
+    private static MainWindow frame;
+    private static Main program;
 
-    public Main(){
-        MainWindow app = new MainWindow();
+    public Main() {
+        frame = new MainWindow();
     }
+
     public static void main(String[] args) {
-        app = new Main();
+        program = new Main();
     }
 }
