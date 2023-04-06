@@ -1,23 +1,27 @@
 package uni.climatemonitor.graphics;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class MainWindow extends JFrame {
+    private JPanel MainWindow;
     private JPanel MainPnl;
-    private JTextField typeAPlaceTextField;
-    private JPanel MainPanel;
     private JButton LoginBtn;
     private JButton RegisterBtn;
     private JPanel UserPnl;
     private JPanel AboutPnl;
     private JButton aboutButton;
+    private JTextField typeAPlaceTextField;
+    private JButton searchBtn;
+    private JPanel SearchPnl;
 
     public MainWindow() {
         setTitle("Climate Monitor");
         setSize(1000,600);
+        setMinimumSize(new Dimension(1000,600));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        setContentPane(MainPnl);
+        setContentPane(MainWindow);
         setVisible(true);
     }
 
