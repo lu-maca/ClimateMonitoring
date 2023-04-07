@@ -2,6 +2,8 @@ package uni.climatemonitor.graphics;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainWindow extends JFrame {
     private JPanel MainWindow;
@@ -23,6 +25,29 @@ public class MainWindow extends JFrame {
 
         setContentPane(MainWindow);
         setVisible(true);
+
+        /* perform a search action when clicking the search button */
+        searchBtn_at_click();
+
+    }
+
+    /**************************************************************
+    *
+    *                       CALLBACKS
+    *
+     **************************************************************/
+
+    /**
+     * This is the callback of a push event on the Search button
+     * @todo: add the callback to the search function
+     */
+    private void searchBtn_at_click(){
+        searchBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /* perform here some action */
+            }
+        });
     }
 
     public static void main(String[] args) {
