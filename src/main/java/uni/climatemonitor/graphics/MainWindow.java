@@ -14,6 +14,8 @@ public class MainWindow extends JFrame {
     private static final String EMPTY_S = "";
     private static final String USERNAME_S = "Username";
     private static final String PWD_S = "Password";
+    private static final String APP_NAME_S = "ClimaScope";
+    private static final String LOGO_PATH_S = "./src/main/images/logo.png";
 
     private JPanel MainWindow;
     private JPanel MainPnl;
@@ -30,16 +32,21 @@ public class MainWindow extends JFrame {
     private JPasswordField pwdLoginTextField;
     private JPanel ButtonsPnl;
     private JButton loginEnterBtn;
+    private JLabel logo;
 
     /**
      * Constructor for the MainWindow object.
      */
     public MainWindow() {
-        setTitle("Climate Monitor");
-        setSize(1000,600);
-        setMinimumSize(new Dimension(1000,600));
+        setTitle(APP_NAME_S);
+        setSize(1100,600);
+        setMinimumSize(new Dimension(1100,600));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        /* set the logo */
+        ImageIcon iconLogo = new ImageIcon(LOGO_PATH_S);
+        logo.setIcon(iconLogo);
 
         setContentPane(MainWindow);
         setVisible(true);
