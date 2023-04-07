@@ -56,6 +56,8 @@ public class MainWindow extends JFrame {
         userLoginTextField_at_selection();
         /* remove the text when selecting the pwd field */
         pwdLoginTextField_at_selection();
+        /* manage the login Enter button click */
+        loginEnterBtn_at_click();
     }
 
     /*************************************************************
@@ -104,7 +106,7 @@ public class MainWindow extends JFrame {
 
     /**
      * This is the callback of a push event on the Search button
-     * 
+     *
      */
     private void searchBtn_at_click(){
         searchBtn.addActionListener(new ActionListener() {
@@ -191,6 +193,25 @@ public class MainWindow extends JFrame {
         });
     }
 
+
+    /**
+     * This is the callback of a push event on the Search button
+     *
+     */
+    private void loginEnterBtn_at_click(){
+        loginEnterBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /* perform here some action:
+                    if the user exists and the pwd is the correct one,
+                    remove all the panel related to log in/register and
+                    display some new buttons for specific tasks.
+                    Otherwise, show again the login/register buttons
+                    and warn the user for the wrong login request
+                 */
+            }
+        });
+    }
 
     /**
      * main method
