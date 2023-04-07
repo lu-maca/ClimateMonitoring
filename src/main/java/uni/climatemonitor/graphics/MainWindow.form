@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="MainWindow" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="2" left="2" bottom="2" right="2"/>
     <constraints>
-      <xy x="20" y="20" width="938" height="568"/>
+      <xy x="20" y="20" width="1031" height="568"/>
     </constraints>
     <properties>
       <maximumSize width="1000" height="600"/>
@@ -37,47 +37,97 @@
               </grid>
             </constraints>
           </hspacer>
-          <grid id="cb9e" binding="UserPnl" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="cb9e" binding="UserPnl" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <grid row="0" column="2" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="2" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <visible value="true"/>
+            </properties>
             <border type="none"/>
             <children>
-              <component id="ec25" class="javax.swing.JButton" binding="LoginBtn">
-                <constraints/>
+              <grid id="1fcc0" binding="LoginPnl" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="10" left="0" bottom="0" right="10"/>
+                <constraints border-constraint="South"/>
                 <properties>
-                  <borderPainted value="false"/>
-                  <contentAreaFilled value="false"/>
-                  <hideActionText value="false"/>
-                  <horizontalAlignment value="0"/>
-                  <iconTextGap value="4"/>
-                  <inheritsPopupMenu value="false"/>
-                  <label value="Login"/>
-                  <opaque value="false"/>
-                  <requestFocusEnabled value="true"/>
-                  <rolloverEnabled value="true"/>
-                  <text value="Login"/>
+                  <visible value="false"/>
                 </properties>
-                <clientProperties>
-                  <hideActionText class="java.lang.Boolean" value="false"/>
-                </clientProperties>
-              </component>
-              <component id="40b9e" class="javax.swing.JButton" binding="RegisterBtn">
-                <constraints/>
-                <properties>
-                  <actionCommand value="Register"/>
-                  <borderPainted value="false"/>
-                  <contentAreaFilled value="false"/>
-                  <label value="Register"/>
-                  <text value="Register"/>
-                </properties>
-              </component>
+                <border type="none"/>
+                <children>
+                  <component id="4f039" class="javax.swing.JTextField" binding="userLoginTextField">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <margin top="2" left="6" bottom="2" right="6"/>
+                      <text value="Username"/>
+                      <visible value="true"/>
+                    </properties>
+                  </component>
+                  <component id="ef5ab" class="javax.swing.JPasswordField" binding="pwdLoginTextField">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <margin top="2" left="5" bottom="2" right="2"/>
+                      <text value="password"/>
+                      <visible value="true"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="4d534" binding="ButtonsPnl" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="ec25" class="javax.swing.JButton" binding="LoginBtn">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <borderPainted value="false"/>
+                      <contentAreaFilled value="false"/>
+                      <hideActionText value="false"/>
+                      <horizontalAlignment value="0"/>
+                      <iconTextGap value="4"/>
+                      <inheritsPopupMenu value="false"/>
+                      <label value="Login"/>
+                      <opaque value="false"/>
+                      <requestFocusEnabled value="true"/>
+                      <rolloverEnabled value="true"/>
+                      <text value="Login"/>
+                    </properties>
+                    <clientProperties>
+                      <hideActionText class="java.lang.Boolean" value="false"/>
+                    </clientProperties>
+                  </component>
+                  <component id="40b9e" class="javax.swing.JButton" binding="RegisterBtn">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <actionCommand value="Register"/>
+                      <borderPainted value="false"/>
+                      <contentAreaFilled value="false"/>
+                      <label value="Register"/>
+                      <text value="Register"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
             </children>
           </grid>
           <grid id="366b0" binding="AboutPnl" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false">
+                <preferred-size width="88" height="185"/>
+              </grid>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -95,7 +145,9 @@
           <grid id="e2908" binding="SearchPnl" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="592" height="185"/>
+              </grid>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -107,6 +159,10 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <autoscrolls value="true"/>
+                  <foreground color="-2763307"/>
+                  <opaque value="true"/>
+                  <selectedTextColor color="-5131855"/>
                   <text value="Type a place..."/>
                 </properties>
               </component>

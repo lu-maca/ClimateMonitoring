@@ -12,7 +12,7 @@ public class AboutDialog extends JDialog {
         setSize(600,200);
         setResizable(false);
         setLocationRelativeTo(null);
-        setTitle("About the authors");
+        setTitle("About");
     }
 
 }

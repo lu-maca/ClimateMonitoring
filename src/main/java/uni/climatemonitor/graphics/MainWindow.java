@@ -7,7 +7,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.awt.Dialog.ModalityType;
-import uni.climatemonitor.graphics.AboutDialog;
 
 public class MainWindow extends JFrame {
     private JPanel MainWindow;
@@ -20,6 +19,10 @@ public class MainWindow extends JFrame {
     private JTextField typeAPlaceTextField;
     private JButton searchBtn;
     private JPanel SearchPnl;
+    private JPanel LoginPnl;
+    private JTextField userLoginTextField;
+    private JPasswordField pwdLoginTextField;
+    private JPanel ButtonsPnl;
 
     public MainWindow() {
         setTitle("Climate Monitor");
@@ -37,6 +40,9 @@ public class MainWindow extends JFrame {
         placeTextField_at_selection();
         /* open the about popup clicking on the About button */
         aboutBtn_at_click();
+        /* open the login panel clicking on the Login button */
+        loginBtn_at_click();
+
     }
 
     /**************************************************************
@@ -62,6 +68,21 @@ public class MainWindow extends JFrame {
         });
     }
 
+
+    /**
+     * Callback for Login button. Show the login panel
+     */
+    private void loginBtn_at_click(){
+        LoginBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ButtonsPnl.setVisible(false);
+                LoginPnl.setVisible(true);
+            }
+        });
+    }
+
+
     /**
      * This is the callback of a push event on the Search button
      * @todo: add the callback to the search function
@@ -74,6 +95,7 @@ public class MainWindow extends JFrame {
             }
         });
     }
+
 
     /**
      * This is the callback for a selection of the text edit field. It
@@ -92,8 +114,16 @@ public class MainWindow extends JFrame {
         });
     }
 
+
+    /**
+     * main method
+     *
+     */
     public static void main(String[] args) {
         MainWindow mainWindow = new MainWindow();
     }
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here 
+    }
 }
