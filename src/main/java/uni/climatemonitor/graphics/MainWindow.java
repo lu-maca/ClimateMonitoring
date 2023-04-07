@@ -7,8 +7,14 @@ import java.awt.event.FocusEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.awt.Dialog.ModalityType;
+import java.util.Arrays;
 
 public class MainWindow extends JFrame {
+    private static final String TYPE_A_PLACE_S = "Type a place...";
+    private static final String EMPTY_S = "";
+    private static final String USERNAME_S = "Username";
+    private static final String PWD_S = "Password";
+
     private JPanel MainWindow;
     private JPanel MainPnl;
     private JButton LoginBtn;
@@ -23,7 +29,11 @@ public class MainWindow extends JFrame {
     private JTextField userLoginTextField;
     private JPasswordField pwdLoginTextField;
     private JPanel ButtonsPnl;
+    private JButton loginEnterBtn;
 
+    /**
+     * Constructor for the MainWindow object.
+     */
     public MainWindow() {
         setTitle("Climate Monitor");
         setSize(1000,600);
@@ -36,20 +46,43 @@ public class MainWindow extends JFrame {
 
         /* perform a search action when clicking the search button */
         searchBtn_at_click();
-        /* remove the text when selecting the search button */
+        /* remove the text when selecting the search field */
         placeTextField_at_selection();
         /* open the about popup clicking on the About button */
         aboutBtn_at_click();
         /* open the login panel clicking on the Login button */
         loginBtn_at_click();
-
+        /* remove the text when selecting the username field */
+        userLoginTextField_at_selection();
+        /* remove the text when selecting the pwd field */
+        pwdLoginTextField_at_selection();
     }
 
-    /**************************************************************
-    *
-    *                       CALLBACKS
-    *
-     **************************************************************/
+    /*************************************************************
+
+     UTILS
+
+     */
+
+    private static void textFieldEnter(JTextField f, String oldString){
+        if (f.getText().equals(oldString)) {
+            f.setText(EMPTY_S);
+        }
+        f.setForeground(new Color(0,0,0));
+    }
+
+    private static void textFieldExit(JTextField f, String newString){
+        if (f.getText().equals(EMPTY_S)) {
+            f.setText(newString);
+            f.setForeground(new Color(187,187,187));
+        }
+    }
+
+    /*************************************************************
+
+     CALLBACKS
+
+     */
 
     /**
      * Callback for About button push. Open the dialog with some info
@@ -70,6 +103,40 @@ public class MainWindow extends JFrame {
 
 
     /**
+     * This is the callback of a push event on the Search button
+     * 
+     */
+    private void searchBtn_at_click(){
+        searchBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /* perform here some action */
+            }
+        });
+    }
+
+
+    /**
+     * This is the callback for a selection of the place text edit field. It
+     * removes the "Type a place..." text.
+     *
+     */
+    private void placeTextField_at_selection(){
+        typeAPlaceTextField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                textFieldEnter(typeAPlaceTextField, TYPE_A_PLACE_S);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                textFieldExit(typeAPlaceTextField, TYPE_A_PLACE_S);
+            }
+        });
+    }
+
+
+    /**
      * Callback for Login button. Show the login panel
      */
     private void loginBtn_at_click(){
@@ -84,33 +151,43 @@ public class MainWindow extends JFrame {
 
 
     /**
-     * This is the callback of a push event on the Search button
-     * @todo: add the callback to the search function
+     * This is the callback for a selection of the username text edit field.
+     * It removes the "Username" text.
      */
-    private void searchBtn_at_click(){
-        searchBtn.addActionListener(new ActionListener() {
+    private void userLoginTextField_at_selection(){
+        userLoginTextField.addFocusListener(new FocusListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                /* perform here some action */
+            public void focusGained(FocusEvent e) {
+                textFieldEnter(userLoginTextField, USERNAME_S);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                textFieldExit(userLoginTextField, USERNAME_S);
             }
         });
     }
 
 
     /**
-     * This is the callback for a selection of the text edit field. It
-     * removes the "Type a place..." text.
-     *
+     * This is the callback for a selection of the pwd text edit field.
+     * It removes the "********" text.
      */
-    private void placeTextField_at_selection(){
-        typeAPlaceTextField.addFocusListener(new FocusListener() {
+    private void pwdLoginTextField_at_selection(){
+        pwdLoginTextField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                typeAPlaceTextField.setText("");
+                pwdLoginTextField.setText("");
+                pwdLoginTextField.setForeground(new Color(0,0,0));
             }
 
             @Override
-            public void focusLost(FocusEvent e) { }
+            public void focusLost(FocusEvent e) {
+                if (Arrays.equals(pwdLoginTextField.getPassword(), EMPTY_S.toCharArray())) {
+                    pwdLoginTextField.setText(PWD_S);
+                    pwdLoginTextField.setForeground(new Color(187,187,187));
+                }
+            }
         });
     }
 
@@ -123,7 +200,4 @@ public class MainWindow extends JFrame {
         MainWindow mainWindow = new MainWindow();
     }
 
-    private void createUIComponents() {
-        // TODO: place custom component creation code here 
-    }
 }
