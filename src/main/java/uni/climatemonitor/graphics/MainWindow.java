@@ -1,11 +1,10 @@
 package uni.climatemonitor.graphics;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.awt.Dialog.ModalityType;
 import java.util.Arrays;
 
@@ -33,6 +32,10 @@ public class MainWindow extends JFrame {
     private JPanel ButtonsPnl;
     private JButton loginEnterBtn;
     private JLabel logo;
+    private JButton loginExitButton;
+
+    private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
+    private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
 
     /**
      * Constructor for the MainWindow object.
@@ -63,8 +66,16 @@ public class MainWindow extends JFrame {
         userLoginTextField_at_selection();
         /* remove the text when selecting the pwd field */
         pwdLoginTextField_at_selection();
-        /* manage the login Enter button click */
+        /* login panel management:
+             - click ESC keyboard button
+             - click ENTER keyboard button
+             - ...
+         */
         loginEnterBtn_at_click();
+        loginExitBtn_at_click();
+
+
+
     }
 
     /*************************************************************
@@ -73,19 +84,20 @@ public class MainWindow extends JFrame {
 
      */
 
-    private static void textFieldEnter(JTextField f, String oldString){
+    private void textFieldEnter(JTextField f, String oldString){
         if (f.getText().equals(oldString)) {
             f.setText(EMPTY_S);
         }
         f.setForeground(new Color(0,0,0));
     }
 
-    private static void textFieldExit(JTextField f, String newString){
+    private void textFieldExit(JTextField f, String newString){
         if (f.getText().equals(EMPTY_S)) {
             f.setText(newString);
             f.setForeground(new Color(187,187,187));
         }
     }
+
 
     /*************************************************************
 
@@ -152,6 +164,8 @@ public class MainWindow extends JFrame {
         LoginBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                userLoginTextField.setBorder(userLoginTextFieldBorder);
+                pwdLoginTextField.setBorder(pwdLoginTextFieldBorder);
                 ButtonsPnl.setVisible(false);
                 LoginPnl.setVisible(true);
             }
@@ -216,6 +230,30 @@ public class MainWindow extends JFrame {
                     Otherwise, show again the login/register buttons
                     and warn the user for the wrong login request
                  */
+                boolean isValid = false;
+                if (isValid) {
+                    /* if the user exists... */
+                    LoginPnl.setVisible(false);
+                } else {
+
+                    userLoginTextField.setBorder(new LineBorder(Color.RED, 3));
+                    pwdLoginTextField.setBorder(new LineBorder(Color.RED, 3));
+                }
+            }
+        });
+    }
+
+
+    /**
+     *
+     */
+    private void loginExitBtn_at_click() {
+        loginExitButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UserPnl.setVisible(true);
+                LoginPnl.setVisible(false);
+                ButtonsPnl.setVisible(true);
             }
         });
     }
