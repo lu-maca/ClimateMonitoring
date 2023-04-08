@@ -8,13 +8,13 @@ import java.awt.event.*;
 import java.awt.Dialog.ModalityType;
 import java.util.Arrays;
 
+import uni.climatemonitor.graphics.Constants;
+
 public class MainWindow extends JFrame {
     private static final String TYPE_A_PLACE_S = "Type a place...";
     private static final String EMPTY_S = "";
     private static final String USERNAME_S = "Username";
     private static final String PWD_S = "Password";
-    private static final String APP_NAME_S = "ClimaScope";
-    private static final String LOGO_PATH_S = "./src/main/images/logo.png";
 
     private JPanel MainWindow;
     private JPanel MainPnl;
@@ -41,14 +41,14 @@ public class MainWindow extends JFrame {
      * Constructor for the MainWindow object.
      */
     public MainWindow() {
-        setTitle(APP_NAME_S);
+        setTitle(Constants.APP_NAME_S);
         setSize(1100,600);
         setMinimumSize(new Dimension(1100,600));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         /* set the logo */
-        ImageIcon iconLogo = new ImageIcon(LOGO_PATH_S);
+        ImageIcon iconLogo = new ImageIcon(Constants.LOGO_PATH_S);
         logo.setIcon(iconLogo);
 
         setContentPane(MainWindow);
@@ -85,6 +85,9 @@ public class MainWindow extends JFrame {
      */
 
     private void textFieldEnter(JTextField f, String oldString){
+        /* if the text in the text field is equal to  oldString
+            it changes it to EMPTY string
+         */
         if (f.getText().equals(oldString)) {
             f.setText(EMPTY_S);
         }
@@ -92,6 +95,8 @@ public class MainWindow extends JFrame {
     }
 
     private void textFieldExit(JTextField f, String newString){
+        /* if the text in the text field is EMPTY, it changes it to newString
+         */
         if (f.getText().equals(EMPTY_S)) {
             f.setText(newString);
             f.setForeground(new Color(187,187,187));
@@ -254,6 +259,12 @@ public class MainWindow extends JFrame {
                 UserPnl.setVisible(true);
                 LoginPnl.setVisible(false);
                 ButtonsPnl.setVisible(true);
+
+                /* restore initial configuration for username and pwd */
+                userLoginTextField.setText(USERNAME_S);
+                userLoginTextField.setForeground(new Color(187,187,187));
+                pwdLoginTextField.setText(PWD_S);
+                pwdLoginTextField.setForeground(new Color(187,187,187));
             }
         });
     }
