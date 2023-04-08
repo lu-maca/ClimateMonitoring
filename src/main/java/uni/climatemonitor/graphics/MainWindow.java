@@ -8,8 +8,6 @@ import java.awt.event.*;
 import java.awt.Dialog.ModalityType;
 import java.util.Arrays;
 
-import uni.climatemonitor.graphics.Constants;
-
 public class MainWindow extends JFrame {
     private static final String TYPE_A_PLACE_S = "Type a place...";
     private static final String EMPTY_S = "";
@@ -268,6 +266,7 @@ public class MainWindow extends JFrame {
             }
         });
     }
+
 
     /**
      * main method
