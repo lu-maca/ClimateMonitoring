@@ -3,9 +3,12 @@ package uni.climatemonitor.graphics;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.Dialog.ModalityType;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainWindow extends JFrame {
@@ -31,6 +34,8 @@ public class MainWindow extends JFrame {
     private JButton loginEnterBtn;
     private JLabel logo;
     private JButton loginExitButton;
+    private JList SearchList;
+    private JPanel SearchListPnl;
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
@@ -49,13 +54,25 @@ public class MainWindow extends JFrame {
         ImageIcon iconLogo = new ImageIcon(Constants.LOGO_PATH_S);
         logo.setIcon(iconLogo);
 
+        /* set initial search list */
+        DefaultListModel<String> searchListModel = new DefaultListModel<>();
+        for (String elem : Constants.prova) {
+            searchListModel.addElement(elem);
+        }
+        SearchList.setModel(searchListModel);
+        SearchListPnl.setVisible(false);
+
         setContentPane(MainWindow);
         setVisible(true);
 
         /* perform a search action when clicking the search button */
         searchBtn_at_click();
-        /* remove the text when selecting the search field */
+        /* Location search methods:
+            - remove the text when selecting the search field
+            - analyze text changes
+        */
         placeTextField_at_selection();
+        placeTextField_at_text_change();
         /* open the about popup clicking on the About button */
         aboutBtn_at_click();
         /* open the login panel clicking on the Login button */
@@ -71,8 +88,6 @@ public class MainWindow extends JFrame {
          */
         loginEnterBtn_at_click();
         loginExitBtn_at_click();
-
-
 
     }
 
@@ -156,6 +171,50 @@ public class MainWindow extends JFrame {
             public void focusLost(FocusEvent e) {
                 textFieldExit(typeAPlaceTextField, TYPE_A_PLACE_S);
             }
+        });
+    }
+
+
+    /**
+     * This is the callback for a change in the location text edit field
+     */
+    private void placeTextField_at_text_change(){
+        DefaultListModel<String> updatedListModel = (DefaultListModel<String>) SearchList.getModel();
+        typeAPlaceTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void changedUpdate(DocumentEvent e) { }
+
+            @Override
+            public void insertUpdate(DocumentEvent e){ suggest(); }
+
+            @Override
+            public void removeUpdate(DocumentEvent e){ suggest(); }
+
+            public void suggest() {
+                String searched = typeAPlaceTextField.getText();
+                if (searched.length() == 1){
+                    SearchListPnl.setVisible(true);
+                } else if (searched.length() == 0){
+                    SearchListPnl.setVisible(false);
+                }
+                /* filter places */
+                filterModel(updatedListModel, searched);
+            }
+
+            public void filterModel(DefaultListModel<String> model, String filter) {
+                for (String s : Constants.prova) {
+                    if (!s.contains(filter)) {
+                        if (model.contains(s)) {
+                            model.removeElement(s);
+                        }
+                    } else {
+                        if (!model.contains(s)) {
+                            model.addElement(s);
+                        }
+                    }
+                }
+            }
+
         });
     }
 
