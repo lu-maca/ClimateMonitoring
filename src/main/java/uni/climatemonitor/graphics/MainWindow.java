@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainWindow extends JFrame {
+    /* constants */
     private static final String TYPE_A_PLACE_S = "Type a place...";
     private static final String EMPTY_S = "";
     private static final String USERNAME_S = "Username";
     private static final String PWD_S = "Password";
 
+    /* GUI elements */
     private JPanel MainWindow;
     private JPanel MainPnl;
     private JButton LoginBtn;
@@ -32,10 +34,13 @@ public class MainWindow extends JFrame {
     private JPasswordField pwdLoginTextField;
     private JPanel ButtonsPnl;
     private JButton loginEnterBtn;
-    private JLabel logo;
+    private JLabel Logo;
     private JButton loginExitButton;
     private JList SearchList;
     private JPanel SearchListPnl;
+
+    /* utilities */
+    private DefaultListModel<String> searchListModel;
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
@@ -52,14 +57,18 @@ public class MainWindow extends JFrame {
 
         /* set the logo */
         ImageIcon iconLogo = new ImageIcon(Constants.LOGO_PATH_S);
-        logo.setIcon(iconLogo);
+        Logo.setIcon(iconLogo);
+        ImageIcon earthIcon = new ImageIcon(Constants.EARTH_LOGO_PATH_S);
+        setIconImage(earthIcon.getImage());
 
-        /* set initial search list */
-        DefaultListModel<String> searchListModel = new DefaultListModel<>();
+        /* set initial search list and its gui options */
+        searchListModel = new DefaultListModel<>();
         for (String elem : Constants.prova) {
             searchListModel.addElement(elem);
         }
         SearchList.setModel(searchListModel);
+        SearchList.setBackground(new Color(238, 238, 238));
+
         SearchListPnl.setVisible(false);
 
         setContentPane(MainWindow);
@@ -179,7 +188,6 @@ public class MainWindow extends JFrame {
      * This is the callback for a change in the location text edit field
      */
     private void placeTextField_at_text_change(){
-        DefaultListModel<String> updatedListModel = (DefaultListModel<String>) SearchList.getModel();
         typeAPlaceTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) { }
@@ -196,20 +204,21 @@ public class MainWindow extends JFrame {
                     SearchListPnl.setVisible(true);
                 } else if (searched.length() == 0){
                     SearchListPnl.setVisible(false);
+                    SearchList.clearSelection();
                 }
                 /* filter places */
-                filterModel(updatedListModel, searched);
+                filterModel(searched);
             }
 
-            public void filterModel(DefaultListModel<String> model, String filter) {
+            public void filterModel(String filter) {
                 for (String s : Constants.prova) {
                     if (!s.contains(filter)) {
-                        if (model.contains(s)) {
-                            model.removeElement(s);
+                        if (searchListModel.contains(s)) {
+                            searchListModel.removeElement(s);
                         }
                     } else {
-                        if (!model.contains(s)) {
-                            model.addElement(s);
+                        if (!searchListModel.contains(s)) {
+                            searchListModel.addElement(s);
                         }
                     }
                 }
