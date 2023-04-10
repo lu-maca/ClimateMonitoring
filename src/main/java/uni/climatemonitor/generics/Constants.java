@@ -11,6 +11,4 @@ public class Constants {
     public static final String MONITORING_CENTERS_S = "./data/monitoring_centers.data";
     public static final String MONITORING_COORDS_S = "./data/monitoring_coordinates.data";
     public static final String REGISTERED_OPS_S = "./data/registered_operators.data";
-
-    public static final String[] prova = {"ciao", "come", "va", "io", "bene", "e", "tu", "?"};
 }

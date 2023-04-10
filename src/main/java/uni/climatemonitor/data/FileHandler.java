@@ -5,11 +5,15 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Generic class for data files handling
+ */
 public abstract class FileHandler {
-    private final String fileName;
-    private String fileContent = null;
+    protected final String fileName;
 
-    public FileHandler(String fileName){
+    public FileHandler(String fileName) {
         this.fileName = fileName;
     }
+
+    public abstract void readFile();
 }

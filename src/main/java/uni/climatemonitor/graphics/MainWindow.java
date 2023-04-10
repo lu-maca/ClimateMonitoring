@@ -1,5 +1,6 @@
 package uni.climatemonitor.graphics;
 
+import uni.climatemonitor.data.GeoData;
 import uni.climatemonitor.generics.Constants;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -41,6 +42,7 @@ public class MainWindow extends JFrame {
 
     /* utilities */
     private DefaultListModel<String> searchListModel;
+    private GeoData geoData = new GeoData();
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
@@ -63,7 +65,7 @@ public class MainWindow extends JFrame {
 
         /* set initial search list and its gui options */
         searchListModel = new DefaultListModel<>();
-        for (String elem : Constants.prova) {
+        for (String elem : geoData.getGeoLocationsStringList()) {
             searchListModel.addElement(elem);
         }
         SearchList.setModel(searchListModel);
@@ -211,7 +213,7 @@ public class MainWindow extends JFrame {
             }
 
             public void filterModel(String filter) {
-                for (String s : Constants.prova) {
+                for (String s : geoData.getGeoLocationsStringList()) {
                     if (!s.contains(filter)) {
                         if (searchListModel.contains(s)) {
                             searchListModel.removeElement(s);
