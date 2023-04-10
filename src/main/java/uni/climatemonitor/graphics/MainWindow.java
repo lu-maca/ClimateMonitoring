@@ -69,8 +69,8 @@ public class MainWindow extends JFrame {
             searchListModel.addElement(elem);
         }
         SearchList.setModel(searchListModel);
+        SearchList.setVisibleRowCount(10);
         SearchList.setBackground(new Color(238, 238, 238));
-
         SearchListPnl.setVisible(false);
 
         setContentPane(MainWindow);

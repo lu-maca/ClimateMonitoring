@@ -11,13 +11,16 @@ public class GeoData {
 
     public GeoData() {
         /* geographical locations file */
+        getGeographicalLocations();
+    }
+
+    private void getGeographicalLocations(){
         LocationsFileHandler geoFile = new LocationsFileHandler(Constants.MONITORING_COORDS_S);
         geoFile.readFile();
         geoLocations = geoFile.getLocationsList();
         for (Location loc : geoLocations) {
             geoLocationsStringList.add(loc.getRepresentation());
         }
-        System.out.println(geoLocationsStringList);
     }
 
     public ArrayList<String> getGeoLocationsStringList(){
