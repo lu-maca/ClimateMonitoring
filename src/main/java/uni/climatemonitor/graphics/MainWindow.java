@@ -39,6 +39,8 @@ public class MainWindow extends JFrame {
     private JButton loginExitButton;
     private JList SearchList;
     private JPanel SearchListPnl;
+    private JScrollPane SearchListScrollPnl;
+    private JPanel MainMExC;
 
     /* utilities */
     private DefaultListModel<String> searchListModel;
@@ -69,7 +71,7 @@ public class MainWindow extends JFrame {
             searchListModel.addElement(elem);
         }
         SearchList.setModel(searchListModel);
-        SearchList.setVisibleRowCount(10);
+        SearchList.setVisibleRowCount(18);
         SearchList.setBackground(new Color(238, 238, 238));
         SearchListPnl.setVisible(false);
 
