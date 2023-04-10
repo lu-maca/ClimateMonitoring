@@ -1,5 +1,6 @@
 package uni.climatemonitor.graphics;
 
+import uni.climatemonitor.generics.Constants;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.Border;
@@ -8,7 +9,6 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.Dialog.ModalityType;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainWindow extends JFrame {

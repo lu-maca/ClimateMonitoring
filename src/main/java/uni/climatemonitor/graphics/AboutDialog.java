@@ -1,7 +1,7 @@
 package uni.climatemonitor.graphics;
-
+import uni.climatemonitor.generics.Constants;
 import javax.swing.*;
-import java.awt.*;
+
 
 public class AboutDialog extends JDialog {
     private JPanel contentPane;

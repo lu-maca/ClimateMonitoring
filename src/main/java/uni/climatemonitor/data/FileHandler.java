@@ -12,6 +12,4 @@ public abstract class FileHandler {
     public FileHandler(String fileName){
         this.fileName = fileName;
     }
-
-
 }
