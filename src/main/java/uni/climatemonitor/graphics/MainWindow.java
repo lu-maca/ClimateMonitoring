@@ -88,6 +88,10 @@ public class MainWindow extends JFrame {
         setContentPane(MainWindow);
         setVisible(true);
 
+        /*
+            Callbacks for the main page
+         */
+
         /* perform a search action when clicking the search button */
         searchBtn_at_click();
         /* Location search methods:
@@ -115,7 +119,11 @@ public class MainWindow extends JFrame {
         loginExitBtn_at_click();
 
 
-
+        /*
+            Callbacks for the detailed location page
+         */
+        /* close the detailed location page */
+        closeBtn_at_selection();
     }
 
     /*************************************************************
@@ -123,6 +131,11 @@ public class MainWindow extends JFrame {
      UTILS
 
      */
+
+    private void switchPage(String pageName){
+        CardLayout cl = (CardLayout)(MainMExC.getLayout());
+        cl.show(MainMExC, pageName);
+    }
 
     private void textFieldEnter(JTextField f, String oldString){
         /* if the text in the text field is equal to  oldString
@@ -254,8 +267,10 @@ public class MainWindow extends JFrame {
             public void mouseClicked(MouseEvent evt) {
                 if (evt.getClickCount() == 2) {
                     String clickedElement = SearchList.getSelectedValue().toString();
-                    CardLayout cl = (CardLayout)(MainMExC.getLayout());
-                    cl.show(MainMExC, "Location Details Page");
+                    switchPage("Location Details Page");
+
+                    typeAPlaceTextField.setText("");
+                    textFieldExit(typeAPlaceTextField, "Type a place...");
                 }
             }
         });
@@ -366,6 +381,19 @@ public class MainWindow extends JFrame {
                 userLoginTextField.setForeground(new Color(187,187,187));
                 pwdLoginTextField.setText(PWD_S);
                 pwdLoginTextField.setForeground(new Color(187,187,187));
+            }
+        });
+    }
+
+
+    /**
+     * Callback for the close button of the detailed location page
+     */
+    private void closeBtn_at_selection(){
+        CloseBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchPage("Main Page");
             }
         });
     }
