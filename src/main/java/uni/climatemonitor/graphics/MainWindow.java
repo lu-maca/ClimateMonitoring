@@ -7,6 +7,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.Dialog.ModalityType;
@@ -41,6 +43,9 @@ public class MainWindow extends JFrame {
     private JPanel SearchListPnl;
     private JScrollPane SearchListScrollPnl;
     private JPanel MainMExC;
+    private JPanel LocationDetailPnl;
+    private JTable DetailsTable;
+    private JButton CloseBtn;
 
     /* utilities */
     private DefaultListModel<String> searchListModel;
@@ -71,11 +76,12 @@ public class MainWindow extends JFrame {
             searchListModel.addElement(elem);
         }
         SearchList.setModel(searchListModel);
-        SearchList.setVisibleRowCount(18);
+        SearchList.setVisibleRowCount(16);
         SearchList.setBackground(new Color(238, 238, 238));
         SearchListPnl.setVisible(false);
 
         setContentPane(MainWindow);
+
         setVisible(true);
 
         /* perform a search action when clicking the search button */
@@ -86,6 +92,8 @@ public class MainWindow extends JFrame {
         */
         placeTextField_at_selection();
         placeTextField_at_text_change();
+        /* Location list selection */
+        searchList_at_selection();
         /* open the about popup clicking on the About button */
         aboutBtn_at_click();
         /* open the login panel clicking on the Login button */
@@ -101,6 +109,8 @@ public class MainWindow extends JFrame {
          */
         loginEnterBtn_at_click();
         loginExitBtn_at_click();
+
+
 
     }
 
@@ -229,6 +239,21 @@ public class MainWindow extends JFrame {
             }
 
         });
+    }
+
+
+    /**
+     * Callback for selection of a location on the location list
+     */
+    private void searchList_at_selection(){
+        SearchList.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    String clickedElement = SearchList.getSelectedValue().toString();
+                }
+            }
+        });
+
     }
 
 
