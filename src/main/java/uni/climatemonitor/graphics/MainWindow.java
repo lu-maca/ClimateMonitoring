@@ -80,8 +80,12 @@ public class MainWindow extends JFrame {
         SearchList.setBackground(new Color(238, 238, 238));
         SearchListPnl.setVisible(false);
 
-        setContentPane(MainWindow);
+        /* set mutually exclusive panel */
+        MainMExC.add(MainPnl, "Main Page");
+        MainMExC.add(LocationDetailPnl, "Location Details Page");
 
+        /* set visibility */
+        setContentPane(MainWindow);
         setVisible(true);
 
         /* perform a search action when clicking the search button */
@@ -250,6 +254,8 @@ public class MainWindow extends JFrame {
             public void mouseClicked(MouseEvent evt) {
                 if (evt.getClickCount() == 2) {
                     String clickedElement = SearchList.getSelectedValue().toString();
+                    CardLayout cl = (CardLayout)(MainMExC.getLayout());
+                    cl.show(MainMExC, "Location Details Page");
                 }
             }
         });
