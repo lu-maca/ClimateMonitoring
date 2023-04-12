@@ -7,8 +7,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.Dialog.ModalityType;
@@ -44,8 +42,11 @@ public class MainWindow extends JFrame {
     private JScrollPane SearchListScrollPnl;
     private JPanel MainMExC;
     private JPanel LocationDetailPnl;
-    private JTable DetailsTable;
     private JButton CloseBtn;
+    private JPanel DetailsPnl;
+    private JPanel ClosePnl;
+    private JLabel PlaceNameLbl;
+    private DetailPage detailPage;
 
     /* utilities */
     private DefaultListModel<String> searchListModel;
@@ -268,6 +269,8 @@ public class MainWindow extends JFrame {
                 if (evt.getClickCount() == 2) {
                     String clickedElement = SearchList.getSelectedValue().toString();
                     switchPage("Location Details Page");
+                    /* instantiate an instance of the detail page to manage it (read-only) */
+                    detailPage = new DetailPage(PlaceNameLbl, clickedElement);
 
                     typeAPlaceTextField.setText("");
                     textFieldExit(typeAPlaceTextField, "Type a place...");
@@ -394,6 +397,7 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switchPage("Main Page");
+                detailPage.setPLaceName("");
             }
         });
     }
