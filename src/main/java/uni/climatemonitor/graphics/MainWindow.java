@@ -1,6 +1,7 @@
 package uni.climatemonitor.graphics;
 
 import uni.climatemonitor.data.GeoData;
+import uni.climatemonitor.data.Location;
 import uni.climatemonitor.generics.Constants;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -269,8 +270,13 @@ public class MainWindow extends JFrame {
                 if (evt.getClickCount() == 2) {
                     String clickedElement = SearchList.getSelectedValue().toString();
                     switchPage("Location Details Page");
+
+                    /* search the searched place object*/
+                    Location location = geoData.searchLocationFromName(clickedElement);
+
+
                     /* instantiate an instance of the detail page to manage it (read-only) */
-                    detailPage = new DetailPage(PlaceNameLbl, clickedElement);
+                    detailPage = new DetailPage(PlaceNameLbl, location);
 
                     typeAPlaceTextField.setText("");
                     textFieldExit(typeAPlaceTextField, "Type a place...");
@@ -397,7 +403,7 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switchPage("Main Page");
-                detailPage.setPLaceName("");
+                detailPage.setPlaceName("");
             }
         });
     }
