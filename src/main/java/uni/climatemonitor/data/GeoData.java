@@ -20,6 +20,8 @@ public class GeoData {
         geoFile.readFile();
         geoLocations = geoFile.getLocationsList();
         geoStateMap = geoFile.getStateMap();
+
+        /* create useful list that contains strings representation of locations */
         for (Location loc : geoLocations) {
             geoLocationsStringList.add(loc.getRepresentation());
         }

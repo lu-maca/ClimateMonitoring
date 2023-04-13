@@ -274,9 +274,11 @@ public class MainWindow extends JFrame {
                     /* search the searched place object*/
                     Location location = geoData.searchLocationFromName(clickedElement);
 
-
                     /* instantiate an instance of the detail page to manage it (read-only) */
-                    detailPage = new DetailPage(PlaceNameLbl, location);
+                    detailPage = new DetailPage(
+                            PlaceNameLbl,
+                            location
+                    );
 
                     typeAPlaceTextField.setText("");
                     textFieldExit(typeAPlaceTextField, "Type a place...");

@@ -76,6 +76,7 @@ public class LocationsFileHandler extends FileHandler {
      * Location objects.
      * @see <a href="https://www.geeksforgeeks.org/reading-csv-file-java-using-opencsv/">...</a>
      */
+    @Override
     public void readFile(){
 
         try {
