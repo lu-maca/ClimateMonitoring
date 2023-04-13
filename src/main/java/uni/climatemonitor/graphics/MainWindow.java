@@ -50,7 +50,7 @@ public class MainWindow extends JFrame {
     private DetailPage detailPage;
 
     /* utilities */
-    private DefaultListModel<String> searchListModel;
+    private DefaultListModel<Location> searchListModel;
     private GeoData geoData = new GeoData();
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
@@ -74,7 +74,7 @@ public class MainWindow extends JFrame {
 
         /* set initial search list and its gui options */
         searchListModel = new DefaultListModel<>();
-        for (String elem : geoData.getGeoLocationsStringList()) {
+        for (Location elem : geoData.getGeoLocationsRawList()) {
             searchListModel.addElement(elem);
         }
         SearchList.setModel(searchListModel);
@@ -244,14 +244,14 @@ public class MainWindow extends JFrame {
             }
 
             public void filterModel(String filter) {
-                for (String s : geoData.getGeoLocationsStringList()) {
-                    if (!s.contains(filter)) {
-                        if (searchListModel.contains(s)) {
-                            searchListModel.removeElement(s);
+                for (Location l : geoData.getGeoLocationsRawList()) {
+                    if (!l.toString().contains(filter)) {
+                        if (searchListModel.contains(l)) {
+                            searchListModel.removeElement(l);
                         }
                     } else {
-                        if (!searchListModel.contains(s)) {
-                            searchListModel.addElement(s);
+                        if (!searchListModel.contains(l)) {
+                            searchListModel.addElement(l);
                         }
                     }
                 }
@@ -268,16 +268,13 @@ public class MainWindow extends JFrame {
         SearchList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 if (evt.getClickCount() == 2) {
-                    String clickedElement = SearchList.getSelectedValue().toString();
+                    Location clickedElement = (Location) SearchList.getSelectedValue();
                     switchPage("Location Details Page");
-
-                    /* search the searched place object*/
-                    Location location = geoData.searchLocationFromName(clickedElement);
 
                     /* instantiate an instance of the detail page to manage it (read-only) */
                     detailPage = new DetailPage(
                             PlaceNameLbl,
-                            location
+                            clickedElement
                     );
 
                     typeAPlaceTextField.setText("");

@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class GeoData {
-    private ArrayList<Location> geoLocations;
+    private ArrayList<Location> geoLocationsRawList;
     private Map<String, ArrayList<Location>> geoStateMap;
-    private ArrayList<String> geoLocationsStringList = new ArrayList<>();
 
     public GeoData() {
         /* geographical locations file */
@@ -18,18 +17,12 @@ public class GeoData {
     private void getGeographicalLocations(){
         LocationsFileHandler geoFile = new LocationsFileHandler(Constants.MONITORING_COORDS_S);
         geoFile.readFile();
-        geoLocations = geoFile.getLocationsList();
+        geoLocationsRawList = geoFile.getLocationsList();
         geoStateMap = geoFile.getStateMap();
 
-        /* create useful list that contains strings representation of locations */
-        for (Location loc : geoLocations) {
-            geoLocationsStringList.add(loc.getRepresentation());
-        }
     }
 
-    public ArrayList<String> getGeoLocationsStringList(){
-        return geoLocationsStringList;
-    }
+    public ArrayList<Location> getGeoLocationsRawList(){ return geoLocationsRawList; }
 
     public Location searchLocationFromName(String searchedString){
         /* name has the following structure:
