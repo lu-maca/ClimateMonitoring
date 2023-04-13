@@ -13,6 +13,7 @@ public class DetailsPage {
     private JPanel LocationDetailPnl;
     private JPanel DetailsPnl;
     private JPanel ClosePnl;
+    private JPanel PlaceNamePnl;
 
     /* location infos */
     private Location location;
