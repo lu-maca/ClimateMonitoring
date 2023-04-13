@@ -20,270 +20,6 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="d465d" binding="MainPnl" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <card name="Main Page"/>
-            </constraints>
-            <properties>
-              <foreground color="-12960964"/>
-            </properties>
-            <border type="none"/>
-            <children>
-              <hspacer id="bcc30">
-                <constraints>
-                  <grid row="2" column="0" row-span="2" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="200" height="-1"/>
-                  </grid>
-                </constraints>
-              </hspacer>
-              <hspacer id="a41f1">
-                <constraints>
-                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="200" height="-1"/>
-                  </grid>
-                </constraints>
-              </hspacer>
-              <grid id="cb9e" binding="UserPnl" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints>
-                  <grid row="0" column="2" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="5" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <visible value="true"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <grid id="1fcc0" binding="LoginPnl" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="10" left="0" bottom="0" right="10"/>
-                    <constraints border-constraint="South"/>
-                    <properties>
-                      <visible value="false"/>
-                    </properties>
-                    <border type="none"/>
-                    <children>
-                      <component id="4f039" class="javax.swing.JTextField" binding="userLoginTextField">
-                        <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                            <preferred-size width="150" height="-1"/>
-                          </grid>
-                        </constraints>
-                        <properties>
-                          <foreground color="-2960686"/>
-                          <margin top="2" left="6" bottom="2" right="6"/>
-                          <selectedTextColor color="-5460810"/>
-                          <text value="Username"/>
-                          <visible value="true"/>
-                        </properties>
-                      </component>
-                      <component id="ef5ab" class="javax.swing.JPasswordField" binding="pwdLoginTextField">
-                        <constraints>
-                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                            <preferred-size width="150" height="-1"/>
-                          </grid>
-                        </constraints>
-                        <properties>
-                          <foreground color="-2960686"/>
-                          <margin top="2" left="5" bottom="2" right="2"/>
-                          <selectedTextColor color="-5460810"/>
-                          <text value="password"/>
-                          <visible value="true"/>
-                        </properties>
-                      </component>
-                      <grid id="9ceda" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
-                        <constraints>
-                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="da0ab" class="javax.swing.JButton" binding="loginEnterBtn">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <actionCommand value="LoginEnter"/>
-                              <contentAreaFilled value="false"/>
-                              <inheritsPopupMenu value="false"/>
-                              <opaque value="false"/>
-                              <text value="Login"/>
-                            </properties>
-                          </component>
-                          <component id="1b786" class="javax.swing.JButton" binding="loginExitButton">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <contentAreaFilled value="false"/>
-                              <text value="Exit"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </grid>
-                    </children>
-                  </grid>
-                  <grid id="4d534" binding="ButtonsPnl" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
-                    <constraints border-constraint="Center"/>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <component id="ec25" class="javax.swing.JButton" binding="LoginBtn">
-                        <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <borderPainted value="false"/>
-                          <contentAreaFilled value="false"/>
-                          <hideActionText value="false"/>
-                          <horizontalAlignment value="0"/>
-                          <iconTextGap value="4"/>
-                          <inheritsPopupMenu value="false"/>
-                          <label value="Login"/>
-                          <opaque value="false"/>
-                          <requestFocusEnabled value="true"/>
-                          <rolloverEnabled value="true"/>
-                          <text value="Login"/>
-                        </properties>
-                        <clientProperties>
-                          <hideActionText class="java.lang.Boolean" value="false"/>
-                        </clientProperties>
-                      </component>
-                      <component id="40b9e" class="javax.swing.JButton" binding="RegisterBtn">
-                        <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <actionCommand value="Register"/>
-                          <borderPainted value="false"/>
-                          <contentAreaFilled value="false"/>
-                          <label value="Register"/>
-                          <text value="Register"/>
-                        </properties>
-                      </component>
-                    </children>
-                  </grid>
-                </children>
-              </grid>
-              <grid id="366b0" binding="AboutPnl" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false">
-                    <preferred-size width="88" height="185"/>
-                  </grid>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="4c940" class="javax.swing.JButton" binding="aboutButton" default-binding="true">
-                    <constraints/>
-                    <properties>
-                      <borderPainted value="false"/>
-                      <contentAreaFilled value="false"/>
-                      <text value="About"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
-              <grid id="e2908" binding="SearchPnl" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="592" height="185"/>
-                  </grid>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="a677c" class="javax.swing.JTextField" binding="typeAPlaceTextField" default-binding="true">
-                    <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="480" height="30"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <autoscrolls value="true"/>
-                      <foreground color="-2960686"/>
-                      <opaque value="true"/>
-                      <selectedTextColor color="-5460810"/>
-                      <text value="Type a place..."/>
-                    </properties>
-                  </component>
-                  <hspacer id="b3718">
-                    <constraints>
-                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                  </hspacer>
-                  <component id="8fab3" class="javax.swing.JButton" binding="searchBtn">
-                    <constraints>
-                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <borderPainted value="true"/>
-                      <contentAreaFilled value="false"/>
-                      <text value="Search"/>
-                    </properties>
-                  </component>
-                  <vspacer id="9368b">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                        <preferred-size width="-1" height="70"/>
-                      </grid>
-                    </constraints>
-                  </vspacer>
-                  <component id="873f6" class="javax.swing.JLabel" binding="Logo">
-                    <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <background color="-4473925"/>
-                      <text value=""/>
-                    </properties>
-                  </component>
-                  <grid id="2e0a4" binding="SearchListPnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
-                    <constraints>
-                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <scrollpane id="b552f" binding="SearchListScrollPnl">
-                        <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <opaque value="false"/>
-                          <verticalScrollBarPolicy value="20"/>
-                        </properties>
-                        <border type="none"/>
-                        <children>
-                          <component id="da68a" class="javax.swing.JList" binding="SearchList">
-                            <constraints/>
-                            <properties>
-                              <focusCycleRoot value="true"/>
-                              <font style="2"/>
-                              <layoutOrientation value="0"/>
-                              <model/>
-                              <opaque value="true"/>
-                              <selectionMode value="0"/>
-                              <visible value="true"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </scrollpane>
-                    </children>
-                  </grid>
-                </children>
-              </grid>
-              <vspacer id="9c987">
-                <constraints>
-                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                    <preferred-size width="-1" height="100"/>
-                  </grid>
-                </constraints>
-              </vspacer>
-            </children>
-          </grid>
           <grid id="c9da6" binding="DetailsParentPnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
@@ -297,6 +33,31 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
               </nested-form>
+            </children>
+          </grid>
+          <grid id="4cb14" binding="MainParentPnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <card name="Main Page"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="1197b" binding="MainPnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <nested-form id="61185" form-file="uni/climatemonitor/graphics/MainPage.form">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </nested-form>
+                </children>
+              </grid>
             </children>
           </grid>
         </children>

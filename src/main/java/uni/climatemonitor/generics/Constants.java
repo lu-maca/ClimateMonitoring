@@ -5,6 +5,10 @@ public class Constants {
     public static final String APP_NAME_S = "ClimaScope";
     public static final String LOGO_PATH_S = "./src/main/images/logo.png";
     public static final String EARTH_LOGO_PATH_S = "./src/main/images/earth_logo.png";
+    public static final String TYPE_A_PLACE_S = "Type a place...";
+    public static final String EMPTY_S = "";
+    public static final String USERNAME_S = "Username";
+    public static final String PWD_S = "Password";
 
     /* data paths */
     public static final String CLIMATE_PARAMS_S = "./data/climate_parameters.data";

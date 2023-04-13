@@ -17,9 +17,6 @@ public class DetailsPage {
     /* location infos */
     private Location location;
 
-    /* close info */
-    private static boolean toBeClosed = false;
-
     public DetailsPage(){
         /*
             Callbacks for the detailed location page
@@ -53,6 +50,8 @@ public class DetailsPage {
         CloseBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                UtilsSingleton utils = UtilsSingleton.getInstance();
+                utils.switchPage("Main Page");
                 PlaceNameLbl.setText("");
             }
         });
