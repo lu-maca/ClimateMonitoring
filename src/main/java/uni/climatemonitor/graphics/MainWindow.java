@@ -42,16 +42,13 @@ public class MainWindow extends JFrame {
     private JPanel SearchListPnl;
     private JScrollPane SearchListScrollPnl;
     private JPanel MainMExC;
-    private JPanel LocationDetailPnl;
-    private JButton CloseBtn;
-    private JPanel DetailsPnl;
-    private JPanel ClosePnl;
-    private JLabel PlaceNameLbl;
-    private DetailPage detailPage;
+    private uni.climatemonitor.graphics.DetailsPage DetailsPnl;
+    private JPanel DetailsParentPnl;
 
     /* utilities */
     private DefaultListModel<Location> searchListModel;
     private GeoData geoData = new GeoData();
+    public Location clickedElement;
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
@@ -84,7 +81,7 @@ public class MainWindow extends JFrame {
 
         /* set mutually exclusive panel */
         MainMExC.add(MainPnl, "Main Page");
-        MainMExC.add(LocationDetailPnl, "Location Details Page");
+        MainMExC.add(DetailsParentPnl, "Location Details Page");
 
         /* set visibility */
         setContentPane(MainWindow);
@@ -121,11 +118,7 @@ public class MainWindow extends JFrame {
         loginExitBtn_at_click();
 
 
-        /*
-            Callbacks for the detailed location page
-         */
-        /* close the detailed location page */
-        closeBtn_at_selection();
+
     }
 
     /*************************************************************
@@ -133,7 +126,6 @@ public class MainWindow extends JFrame {
      UTILS
 
      */
-
     private void switchPage(String pageName){
         CardLayout cl = (CardLayout)(MainMExC.getLayout());
         cl.show(MainMExC, pageName);
@@ -268,14 +260,9 @@ public class MainWindow extends JFrame {
         SearchList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 if (evt.getClickCount() == 2) {
-                    Location clickedElement = (Location) SearchList.getSelectedValue();
+                    clickedElement = (Location) SearchList.getSelectedValue();
                     switchPage("Location Details Page");
-
-                    /* instantiate an instance of the detail page to manage it (read-only) */
-                    detailPage = new DetailPage(
-                            PlaceNameLbl,
-                            clickedElement
-                    );
+                    DetailsPnl.setUIPnl(clickedElement);
 
                     typeAPlaceTextField.setText("");
                     textFieldExit(typeAPlaceTextField, "Type a place...");
@@ -394,26 +381,13 @@ public class MainWindow extends JFrame {
     }
 
 
-    /**
-     * Callback for the close button of the detailed location page
-     */
-    private void closeBtn_at_selection(){
-        CloseBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switchPage("Main Page");
-                detailPage.setPlaceName("");
-            }
-        });
-    }
-
 
     /**
      * main method
      *
      */
     public static void main(String[] args) {
-        MainWindow mainWindow = new MainWindow();
+        uni.climatemonitor.graphics.MainWindow mainWindow = new MainWindow();
     }
 
 }

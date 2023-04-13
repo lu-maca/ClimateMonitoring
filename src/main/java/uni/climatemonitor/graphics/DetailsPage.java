@@ -1,0 +1,69 @@
+package uni.climatemonitor.graphics;
+
+import uni.climatemonitor.data.Location;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class DetailsPage {
+    private JLabel PlaceNameLbl;
+    private JButton CloseBtn;
+    private JPanel ParentPnl;
+    private JPanel LocationDetailPnl;
+    private JPanel DetailsPnl;
+    private JPanel ClosePnl;
+
+    /* location infos */
+    private Location location;
+
+    /* close info */
+    private static boolean toBeClosed = false;
+
+    public DetailsPage(){
+        /*
+            Callbacks for the detailed location page
+         */
+        /* close the detailed location page */
+
+        closeBtn_at_selection();
+    }
+
+    /*
+
+        UTILS
+
+     */
+    public void setUIPnl(Location loc){
+        location = loc;
+        PlaceNameLbl.setText(location.getAsciiName());
+    }
+
+
+    /*
+
+    CALLBACKS
+
+     */
+
+    /**
+     * Callback for the close button of the detailed location page
+     */
+    private void closeBtn_at_selection(){
+        CloseBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PlaceNameLbl.setText("");
+            }
+        });
+    }
+
+
+    /**
+     * main method
+     *
+     */
+    public static void main(String[] args) {
+        DetailsPage detailsPage = new DetailsPage();
+    }
+}
