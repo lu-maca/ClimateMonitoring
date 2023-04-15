@@ -4,13 +4,13 @@ import java.util.HashMap;
 public class ClimateParams {
     private String ascii_name;
     private String state;
-    private float[] wind;
-    private float[] humidity;
-    private float[] pressure;
-    private float[] temperature;
-    private float[] rainfall;
-    private float[] glacier_alt;
-    private float[] glacier_mass;
+    private String[] wind;
+    private String[] humidity;
+    private String[] pressure;
+    private String[] temperature;
+    private String[] rainfall;
+    private String[] glacier_alt;
+    private String[] glacier_mass;
     private int tot_measure;
     private String geonameID;
     private String notes;
@@ -25,25 +25,25 @@ public class ClimateParams {
                     this.state = o.get(key).toString();
                     break;
                 case "wind":
-                    this.wind = unpackStringToFloat(o.get(key).toString());
+                    this.wind = unpackStringToStringArray(o.get(key).toString());
                     break;
                 case "humidity":
-                    this.humidity = unpackStringToFloat(o.get(key).toString());
+                    this.humidity = unpackStringToStringArray(o.get(key).toString());
                     break;
                 case "pressure":
-                    this.pressure = unpackStringToFloat(o.get(key).toString());
+                    this.pressure = unpackStringToStringArray(o.get(key).toString());
                     break;
                 case "temperature":
-                    this.temperature = unpackStringToFloat(o.get(key).toString());
+                    this.temperature = unpackStringToStringArray(o.get(key).toString());
                     break;
                 case "rainfall":
-                    this.rainfall = unpackStringToFloat(o.get(key).toString());
+                    this.rainfall = unpackStringToStringArray(o.get(key).toString());
                     break;
                 case "glacier_alt":
-                    this.glacier_alt = unpackStringToFloat(o.get(key).toString());
+                    this.glacier_alt = unpackStringToStringArray(o.get(key).toString());
                     break;
                 case "glacier_mass":
-                    this.glacier_mass = unpackStringToFloat(o.get(key).toString());
+                    this.glacier_mass = unpackStringToStringArray(o.get(key).toString());
                     break;
                 case "tot_measure":
                     this.tot_measure = Math.toIntExact((long) o.get(key));
@@ -58,40 +58,40 @@ public class ClimateParams {
         }
     }
 
-    private float[] unpackStringToFloat(String s){
+    private String[] unpackStringToStringArray(String s){
         String sWithoutBrackets = s.replaceAll("\\[|\\]", "");
         String[] split = sWithoutBrackets.split(",");
-        float[] out = new float[2];
-        out[0] = Float.parseFloat(split[0]);
-        out[1] = Float.parseFloat(split[1]);
+        String[] out = new String[2];
+        out[0] = split[0];
+        out[1] = split[1];
         return out;
     }
 
-    public float[] getGlacier_alt() {
+    public String[] getGlacier_alt() {
         return glacier_alt;
     }
 
-    public float[] getHumidity() {
+    public String[] getHumidity() {
         return humidity;
     }
 
-    public float[] getGlacier_mass() {
+    public String[] getGlacier_mass() {
         return glacier_mass;
     }
 
-    public float[] getPressure() {
+    public String[] getPressure() {
         return pressure;
     }
 
-    public float[] getRainfall() {
+    public String[] getRainfall() {
         return rainfall;
     }
 
-    public float[] getTemperature() {
+    public String[] getTemperature() {
         return temperature;
     }
 
-    public float[] getWind() {
+    public String[] getWind() {
         return wind;
     }
 

@@ -15,11 +15,13 @@ public class DetailsPage {
     private JPanel DetailsPnl;
     private JPanel ClosePnl;
     private JPanel PlaceNamePnl;
-    private JLabel MostRecentLbl;
-    private JLabel AverageLbl;
     private JLabel WindMostRecentValueLbl;
     private JPanel WindPnl;
     private JLabel WindAverageValueLbl;
+    private JPanel ParametersContainer;
+    private JPanel Humidity;
+    private JLabel HumidityMostRecentValueLbl;
+    private JLabel HumidityAverageValueLbl;
 
     /* location infos */
     private Location location;
@@ -43,6 +45,15 @@ public class DetailsPage {
         location = loc;
         params = par;
         PlaceNameLbl.setText(location.getAsciiName());
+
+        /* set wind */
+        setLblValues(WindMostRecentValueLbl, par.getWind()[0], WindAverageValueLbl, par.getWind()[1]);
+        setLblValues(HumidityMostRecentValueLbl, par.getHumidity()[0], HumidityAverageValueLbl, par.getHumidity()[1]);
+    }
+
+    private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
+        current.setText(currentValue + " / 5");
+        average.setText(averageValue + " / 5");
     }
 
 
