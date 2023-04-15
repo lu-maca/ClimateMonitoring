@@ -5,13 +5,15 @@
     <constraints>
       <xy x="20" y="20" width="1020" height="414"/>
     </constraints>
-    <properties/>
+    <properties>
+      <preferredSize width="1100" height="600"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="a5a09" binding="MainPnl" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <foreground color="-12960964"/>
@@ -111,7 +113,7 @@
                 </children>
               </grid>
               <grid id="c73c6" binding="ButtonsPnl" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
+                <margin top="0" left="20" bottom="0" right="0"/>
                 <constraints border-constraint="Center"/>
                 <properties/>
                 <border type="none"/>
@@ -153,7 +155,7 @@
               </grid>
             </children>
           </grid>
-          <grid id="36ec7" binding="AboutPnl" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+          <grid id="36ec7" binding="AboutPnl" layout-manager="FlowLayout" hgap="0" vgap="5" flow-align="1">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false">
                 <preferred-size width="88" height="185"/>
@@ -167,12 +169,14 @@
                 <properties>
                   <borderPainted value="false"/>
                   <contentAreaFilled value="false"/>
+                  <horizontalAlignment value="2"/>
+                  <horizontalTextPosition value="0"/>
                   <text value="About"/>
                 </properties>
               </component>
             </children>
           </grid>
-          <grid id="1dd68" binding="SearchPnl" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="1dd68" binding="SearchPnl" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -194,21 +198,6 @@
                   <opaque value="true"/>
                   <selectedTextColor color="-5460810"/>
                   <text value="Type a place..."/>
-                </properties>
-              </component>
-              <hspacer id="c1c46">
-                <constraints>
-                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
-              <component id="9d770" class="javax.swing.JButton" binding="searchBtn">
-                <constraints>
-                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <borderPainted value="true"/>
-                  <contentAreaFilled value="false"/>
-                  <text value="Search"/>
                 </properties>
               </component>
               <vspacer id="bfdb8">

@@ -22,6 +22,12 @@ public class DetailsPage {
     private JPanel Humidity;
     private JLabel HumidityMostRecentValueLbl;
     private JLabel HumidityAverageValueLbl;
+    private JPanel Pressure;
+    private JLabel PressureMostRecentValueLbl;
+    private JLabel PressureAverageValueLbl;
+    private JPanel ColumnsPnl;
+    private JLabel AverageTitleLbl;
+    private JLabel MostRecentTitleLbl;
 
     /* location infos */
     private Location location;
@@ -44,11 +50,15 @@ public class DetailsPage {
     public void setUIPnl(Location loc, ClimateParams par){
         location = loc;
         params = par;
-        PlaceNameLbl.setText(location.getAsciiName());
+        PlaceNameLbl.setText(location.toString());
+        AverageTitleLbl.setText("Average (on a total of " + par.getTot_measure() + " detections)");
 
         /* set wind */
         setLblValues(WindMostRecentValueLbl, par.getWind()[0], WindAverageValueLbl, par.getWind()[1]);
+        /* set humidity */
         setLblValues(HumidityMostRecentValueLbl, par.getHumidity()[0], HumidityAverageValueLbl, par.getHumidity()[1]);
+        /* set pressure */
+        setLblValues(PressureMostRecentValueLbl, par.getPressure()[0], PressureAverageValueLbl, par.getPressure()[1]);
     }
 
     private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
