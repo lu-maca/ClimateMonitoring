@@ -15,7 +15,6 @@ import java.util.Map;
  */
 public class LocationsFileHandler extends FileHandler {
     private ArrayList<Location> locationsList = new ArrayList<>();
-    private Map<String, ArrayList<Location>> stateMap = new HashMap<String, ArrayList<Location>>();
 
     public LocationsFileHandler(String fileName){
         super(fileName);
@@ -27,13 +26,6 @@ public class LocationsFileHandler extends FileHandler {
      */
     public ArrayList<Location> getLocationsList(){
         return locationsList;
-    }
-
-    /**
-     * getter for stateMap
-     */
-    public Map<String, ArrayList<Location>> getStateMap(){
-        return stateMap;
     }
 
     /**
@@ -59,14 +51,6 @@ public class LocationsFileHandler extends FileHandler {
             while ((nextRecord = csvReader.readNext()) != null) {
                 Location tmpLoc = new Location(nextRecord);
                 locationsList.add(tmpLoc);
-                /* create the state map */
-                ArrayList<Location> tmpLocList = stateMap.get(tmpLoc.getState());
-                if (tmpLocList == null){
-                    tmpLocList = new ArrayList<Location>();
-                    stateMap.put(tmpLoc.getState(), tmpLocList);
-                }
-                tmpLocList.add(tmpLoc);
-
             }
         }
         catch (Exception e) {
@@ -74,17 +58,11 @@ public class LocationsFileHandler extends FileHandler {
         }
     }
 
+
     /**
      * test
      */
     public static void main(String[] args) {
-        LocationsFileHandler f = new LocationsFileHandler("./data/monitoring_coordinates.data");
-        f.readFile();
-        ArrayList<Location> l = f.getLocationsList();
-        Map<String, ArrayList<Location>> m = f.getStateMap();
 
-        for (Map.Entry<String, ArrayList<Location>> entry : m.entrySet()){
-            System.out.println(entry.getKey() + "/" + entry.getValue());
-        }
     }
 }

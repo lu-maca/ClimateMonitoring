@@ -1,5 +1,7 @@
 package uni.climatemonitor.graphics;
 
+import org.json.simple.parser.ParseException;
+import uni.climatemonitor.data.ClimateParams;
 import uni.climatemonitor.data.GeoData;
 import uni.climatemonitor.data.Location;
 import uni.climatemonitor.generics.Constants;
@@ -11,6 +13,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class MainPage {
@@ -43,7 +46,7 @@ public class MainPage {
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
 
-    public MainPage() {
+    public MainPage() throws ParseException, IOException {
         /* set the logo */
         ImageIcon iconLogo = new ImageIcon(Constants.LOGO_PATH_S);
         Logo.setIcon(iconLogo);
@@ -51,7 +54,7 @@ public class MainPage {
 
         /* set initial search list and its gui options */
         searchListModel = new DefaultListModel<>();
-        for (Location elem : geoData.getGeoLocationsRawList()) {
+        for (Location elem : geoData.getGeoLocationsList()) {
             searchListModel.addElement(elem);
         }
         SearchList.setModel(searchListModel);
@@ -178,7 +181,7 @@ public class MainPage {
             }
 
             public void filterModel(String filter) {
-                for (Location l : geoData.getGeoLocationsRawList()) {
+                for (Location l : geoData.getGeoLocationsList()) {
                     if (!l.toString().contains(filter)) {
                         if (searchListModel.contains(l)) {
                             searchListModel.removeElement(l);
@@ -196,7 +199,8 @@ public class MainPage {
 
 
     /**
-     * Callback for selection of a location on the location list
+     * Callback for selection of a location on the location list (with a
+     * double click)
      */
     private void searchList_at_selection(){
         SearchList.addMouseListener(new MouseAdapter() {
@@ -204,8 +208,19 @@ public class MainPage {
                 if (evt.getClickCount() == 2) {
                     UtilsSingleton utils = UtilsSingleton.getInstance();
                     clickedElement = (Location) SearchList.getSelectedValue();
+
+                    /*
+                    * get the climate parameters for the clicked element filtering
+                    * between the climate params structure through the geoname ID (that
+                    * is unique); if the climate params for the clicked place does not
+                    * exist, it means that no operator has inserted it: in this case a
+                    * null object will be passed to the details panel and will be handled
+                    * by the details panel itself.
+                     */
+                    ClimateParams climateParams = geoData.getClimateParamsFor(clickedElement.getGeonameID());
+
+                    utils.DetailsPnl.setUIPnl(clickedElement, climateParams);
                     utils.switchPage("Location Details Page");
-                    utils.DetailsPnl.setUIPnl(clickedElement);
 
                     typeAPlaceTextField.setText("");
                     utils.textFieldExit(typeAPlaceTextField, "Type a place...");

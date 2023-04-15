@@ -1,5 +1,6 @@
 package uni.climatemonitor.graphics;
 
+import uni.climatemonitor.data.ClimateParams;
 import uni.climatemonitor.data.Location;
 
 import javax.swing.*;
@@ -17,6 +18,7 @@ public class DetailsPage {
 
     /* location infos */
     private Location location;
+    private ClimateParams params;
 
     public DetailsPage(){
         /*
@@ -32,9 +34,12 @@ public class DetailsPage {
         UTILS
 
      */
-    public void setUIPnl(Location loc){
+    public void setUIPnl(Location loc, ClimateParams par){
         location = loc;
+        params = par;
         PlaceNameLbl.setText(location.getAsciiName());
+
+
     }
 
 

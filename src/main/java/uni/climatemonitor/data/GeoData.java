@@ -1,46 +1,50 @@
 package uni.climatemonitor.data;
 
+import org.json.simple.parser.ParseException;
 import uni.climatemonitor.generics.Constants;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
 public class GeoData {
-    private ArrayList<Location> geoLocationsRawList;
-    private Map<String, ArrayList<Location>> geoStateMap;
+    /* files */
+    private LocationsFileHandler geoFile;
+    private ClimateParametersFileHandler climateInfoFile;
+    /* locations and climate params */
+    private ArrayList<Location> geoLocationsList;
+    private ArrayList<ClimateParams> climateParamsList;
 
-    public GeoData() {
+    public GeoData() throws ParseException, IOException {
+        geoFile = new LocationsFileHandler(Constants.MONITORING_COORDS_S);
+        climateInfoFile = new ClimateParametersFileHandler(Constants.CLIMATE_PARAMS_S);
+
+        /* climate parameters */
+        getClimateParams();
+
         /* geographical locations file */
         getGeographicalLocations();
     }
 
-    private void getGeographicalLocations(){
-        LocationsFileHandler geoFile = new LocationsFileHandler(Constants.MONITORING_COORDS_S);
-        geoFile.readFile();
-        geoLocationsRawList = geoFile.getLocationsList();
-        geoStateMap = geoFile.getStateMap();
-
+    private void getClimateParams() throws ParseException, IOException {
+        climateInfoFile.readFile();
+        climateParamsList = climateInfoFile.getCities();
     }
 
-    public ArrayList<Location> getGeoLocationsRawList(){ return geoLocationsRawList; }
+    private void getGeographicalLocations(){
+        geoFile.readFile();
+        geoLocationsList = geoFile.getLocationsList();
+    }
 
-    public Location searchLocationFromName(String searchedString){
-        /* name has the following structure:
-            ascii_name, state (ST), coordinates
-           We use the state as first filter to access geoStateMap key
-           and searching the ascii_name between the values associated to this key
-         */
-
-        String[] splitString = searchedString.split(",");
-        String stateName = splitString[1].trim();
-        String ascii_name = splitString[0].trim();
-
-        ArrayList<Location> tmpStateArray = geoStateMap.get(stateName);
-        for (Location l : tmpStateArray){
-            if (l.getAsciiName().equals(ascii_name)){
-                return l;
+    public ClimateParams getClimateParamsFor(String geonameID){
+        for (ClimateParams cp : climateParamsList){
+            if (cp.getGeonameID().equals(geonameID)){
+                return cp;
             }
         }
         return null;
     }
+
+    public ArrayList<Location> getGeoLocationsList(){ return geoLocationsList; }
+
 }

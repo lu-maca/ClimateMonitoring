@@ -89,4 +89,9 @@ public class Location {
      * ascii_name getter
      */
     public String getAsciiName(){ return asciiName; }
+
+    /**
+     * geoname_id getter
+     */
+    public String getGeonameID(){ return geonameID; }
 }
