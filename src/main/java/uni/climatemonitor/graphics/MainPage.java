@@ -65,6 +65,8 @@ public class MainPage {
             Callbacks for the main page
          */
 
+        /* main panel visibility check; if not visible, reset everything needs to be reset here*/
+        MainPnl_at_visibility_change();
         /* perform a search action when clicking the search button */
         searchBtn_at_click();
         /* Location search methods:
@@ -98,6 +100,28 @@ public class MainPage {
      CALLBACKS
 
      */
+
+    /**
+     * At visibility change of the main panel, perform some reset actions,
+     * for example:
+     *  - remove the visibility of the suggestion list
+     *  - remove the login popup
+     */
+    private void MainPnl_at_visibility_change(){
+        MainPnl.addHierarchyListener(new HierarchyListener() {
+            @Override
+            public void hierarchyChanged(HierarchyEvent e)
+            {
+                JComponent component = (JComponent)e.getSource();
+                if ((HierarchyEvent.SHOWING_CHANGED & e.getChangeFlags()) != 0
+                        &&  component.isShowing()){
+                    SearchListPnl.setVisible(false);
+                    LoginPnl.setVisible(false);
+                }
+            }
+        });
+    };
+
 
     /**
      * Callback for About button push. Open the dialog with some info
@@ -154,46 +178,49 @@ public class MainPage {
 
 
     /**
-     * This is the callback for a change in the location text edit field
+     * Definition of the action listener for the search field
      */
-    private void placeTextField_at_text_change(){
-        typeAPlaceTextField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void changedUpdate(DocumentEvent e) { }
+    private DocumentListener searchFieldListener = new DocumentListener() {
+        @Override
+        public void changedUpdate(DocumentEvent e) { }
 
-            @Override
-            public void insertUpdate(DocumentEvent e){ suggest(); }
+        @Override
+        public void insertUpdate(DocumentEvent e){ suggest(); }
 
-            @Override
-            public void removeUpdate(DocumentEvent e){ suggest(); }
+        @Override
+        public void removeUpdate(DocumentEvent e){ suggest(); }
 
-            public void suggest() {
-                String searched = typeAPlaceTextField.getText();
-                if (searched.length() == 1){
-                    SearchListPnl.setVisible(true);
-                } else if (searched.length() == 0){
-                    SearchListPnl.setVisible(false);
-                    SearchList.clearSelection();
-                }
-                /* filter places */
-                filterModel(searched);
+        public void suggest() {
+            String searched = typeAPlaceTextField.getText();
+            if (searched.length() == 1){
+                SearchListPnl.setVisible(true);
+            } else if (searched.length() == 0){
+                SearchListPnl.setVisible(false);
+                SearchList.clearSelection();
             }
+            /* filter places */
+            filterModel(searched);
+        }
 
-            public void filterModel(String filter) {
-                for (Location l : geoData.getGeoLocationsList()) {
-                    if (!l.toString().contains(filter)) {
-                        if (searchListModel.contains(l)) {
-                            searchListModel.removeElement(l);
-                        }
-                    } else {
-                        if (!searchListModel.contains(l)) {
-                            searchListModel.addElement(l);
-                        }
+        public void filterModel(String filter) {
+            for (Location l : geoData.getGeoLocationsList()) {
+                if (!l.toString().contains(filter)) {
+                    if (searchListModel.contains(l)) {
+                        searchListModel.removeElement(l);
+                    }
+                } else {
+                    if (!searchListModel.contains(l)) {
+                        searchListModel.addElement(l);
                     }
                 }
             }
-
-        });
+        }
+    };
+    /**
+     * This is the callback for a change in the location text edit field
+     */
+    private void placeTextField_at_text_change(){
+        typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
     }
 
 
@@ -218,8 +245,13 @@ public class MainPage {
                      */
                     ClimateParams climateParams = geoData.getClimateParamsFor(clickedElement.getGeonameID());
 
-                    utils.DetailsPnl.setUIPnl(clickedElement, climateParams);
+                    /* remove the document listener to avoid infinite loops */
+                    typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
+                    typeAPlaceTextField.setText("");
+                    utils.textFieldExit(typeAPlaceTextField, "Type a place...");
+                    typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
 
+                    utils.DetailsPnl.setUIPnl(clickedElement, climateParams);
                     utils.switchPage("Location Details Page");
                 }
             }
