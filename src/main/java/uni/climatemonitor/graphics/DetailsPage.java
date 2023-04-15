@@ -28,6 +28,18 @@ public class DetailsPage {
     private JPanel ColumnsPnl;
     private JLabel AverageTitleLbl;
     private JLabel MostRecentTitleLbl;
+    private JPanel Temperature;
+    private JLabel TemperatureMostRecentValueLbl;
+    private JLabel TemperatureAverageValueLbl;
+    private JPanel Rainfall;
+    private JLabel RainfallMostRecentValueLbl;
+    private JLabel RainfallAverageValueLbl;
+    private JPanel GlaciersAlt;
+    private JLabel GAltMostRecentValueLbl;
+    private JLabel GAltAverageValueLbl;
+    private JPanel GlaciersMass;
+    private JLabel GMassMostRecentValueLbl;
+    private JLabel GMassAverageValueLbl;
 
     /* location infos */
     private Location location;
@@ -51,6 +63,8 @@ public class DetailsPage {
         location = loc;
         params = par;
         PlaceNameLbl.setText(location.toString());
+
+        if (par == null){ return; }
         AverageTitleLbl.setText("Average (on a total of " + par.getTot_measure() + " detections)");
 
         /* set wind */
@@ -59,6 +73,14 @@ public class DetailsPage {
         setLblValues(HumidityMostRecentValueLbl, par.getHumidity()[0], HumidityAverageValueLbl, par.getHumidity()[1]);
         /* set pressure */
         setLblValues(PressureMostRecentValueLbl, par.getPressure()[0], PressureAverageValueLbl, par.getPressure()[1]);
+        /* set temperature */
+        setLblValues(TemperatureMostRecentValueLbl, par.getTemperature()[0], TemperatureAverageValueLbl, par.getTemperature()[1]);
+        /* set rainfall */
+        setLblValues(RainfallMostRecentValueLbl, par.getRainfall()[0], RainfallAverageValueLbl, par.getRainfall()[1]);
+        /* set glaciers alt */
+        setLblValues(GAltMostRecentValueLbl, par.getGlacier_alt()[0], GAltAverageValueLbl, par.getGlacier_alt()[1]);
+        /* set glaciers mass */
+        setLblValues(GMassMostRecentValueLbl, par.getGlacier_mass()[0], GMassAverageValueLbl, par.getGlacier_mass()[1]);
     }
 
     private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){

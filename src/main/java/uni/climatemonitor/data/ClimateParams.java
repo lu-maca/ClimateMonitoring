@@ -39,10 +39,10 @@ public class ClimateParams {
                 case "rainfall":
                     this.rainfall = unpackStringToStringArray(o.get(key).toString());
                     break;
-                case "glacier_alt":
+                case "glaciers_alt":
                     this.glacier_alt = unpackStringToStringArray(o.get(key).toString());
                     break;
-                case "glacier_mass":
+                case "glaciers_mass":
                     this.glacier_mass = unpackStringToStringArray(o.get(key).toString());
                     break;
                 case "tot_measure":
