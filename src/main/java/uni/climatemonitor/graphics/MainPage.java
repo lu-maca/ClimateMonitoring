@@ -51,7 +51,6 @@ public class MainPage {
         ImageIcon iconLogo = new ImageIcon(Constants.LOGO_PATH_S);
         Logo.setIcon(iconLogo);
 
-
         /* set initial search list and its gui options */
         searchListModel = new DefaultListModel<>();
         for (Location elem : geoData.getGeoLocationsList()) {

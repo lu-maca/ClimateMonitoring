@@ -15,6 +15,11 @@ public class DetailsPage {
     private JPanel DetailsPnl;
     private JPanel ClosePnl;
     private JPanel PlaceNamePnl;
+    private JLabel MostRecentLbl;
+    private JLabel AverageLbl;
+    private JLabel WindMostRecentValueLbl;
+    private JPanel WindPnl;
+    private JLabel WindAverageValueLbl;
 
     /* location infos */
     private Location location;
@@ -38,8 +43,6 @@ public class DetailsPage {
         location = loc;
         params = par;
         PlaceNameLbl.setText(location.getAsciiName());
-
-
     }
 
 
@@ -59,7 +62,7 @@ public class DetailsPage {
                 UtilsSingleton utils = UtilsSingleton.getInstance();
                 utils.switchPage("Main Page");
                 PlaceNameLbl.setText("");
-            }
+             }
         });
     }
 
