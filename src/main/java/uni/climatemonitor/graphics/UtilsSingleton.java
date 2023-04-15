@@ -1,5 +1,6 @@
 package uni.climatemonitor.graphics;
 
+import uni.climatemonitor.Main;
 import uni.climatemonitor.generics.Constants;
 
 import javax.swing.*;
@@ -13,20 +14,24 @@ import java.awt.*;
 public final class UtilsSingleton {
     private JPanel PageSelector;
     public DetailsPage DetailsPnl;
+    private static JPanel MainPanel;
+    private static JPanel DetailsPanel;
     private static UtilsSingleton INSTANCE = null;
 
-    private UtilsSingleton(JPanel pageSelector, DetailsPage detailsPnl){
+    private UtilsSingleton(JPanel pageSelector, DetailsPage detailsPnl, JPanel details, JPanel main){
         PageSelector = pageSelector;
         DetailsPnl = detailsPnl;
+        MainPanel = main;
+        DetailsPanel = details;
     }
 
     public static UtilsSingleton getInstance(){
         return INSTANCE;
     }
 
-    public static UtilsSingleton getInstance(JPanel pageSelector, DetailsPage detailsPnl){
+    public static UtilsSingleton getInstance(JPanel pageSelector, DetailsPage detailsPnl, JPanel details, JPanel main){
         if (INSTANCE == null){
-            INSTANCE = new UtilsSingleton(pageSelector, detailsPnl);
+            INSTANCE = new UtilsSingleton(pageSelector, detailsPnl, details, main);
         }
         return INSTANCE;
     }
@@ -34,6 +39,18 @@ public final class UtilsSingleton {
     public void switchPage(String pageName){
         CardLayout cl = (CardLayout)(PageSelector.getLayout());
         cl.show(PageSelector, pageName);
+
+        switch (pageName){
+            case "Main Page":
+                MainPanel.setFocusable(true);
+                DetailsPanel.setFocusable(false);
+                break;
+            case "Location Details Page":
+                MainPanel.setFocusable(false);
+                DetailsPanel.setFocusable(true);
+                break;
+        }
+
     }
 
     public void textFieldEnter(JTextField f, String oldString){

@@ -219,10 +219,8 @@ public class MainPage {
                     ClimateParams climateParams = geoData.getClimateParamsFor(clickedElement.getGeonameID());
 
                     utils.DetailsPnl.setUIPnl(clickedElement, climateParams);
-                    utils.switchPage("Location Details Page");
 
-                    typeAPlaceTextField.setText("");
-                    utils.textFieldExit(typeAPlaceTextField, "Type a place...");
+                    utils.switchPage("Location Details Page");
                 }
             }
         });
