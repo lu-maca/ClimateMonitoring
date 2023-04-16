@@ -11,7 +11,7 @@ package uni.climatemonitor.data;
         import java.util.List;
 
 public class OperatorsFileHandler extends FileHandler{
-    private ArrayList<Operator> operators;
+    private ArrayList<Operator> operators = new ArrayList<>();
 
     public OperatorsFileHandler(String fileName){
         super(fileName);

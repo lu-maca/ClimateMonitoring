@@ -15,16 +15,22 @@ public class Operator {
             switch (key.toString()) {
                 case "name":
                     this.name = o.get(key).toString();
+                    break;
                 case "tax_code":
                     this.taxCode = o.get(key).toString();
+                    break;
                 case "email":
                     this.email = o.get(key).toString();
+                    break;
                 case "username":
                     this.username = o.get(key).toString();
+                    break;
                 case "password":
                     this.password = o.get(key).toString();
+                    break;
                 case "monitoring_center":
                     this.monitoringCenter = o.get(key).toString();
+                    break;
             }
         }
     }

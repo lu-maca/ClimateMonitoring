@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MonitoringCentersFileHandler extends FileHandler{
-    private ArrayList<MonitoringCenter> monitoringCenters;
+    private ArrayList<MonitoringCenter> monitoringCenters = new ArrayList<>();
 
     public MonitoringCentersFileHandler(String fileName){
         super(fileName);

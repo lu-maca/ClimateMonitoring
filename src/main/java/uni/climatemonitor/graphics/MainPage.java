@@ -1,6 +1,7 @@
 package uni.climatemonitor.graphics;
 
 import org.json.simple.parser.ParseException;
+import uni.climatemonitor.data.CentersData;
 import uni.climatemonitor.data.ClimateParams;
 import uni.climatemonitor.data.GeoData;
 import uni.climatemonitor.data.Location;
@@ -38,10 +39,13 @@ public class MainPage {
     private JScrollPane SearchListScrollPnl;
     private JList SearchList;
 
-    /* utilities */
+    /* utilities for locations */
     private DefaultListModel<Location> searchListModel;
     private GeoData geoData = new GeoData();
-    public Location clickedElement;
+    private Location clickedElement;
+    /* utilities for operators */
+    private CentersData centersData = new CentersData();
+
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
@@ -91,7 +95,6 @@ public class MainPage {
          */
         loginEnterBtn_at_click();
         loginExitBtn_at_click();
-
     }
 
     /*************************************************************
@@ -324,12 +327,14 @@ public class MainPage {
                     Otherwise, show again the login/register buttons
                     and warn the user for the wrong login request
                  */
-                boolean isValid = false;
+                String username = userLoginTextField.getText();
+                char[] pwd = pwdLoginTextField.getPassword();
+
+                boolean isValid = centersData.checkOperatorExistance(username, pwd);
                 if (isValid) {
-                    /* if the user exists... */
+                    /* if the user exists, operators features are shown */
                     LoginPnl.setVisible(false);
                 } else {
-
                     userLoginTextField.setBorder(new LineBorder(Color.RED, 3));
                     pwdLoginTextField.setBorder(new LineBorder(Color.RED, 3));
                 }

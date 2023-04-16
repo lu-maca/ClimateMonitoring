@@ -12,10 +12,13 @@ public class MonitoringCenter {
             switch (key.toString()) {
                 case "name":
                     this.name = o.get(key).toString();
+                    break;
                 case "address":
                     this.address = o.get(key).toString();
+                    break;
                 case "monitored_areas":
                     this.monitoredAreas = unpackStringToStringArray(o.get(key).toString());
+                    break;
             }
         }
     }
