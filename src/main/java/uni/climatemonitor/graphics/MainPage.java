@@ -188,6 +188,7 @@ public class MainPage {
         }
 
         public void filterModel(String filter) {
+            SearchListPnl.setVisible(true);
             for (Location l : geoData.getGeoLocationsList()) {
                 if (!l.toString().contains(filter)) {
                     if (searchListModel.contains(l)) {
@@ -198,6 +199,10 @@ public class MainPage {
                         searchListModel.addElement(l);
                     }
                 }
+            }
+            /* remove the list if it is empty*/
+            if (searchListModel.isEmpty()){
+                SearchListPnl.setVisible(false);
             }
         }
     };
