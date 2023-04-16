@@ -67,8 +67,7 @@ public class MainPage {
 
         /* main panel visibility check; if not visible, reset everything needs to be reset here*/
         MainPnl_at_visibility_change();
-        /* perform a search action when clicking the search button */
-//        searchBtn_at_click();
+
         /* Location search methods:
             - remove the text when selecting the search field
             - analyze text changes
@@ -139,20 +138,6 @@ public class MainPage {
             }
         });
     }
-
-
-    /**
-     * This is the callback of a push event on the Search button
-     *
-     */
-//    private void searchBtn_at_click(){
-//        searchBtn.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                /* perform here some action */
-//            }
-//        });
-//    }
 
 
     /**

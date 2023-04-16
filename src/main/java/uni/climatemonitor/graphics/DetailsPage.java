@@ -6,6 +6,8 @@ import uni.climatemonitor.data.Location;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 
 public class DetailsPage {
     private JLabel PlaceNameLbl;
@@ -41,7 +43,7 @@ public class DetailsPage {
     private JLabel GMassMostRecentValueLbl;
     private JLabel GMassAverageValueLbl;
 
-    /* location infos */
+    /* location info */
     private Location location;
     private ClimateParams params;
 
@@ -49,10 +51,13 @@ public class DetailsPage {
         /*
             Callbacks for the detailed location page
          */
-        /* close the detailed location page */
 
+        /* close the detailed location page */
         closeBtn_at_selection();
+        /* reset action when the page is closed */
+        DetailsPnl_at_visibility_change();
     }
+
 
     /*
 
@@ -94,6 +99,40 @@ public class DetailsPage {
     CALLBACKS
 
      */
+
+    /**
+     * When the details page is closed, perform some reset actions,
+     * for example:
+     *  - set climate params info to "?? / 5"
+     *
+     */
+    private void DetailsPnl_at_visibility_change(){
+        ParentPnl.addHierarchyListener(new HierarchyListener() {
+            @Override
+            public void hierarchyChanged(HierarchyEvent e)
+            {
+                JComponent component = (JComponent)e.getSource();
+                if ((HierarchyEvent.SHOWING_CHANGED & e.getChangeFlags()) != 0
+                        &&  ! component.isShowing()){
+                    AverageTitleLbl.setText("Average (no detection found)");
+                    /* set wind */
+                    setLblValues(WindMostRecentValueLbl, "??", WindAverageValueLbl, "??");
+                    /* set humidity */
+                    setLblValues(HumidityMostRecentValueLbl, "??", HumidityAverageValueLbl, "??");
+                    /* set pressure */
+                    setLblValues(PressureMostRecentValueLbl, "??", PressureAverageValueLbl, "??");
+                    /* set temperature */
+                    setLblValues(TemperatureMostRecentValueLbl, "??", TemperatureAverageValueLbl, "??");
+                    /* set rainfall */
+                    setLblValues(RainfallMostRecentValueLbl, "??", RainfallAverageValueLbl, "??");
+                    /* set glaciers alt */
+                    setLblValues(GAltMostRecentValueLbl, "??", GAltAverageValueLbl, "??");
+                    /* set glaciers mass */
+                    setLblValues(GMassMostRecentValueLbl, "??", GMassAverageValueLbl, "??");
+                }
+            }
+        });
+    };
 
     /**
      * Callback for the close button of the detailed location page
