@@ -177,7 +177,7 @@ public class MainPage {
 
         public void suggest() {
             String searched = typeAPlaceTextField.getText();
-            if (searched.length() == 1){
+            if (searched.length() > 0){
                 SearchListPnl.setVisible(true);
             } else if (searched.length() == 0){
                 SearchListPnl.setVisible(false);
@@ -188,7 +188,6 @@ public class MainPage {
         }
 
         public void filterModel(String filter) {
-            SearchListPnl.setVisible(true);
             for (Location l : geoData.getGeoLocationsList()) {
                 if (!l.toString().contains(filter)) {
                     if (searchListModel.contains(l)) {
