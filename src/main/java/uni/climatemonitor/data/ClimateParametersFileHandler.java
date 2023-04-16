@@ -16,7 +16,7 @@ public class ClimateParametersFileHandler extends FileHandler {
         super(fileName);
     }
 
-    public ArrayList<ClimateParams> getCities() {
+    public ArrayList<ClimateParams> getClimateParams() {
         return climateParams;
     }
 
@@ -38,7 +38,6 @@ public class ClimateParametersFileHandler extends FileHandler {
         for (int i = 0; i< ll.size(); i++){
             climateParams.add(new ClimateParams((HashMap) ll.get(i)));
         }
-
     }
 
     public static void main(String[] args) throws IOException, ParseException {

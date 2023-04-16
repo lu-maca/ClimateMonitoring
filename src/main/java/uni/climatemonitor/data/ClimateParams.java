@@ -61,10 +61,8 @@ public class ClimateParams {
     private String[] unpackStringToStringArray(String s){
         String sWithoutBrackets = s.replaceAll("\\[|\\]", "");
         String[] split = sWithoutBrackets.split(",");
-        String[] out = new String[2];
-        out[0] = split[0];
-        out[1] = split[1];
-        return out;
+
+        return split;
     }
 
     public String[] getGlacier_alt() {

@@ -17,7 +17,7 @@ public class MainWindow extends JFrame {
     private JPanel MainPnl;
 
     /* utils */
-    private UtilsSingleton u = UtilsSingleton.getInstance(MainMExC, DetailsPnl, MainParentPnl, DetailsParentPnl);
+    private UtilsSingleton u = UtilsSingleton.getInstance(MainMExC, DetailsPnl);
 
     /**
      * Constructor for the MainWindow object.

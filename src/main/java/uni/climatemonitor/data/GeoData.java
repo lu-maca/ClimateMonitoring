@@ -28,7 +28,7 @@ public class GeoData {
 
     private void getClimateParams() throws ParseException, IOException {
         climateInfoFile.readFile();
-        climateParamsList = climateInfoFile.getCities();
+        climateParamsList = climateInfoFile.getClimateParams();
     }
 
     private void getGeographicalLocations(){
