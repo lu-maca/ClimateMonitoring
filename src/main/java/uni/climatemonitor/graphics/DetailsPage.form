@@ -3,10 +3,10 @@
   <grid id="27dc6" binding="ParentPnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="1100" height="600"/>
+      <xy x="20" y="20" width="1100" height="800"/>
     </constraints>
     <properties>
-      <minimumSize width="1100" height="600"/>
+      <minimumSize width="1100" height="800"/>
     </properties>
     <border type="none"/>
     <children>
@@ -22,7 +22,7 @@
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="800" height="-1"/>
+                <preferred-size width="800" height="800"/>
               </grid>
             </constraints>
             <properties/>
@@ -69,22 +69,58 @@
                     <properties/>
                     <border type="none" title="Wind" title-justification="1"/>
                     <children>
-                      <component id="8ccf6" class="javax.swing.JLabel" binding="WindMostRecentValueLbl">
+                      <grid id="3cac3" binding="WindMostRecentPnl" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
-                      <component id="45e48" class="javax.swing.JLabel" binding="WindAverageValueLbl">
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="8ccf6" class="javax.swing.JLabel" binding="WindMostRecentValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                          <component id="63604" class="javax.swing.JComboBox" binding="WindComboBox">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <maximumRowCount value="5"/>
+                              <model>
+                                <item value="1"/>
+                                <item value="2"/>
+                                <item value="3"/>
+                                <item value="4"/>
+                                <item value="5"/>
+                              </model>
+                              <visible value="false"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="9d756" binding="WindAveragePnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="45e48" class="javax.swing.JLabel" binding="WindAverageValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                   <grid id="a3307" binding="Humidity" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -95,22 +131,58 @@
                     <properties/>
                     <border type="none" title="Humidity" title-justification="1"/>
                     <children>
-                      <component id="9d45" class="javax.swing.JLabel" binding="HumidityMostRecentValueLbl">
+                      <grid id="e2a3b" binding="HumidityMostRecentPnl" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
-                      <component id="b5388" class="javax.swing.JLabel" binding="HumidityAverageValueLbl">
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="9d45" class="javax.swing.JLabel" binding="HumidityMostRecentValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                          <component id="7d19" class="javax.swing.JComboBox" binding="HumidityComboBox">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <maximumRowCount value="5"/>
+                              <model>
+                                <item value="1"/>
+                                <item value="2"/>
+                                <item value="3"/>
+                                <item value="4"/>
+                                <item value="5"/>
+                              </model>
+                              <visible value="false"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="e9c2" binding="HumidityAveragePnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="b5388" class="javax.swing.JLabel" binding="HumidityAverageValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                   <grid id="f52e0" binding="Pressure" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -121,22 +193,58 @@
                     <properties/>
                     <border type="none" title="Pressure" title-justification="1"/>
                     <children>
-                      <component id="4e68c" class="javax.swing.JLabel" binding="PressureMostRecentValueLbl">
+                      <grid id="2c818" binding="PressureMostRecentPnl" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
-                      <component id="cba43" class="javax.swing.JLabel" binding="PressureAverageValueLbl">
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="4e68c" class="javax.swing.JLabel" binding="PressureMostRecentValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                          <component id="a32df" class="javax.swing.JComboBox" binding="PressureComboBox">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <maximumRowCount value="5"/>
+                              <model>
+                                <item value="1"/>
+                                <item value="2"/>
+                                <item value="3"/>
+                                <item value="4"/>
+                                <item value="5"/>
+                              </model>
+                              <visible value="false"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="baf71" binding="PressureAveragePnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="cba43" class="javax.swing.JLabel" binding="PressureAverageValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                   <grid id="37bf0" binding="ColumnsPnl" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -173,22 +281,58 @@
                     <properties/>
                     <border type="none" title="Temperature" title-justification="1"/>
                     <children>
-                      <component id="6625d" class="javax.swing.JLabel" binding="TemperatureMostRecentValueLbl">
+                      <grid id="d2e44" binding="TemperatureMostRecentPnl" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
-                      <component id="c03cd" class="javax.swing.JLabel" binding="TemperatureAverageValueLbl">
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="6625d" class="javax.swing.JLabel" binding="TemperatureMostRecentValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                          <component id="64bfd" class="javax.swing.JComboBox" binding="TemperatureComboBox">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <maximumRowCount value="5"/>
+                              <model>
+                                <item value="1"/>
+                                <item value="2"/>
+                                <item value="3"/>
+                                <item value="4"/>
+                                <item value="5"/>
+                              </model>
+                              <visible value="false"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="ed25f" binding="TemperatureAveragePnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="c03cd" class="javax.swing.JLabel" binding="TemperatureAverageValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                   <grid id="4ed16" binding="Rainfall" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -199,22 +343,58 @@
                     <properties/>
                     <border type="none" title="Rainfall" title-justification="1"/>
                     <children>
-                      <component id="1964e" class="javax.swing.JLabel" binding="RainfallMostRecentValueLbl">
+                      <grid id="830a4" binding="RainfallMostRecentPnl" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
-                      <component id="17c10" class="javax.swing.JLabel" binding="RainfallAverageValueLbl">
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="1964e" class="javax.swing.JLabel" binding="RainfallMostRecentValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                          <component id="f674" class="javax.swing.JComboBox" binding="RainfallComboBox">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <maximumRowCount value="5"/>
+                              <model>
+                                <item value="1"/>
+                                <item value="2"/>
+                                <item value="3"/>
+                                <item value="4"/>
+                                <item value="5"/>
+                              </model>
+                              <visible value="false"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="c1638" binding="RainfallAveragePnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="17c10" class="javax.swing.JLabel" binding="RainfallAverageValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                   <grid id="4d0ba" binding="GlaciersAlt" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -225,22 +405,58 @@
                     <properties/>
                     <border type="none" title="Glaciers Altitude" title-justification="1"/>
                     <children>
-                      <component id="17d58" class="javax.swing.JLabel" binding="GAltMostRecentValueLbl">
+                      <grid id="51541" binding="GAltMostRecentPnl" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
-                      <component id="3cba0" class="javax.swing.JLabel" binding="GAltAverageValueLbl">
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="17d58" class="javax.swing.JLabel" binding="GAltMostRecentValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                          <component id="fd390" class="javax.swing.JComboBox" binding="GAltComboBox">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <maximumRowCount value="5"/>
+                              <model>
+                                <item value="1"/>
+                                <item value="2"/>
+                                <item value="3"/>
+                                <item value="4"/>
+                                <item value="5"/>
+                              </model>
+                              <visible value="false"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="14cc3" binding="GAltAveragePnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="3cba0" class="javax.swing.JLabel" binding="GAltAverageValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                   <grid id="c8ba8" binding="GlaciersMass" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -249,24 +465,60 @@
                       <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title="Glaciers Altitude" title-justification="1"/>
+                    <border type="none" title="Glaciers Mass" title-justification="1"/>
                     <children>
-                      <component id="a09ea" class="javax.swing.JLabel" binding="GMassMostRecentValueLbl">
+                      <grid id="d310e" binding="GMassMostRecentPnl" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
-                      <component id="4f92d" class="javax.swing.JLabel" binding="GMassAverageValueLbl">
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="a09ea" class="javax.swing.JLabel" binding="GMassMostRecentValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                          <component id="57204" class="javax.swing.JComboBox" binding="GMassComboBox">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <maximumRowCount value="5"/>
+                              <model>
+                                <item value="1"/>
+                                <item value="2"/>
+                                <item value="3"/>
+                                <item value="4"/>
+                                <item value="5"/>
+                              </model>
+                              <visible value="false"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="a2d3f" binding="GMassAveragePnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties>
-                          <text value="?? / 5"/>
-                        </properties>
-                      </component>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="4f92d" class="javax.swing.JLabel" binding="GMassAverageValueLbl">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="?? / 5"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
                     </children>
                   </grid>
                 </children>

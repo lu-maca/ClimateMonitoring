@@ -1,5 +1,6 @@
 package uni.climatemonitor.graphics;
 
+import jdk.jshell.execution.Util;
 import uni.climatemonitor.data.ClimateParams;
 import uni.climatemonitor.data.Location;
 
@@ -42,6 +43,27 @@ public class DetailsPage {
     private JPanel GlaciersMass;
     private JLabel GMassMostRecentValueLbl;
     private JLabel GMassAverageValueLbl;
+    private JPanel WindAveragePnl;
+    private JPanel WindMostRecentPnl;
+    private JComboBox WindComboBox;
+    private JPanel HumidityMostRecentPnl;
+    private JPanel HumidityAveragePnl;
+    private JComboBox HumidityComboBox;
+    private JPanel PressureMostRecentPnl;
+    private JPanel PressureAveragePnl;
+    private JComboBox PressureComboBox;
+    private JPanel TemperatureMostRecentPnl;
+    private JPanel TemperatureAveragePnl;
+    private JComboBox TemperatureComboBox;
+    private JPanel RainfallMostRecentPnl;
+    private JPanel RainfallAveragePnl;
+    private JComboBox RainfallComboBox;
+    private JPanel GAltMostRecentPnl;
+    private JPanel GAltAveragePnl;
+    private JComboBox GAltComboBox;
+    private JPanel GMassMostRecentPnl;
+    private JPanel GMassAveragePnl;
+    private JComboBox GMassComboBox;
 
     /* location info */
     private Location location;
@@ -69,7 +91,27 @@ public class DetailsPage {
         params = par;
         PlaceNameLbl.setText(location.toString());
 
+        /* if an operator is logged in, set the combo box for detections and remove current values */
+        if (UtilsSingleton.getInstance().getWhoisLoggedIn() != null) {
+            setOperatorsView();
+            MostRecentTitleLbl.setText("Set new detection");
+        }
+
+        /* if climate params is null (i.e. when no detections are found, maintain the "unknown" state */
         if (par == null){ return; }
+
+        /* if history on climate params exists, set it */
+        setParamsFromHistory(par);
+    }
+
+    private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
+        if (UtilsSingleton.getInstance().getWhoisLoggedIn() != null) {
+            current.setText(currentValue + " / 5");
+        }
+        average.setText(averageValue + " / 5");
+    }
+
+    private void setParamsFromHistory(ClimateParams par){
         AverageTitleLbl.setText("Average (on a total of " + par.getTot_measure() + " detections)");
 
         /* set wind */
@@ -88,11 +130,22 @@ public class DetailsPage {
         setLblValues(GMassMostRecentValueLbl, par.getGlacier_mass()[0], GMassAverageValueLbl, par.getGlacier_mass()[1]);
     }
 
-    private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
-        current.setText(currentValue + " / 5");
-        average.setText(averageValue + " / 5");
+    private void setOperatorsView(){
+        WindMostRecentValueLbl.setVisible(false);
+        HumidityMostRecentValueLbl.setVisible(false);
+        PressureMostRecentValueLbl.setVisible(false);
+        TemperatureMostRecentValueLbl.setVisible(false);
+        RainfallMostRecentValueLbl.setVisible(false);
+        GAltMostRecentValueLbl.setVisible(false);
+        GMassMostRecentValueLbl.setVisible(false);
+        WindComboBox.setVisible(true);
+        HumidityComboBox.setVisible(true);
+        PressureComboBox.setVisible(true);
+        TemperatureComboBox.setVisible(true);
+        RainfallComboBox.setVisible(true);
+        GAltComboBox.setVisible(true);
+        GMassComboBox.setVisible(true);
     }
-
 
     /*
 
@@ -115,6 +168,7 @@ public class DetailsPage {
                 if ((HierarchyEvent.SHOWING_CHANGED & e.getChangeFlags()) != 0
                         &&  ! component.isShowing()){
                     AverageTitleLbl.setText("Average (no detection found)");
+                    MostRecentTitleLbl.setText("Most recent detection");
                     /* set wind */
                     setLblValues(WindMostRecentValueLbl, "??", WindAverageValueLbl, "??");
                     /* set humidity */
