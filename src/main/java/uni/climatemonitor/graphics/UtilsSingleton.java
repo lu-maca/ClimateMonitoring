@@ -1,6 +1,6 @@
 package uni.climatemonitor.graphics;
 
-import uni.climatemonitor.Main;
+import uni.climatemonitor.data.Operator;
 import uni.climatemonitor.generics.Constants;
 
 import javax.swing.*;
@@ -13,12 +13,16 @@ import java.awt.*;
  */
 public final class UtilsSingleton {
     private JPanel PageSelector;
-    public DetailsPage DetailsPnl;
+    private DetailsPage DetailsPnl;
+    private boolean isLoggedIn;
+    private Operator whoisLoggedIn;
     private static UtilsSingleton INSTANCE = null;
 
     private UtilsSingleton(JPanel pageSelector, DetailsPage detailsPnl){
         PageSelector = pageSelector;
         DetailsPnl = detailsPnl;
+        whoisLoggedIn = null;
+        isLoggedIn = false;
     }
 
     public static UtilsSingleton getInstance(){
@@ -56,5 +60,37 @@ public final class UtilsSingleton {
         }
     }
 
+    public DetailsPage getDetailsPnl() {
+        return DetailsPnl;
+    }
 
+    private boolean isSomeoneAlreadyLoggedIn() throws Exception {
+        if (isLoggedIn && whoisLoggedIn != null){
+            return true;
+        } else if (isLoggedIn) {
+            throw new Exception("Someone is logged in, but I don't know who it is.");
+        }
+        return false;
+    }
+
+    public boolean giveAccessTo(Operator operator){
+        try{
+            if (isSomeoneAlreadyLoggedIn()){
+                return false;
+            }
+            whoisLoggedIn = operator;
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
+    public Operator getWhoisLoggedIn() {
+        return whoisLoggedIn;
+    }
+
+    public void logoutUser(){
+        whoisLoggedIn = null;
+        isLoggedIn = false;
+    }
 }

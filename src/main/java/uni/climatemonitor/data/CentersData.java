@@ -35,15 +35,13 @@ public class CentersData {
         monitoringCentersList = monitoringCentersFile.getMonitoringCenters();
     }
 
-    public boolean checkOperatorExistance(String username, char[] pwd){
+    public Operator checkOperatorExistance(String username, char[] pwd){
         String pwd_s = new String(pwd);
-        System.out.println(username + " " + pwd_s);
         for (Operator o : operatorsList){
-            System.out.println(o.getUsername() +  " " + o.getPassword());
             if (o.getUsername().equals(username) && o.getPassword().equals(pwd_s)){
-                return true;
+                return o;
             }
         }
-        return false;
+        return null;
     }
 }

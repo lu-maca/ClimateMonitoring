@@ -1,10 +1,7 @@
 package uni.climatemonitor.graphics;
 
 import org.json.simple.parser.ParseException;
-import uni.climatemonitor.data.CentersData;
-import uni.climatemonitor.data.ClimateParams;
-import uni.climatemonitor.data.GeoData;
-import uni.climatemonitor.data.Location;
+import uni.climatemonitor.data.*;
 import uni.climatemonitor.generics.Constants;
 
 import javax.swing.*;
@@ -38,6 +35,11 @@ public class MainPage {
     private JPanel SearchListPnl;
     private JScrollPane SearchListScrollPnl;
     private JList SearchList;
+    private JButton LogoutBtn;
+    private JLabel WelcomeBackLbl;
+    private JPanel LoginBtnsPnl;
+    private JPanel LogoutBtnPnl;
+    private JPanel UserMessagesPnl;
 
     /* utilities for locations */
     private DefaultListModel<Location> searchListModel;
@@ -64,6 +66,9 @@ public class MainPage {
         SearchList.setVisibleRowCount(16);
         SearchList.setBackground(new Color(238, 238, 238));
         SearchListPnl.setVisible(false);
+
+        /* set initial login */
+        LogoutBtnPnl.setVisible(false);
 
         /*
             Callbacks for the main page
@@ -95,6 +100,20 @@ public class MainPage {
          */
         loginEnterBtn_at_click();
         loginExitBtn_at_click();
+        /* restore main page to initial condition when logout button is pushed */
+        logoutBtn_at_click();
+    }
+
+    /*************************************************************
+
+     UTILS
+
+     */
+
+    private void setLoggedInMode(boolean isLoggedInModeActive){
+        LoginBtnsPnl.setVisible(!isLoggedInModeActive);
+        LogoutBtnPnl.setVisible(isLoggedInModeActive);
+        UserMessagesPnl.setVisible(isLoggedInModeActive);
     }
 
     /*************************************************************
@@ -243,7 +262,7 @@ public class MainPage {
                     utils.textFieldExit(typeAPlaceTextField, "Type a place...");
                     typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
 
-                    utils.DetailsPnl.setUIPnl(clickedElement, climateParams);
+                    utils.getDetailsPnl().setUIPnl(clickedElement, climateParams);
                     utils.switchPage("Location Details Page");
                 }
             }
@@ -330,10 +349,14 @@ public class MainPage {
                 String username = userLoginTextField.getText();
                 char[] pwd = pwdLoginTextField.getPassword();
 
-                boolean isValid = centersData.checkOperatorExistance(username, pwd);
-                if (isValid) {
-                    /* if the user exists, operators features are shown */
+                /* if the user exists and nobody else is logged in, operators features are shown */
+                Operator operator = centersData.checkOperatorExistance(username, pwd);
+                UtilsSingleton utils = UtilsSingleton.getInstance();
+                if (operator != null && utils.giveAccessTo(operator)) {
+                    WelcomeBackLbl.setText("Welcome back, " + operator);
                     LoginPnl.setVisible(false);
+                    ButtonsPnl.setVisible(true);
+                    setLoggedInMode(true);
                 } else {
                     userLoginTextField.setBorder(new LineBorder(Color.RED, 3));
                     pwdLoginTextField.setBorder(new LineBorder(Color.RED, 3));
@@ -344,7 +367,7 @@ public class MainPage {
 
 
     /**
-     *
+     * Callback for exit button in the login form
      */
     private void loginExitBtn_at_click() {
         loginExitButton.addActionListener(new ActionListener(){
@@ -354,6 +377,30 @@ public class MainPage {
                 LoginPnl.setVisible(false);
                 ButtonsPnl.setVisible(true);
 
+                /* restore initial configuration for username and pwd */
+                userLoginTextField.setText(Constants.USERNAME_S);
+                userLoginTextField.setForeground(new Color(187,187,187));
+                pwdLoginTextField.setText(Constants.PWD_S);
+                pwdLoginTextField.setForeground(new Color(187,187,187));
+            }
+        });
+    }
+
+
+    /**
+     * Callback for logout button for logged in users
+     */
+    private void logoutBtn_at_click() {
+        LogoutBtn.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /* reset all the info for logged in users */
+                UtilsSingleton utils = UtilsSingleton.getInstance();
+                utils.logoutUser();
+
+                /* gui elements */
+                setLoggedInMode(false);
+                ButtonsPnl.setVisible(true);
                 /* restore initial configuration for username and pwd */
                 userLoginTextField.setText(Constants.USERNAME_S);
                 userLoginTextField.setForeground(new Color(187,187,187));

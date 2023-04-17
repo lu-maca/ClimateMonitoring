@@ -1,6 +1,6 @@
 package uni.climatemonitor.generics;
 
-public class Constants {
+public final class Constants {
     /* some generic constants for graphics */
     public static final String APP_NAME_S = "ClimaScope";
     public static final String LOGO_PATH_S = "./src/main/images/logo.png";

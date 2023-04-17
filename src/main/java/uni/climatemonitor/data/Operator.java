@@ -58,4 +58,7 @@ public class Operator {
     public String getUsername() {
         return username;
     }
+
+    @Override
+    public String toString(){ return getUsername(); }
 }
