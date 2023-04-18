@@ -139,6 +139,7 @@ public class MainPage {
                         &&  component.isShowing()){
                     SearchListPnl.setVisible(false);
                     LoginPnl.setVisible(false);
+                    ButtonsPnl.setVisible(true);
                 }
             }
         });

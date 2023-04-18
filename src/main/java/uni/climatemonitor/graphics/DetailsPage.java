@@ -2,7 +2,6 @@ package uni.climatemonitor.graphics;
 
 import uni.climatemonitor.data.ClimateParams;
 import uni.climatemonitor.data.Location;
-import uni.climatemonitor.data.MonitoringCenter;
 import uni.climatemonitor.data.Operator;
 
 import javax.swing.*;
@@ -68,6 +67,9 @@ public class DetailsPage {
     private JComboBox GMassComboBox;
     private JTextArea NotesTextArea;
     private JPanel NotesPnl;
+    private JButton SaveBtn;
+    private JPanel NotesSurrounderPnl;
+    private JPanel ButtonsPnl;
 
     /* location info */
     private Location location;
@@ -200,6 +202,8 @@ public class DetailsPage {
         setLblValues(GAltMostRecentValueLbl, "??", GAltAverageValueLbl, "??");
         /* set glaciers mass */
         setLblValues(GMassMostRecentValueLbl, "??", GMassAverageValueLbl, "??");
+        /* notes field */
+        NotesTextArea.setText("");
         /* if operator mode, reset all the combo boxes */
         if (UtilsSingleton.getInstance().getWhoisLoggedIn() != null) {
             WindComboBox.setSelectedIndex(0);

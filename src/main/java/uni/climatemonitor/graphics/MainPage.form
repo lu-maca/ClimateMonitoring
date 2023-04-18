@@ -157,6 +157,7 @@
                           <contentAreaFilled value="false"/>
                           <hideActionText value="false"/>
                           <horizontalAlignment value="0"/>
+                          <horizontalTextPosition value="11"/>
                           <iconTextGap value="4"/>
                           <inheritsPopupMenu value="false"/>
                           <label value="Login"/>
