@@ -58,6 +58,7 @@ public class LocationsFileHandler extends FileHandler {
         }
     }
 
+    public void writeFile(){}
 
     /**
      * test

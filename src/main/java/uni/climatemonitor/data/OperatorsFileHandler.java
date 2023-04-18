@@ -36,4 +36,7 @@ public class OperatorsFileHandler extends FileHandler{
             operators.add(new Operator((HashMap) ll.get(i)));
         }
     }
+
+    @Override
+    public void writeFile(){}
 }

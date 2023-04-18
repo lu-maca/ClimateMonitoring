@@ -36,6 +36,11 @@ public class GeoData {
         geoLocationsList = geoFile.getLocationsList();
     }
 
+    public void addClimateParams(ClimateParams climateParams){
+        climateParamsList.add(climateParams);
+        climateInfoFile.addClimateParams(climateParams);
+    }
+
     public ClimateParams getClimateParamsFor(String geonameID){
         for (ClimateParams cp : climateParamsList){
             if (cp.getGeonameID().equals(geonameID)){
@@ -46,5 +51,9 @@ public class GeoData {
     }
 
     public ArrayList<Location> getGeoLocationsList(){ return geoLocationsList; }
+
+    public void updateClimateParamsFile(){
+        climateInfoFile.writeFile();
+    }
 
 }

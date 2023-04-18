@@ -36,4 +36,7 @@ public class MonitoringCentersFileHandler extends FileHandler{
             monitoringCenters.add(new MonitoringCenter((HashMap) ll.get(i)));
         }
     }
+
+    @Override
+    public void writeFile(){}
 }

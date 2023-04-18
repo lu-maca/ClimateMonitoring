@@ -84,15 +84,29 @@ public class DetailsPage {
         closeBtn_at_selection();
         /* reset action when the page is closed */
         DetailsPnl_at_visibility_change();
+        /* at save button click */
+        saveBtn_at_selection();
     }
 
 
-    /*
+    /*********************************************************
 
         UTILS
 
      */
-    public boolean isOperatorEnabledForThisPlace(){
+    private String averageBetween(String previousAverage, int currentDetection, int totDetections){
+        float average;
+        float prevAve;
+        float N = (float) totDetections;
+        prevAve = Float.parseFloat(previousAverage);
+        average = ( N - 1.0f ) * prevAve + (float) currentDetection;
+        average = average / N;
+
+        String averageStr = String.format("%.2f", average);
+        return averageStr;
+    }
+
+    private boolean isOperatorEnabledForThisPlace(){
         /* local variables */
         boolean out = false;
         UtilsSingleton utils = UtilsSingleton.getInstance();
@@ -141,7 +155,7 @@ public class DetailsPage {
     }
 
     private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
-        if (UtilsSingleton.getInstance().getWhoisLoggedIn() != null) {
+        if (UtilsSingleton.getInstance().getWhoisLoggedIn() == null) {
             current.setText(currentValue + " / 5");
         }
         average.setText(averageValue + " / 5");
@@ -236,7 +250,7 @@ public class DetailsPage {
         }
     }
 
-    /*
+    /***************************************************************
 
     CALLBACKS
 
@@ -262,6 +276,7 @@ public class DetailsPage {
         });
     };
 
+
     /**
      * Callback for the close button of the detailed location page
      */
@@ -273,6 +288,95 @@ public class DetailsPage {
                 utils.switchPage("Main Page");
                 PlaceNameLbl.setText("");
              }
+        });
+    }
+
+
+    /**
+     * Callback for the save button:
+     *  - get all the values
+     *  - compute new averages
+     *  - overwrite the ClimateParams object
+     *  - overwrite the file
+     *  - close the page
+     */
+    private void saveBtn_at_selection(){
+        SaveBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /* local variables */
+                UtilsSingleton utils = UtilsSingleton.getInstance();
+                String windAverage;
+                String humidityAverage;
+                String pressureAverage;
+                String temperatureAverage;
+                String rainfallAverage;
+                String galtAverage;
+                String gmassAverage;
+
+                /* get values */
+                int windItem = WindComboBox.getSelectedIndex() + 1;
+                int humidityItem = HumidityComboBox.getSelectedIndex() + 1;
+                int pressureItem = PressureComboBox.getSelectedIndex() + 1;
+                int temperatureItem = TemperatureComboBox.getSelectedIndex() + 1;
+                int rainfallItem = RainfallComboBox.getSelectedIndex() + 1;
+                int galtItem = GAltComboBox.getSelectedIndex() + 1;
+                int gmassItem = GMassComboBox.getSelectedIndex() + 1;
+
+                /* compute new averages:
+                * note that tot_measure is increased by 1,
+                * because when you call the save button
+                * you are actually adding a new measurement */
+                if (params != null) {
+                    params.setTot_measure(params.getTot_measure() + 1);
+                    windAverage = averageBetween(params.getWind()[1], windItem, params.getTot_measure());
+                    humidityAverage = averageBetween(params.getHumidity()[1], humidityItem, params.getTot_measure());
+                    pressureAverage = averageBetween(params.getPressure()[1], pressureItem, params.getTot_measure());
+                    temperatureAverage = averageBetween(params.getTemperature()[1], temperatureItem, params.getTot_measure());
+                    rainfallAverage = averageBetween(params.getRainfall()[1], rainfallItem, params.getTot_measure());
+                    galtAverage = averageBetween(params.getGlacier_alt()[1], galtItem, params.getTot_measure());
+                    gmassAverage = averageBetween(params.getGlacier_mass()[1], gmassItem, params.getTot_measure());
+                } else {
+                    /* this is the case in which the climate params object for the selected location does not exist. In this case,
+                    * create it */
+                    params = new ClimateParams();
+                    params.setTot_measure(1);
+                    params.setGeonameID(location.getGeonameID());
+                    params.setState(location.getState());
+                    params.setAscii_name(location.getAsciiName());
+                    windAverage = String.format("%d", windItem);
+                    humidityAverage = String.format("%d", humidityItem);
+                    pressureAverage = String.format("%d", pressureItem);
+                    temperatureAverage = String.format("%d", temperatureItem);
+                    rainfallAverage = String.format("%d", rainfallItem);
+                    galtAverage = String.format("%d", galtItem);
+                    gmassAverage = String.format("%d", gmassItem);
+                    utils.getGeoData().addClimateParams(params);
+                }
+
+                /* overwrite the object */
+                String[] newWind = {String.format("%d", windItem), windAverage };
+                params.setWind(newWind);
+                String[] newHumidity = {String.format("%d", humidityItem), humidityAverage };
+                params.setHumidity(newHumidity);
+                String[] newPress = {String.format("%d", pressureItem), pressureAverage };
+                params.setPressure(newPress);
+                String[] newTemp = {String.format("%d", temperatureItem), temperatureAverage };
+                params.setTemperature(newTemp);
+                String[] newRain = {String.format("%d", rainfallItem), rainfallAverage };
+                params.setRainfall(newRain);
+                String[] newGalt = {String.format("%d", galtItem), galtAverage };
+                params.setGlacier_alt(newGalt);
+                String[] newGmass = {String.format("%d", gmassItem), gmassAverage };
+                params.setGlacier_mass(newGmass);
+                /* set also new notes */
+                params.setNotes(NotesTextArea.getText());
+
+                utils.getGeoData().updateClimateParamsFile();
+
+                utils.switchPage("Main Page");
+                PlaceNameLbl.setText("");
+            }
         });
     }
 
