@@ -108,6 +108,7 @@ public class DetailsPage {
                 }
             }
         }
+
         return out;
     }
 
@@ -168,6 +169,7 @@ public class DetailsPage {
     }
 
     private void setOperatorsView(){
+        /* set combo boxes visible */
         WindMostRecentValueLbl.setVisible(false);
         HumidityMostRecentValueLbl.setVisible(false);
         PressureMostRecentValueLbl.setVisible(false);
@@ -183,6 +185,8 @@ public class DetailsPage {
         GAltComboBox.setVisible(true);
         GMassComboBox.setVisible(true);
         NotesTextArea.setEditable(true);
+        /* make save button visible */
+        SaveBtn.setVisible(true);
     }
 
     private void resetAllFields(){
@@ -213,6 +217,22 @@ public class DetailsPage {
             RainfallComboBox.setSelectedIndex(0);
             GAltComboBox.setSelectedIndex(0);
             GMassComboBox.setSelectedIndex(0);
+            WindMostRecentValueLbl.setVisible(true);
+            HumidityMostRecentValueLbl.setVisible(true);
+            PressureMostRecentValueLbl.setVisible(true);
+            TemperatureMostRecentValueLbl.setVisible(true);
+            RainfallMostRecentValueLbl.setVisible(true);
+            GAltMostRecentValueLbl.setVisible(true);
+            GMassMostRecentValueLbl.setVisible(true);
+            WindComboBox.setVisible(false);
+            HumidityComboBox.setVisible(false);
+            PressureComboBox.setVisible(false);
+            TemperatureComboBox.setVisible(false);
+            RainfallComboBox.setVisible(false);
+            GAltComboBox.setVisible(false);
+            GMassComboBox.setVisible(false);
+            SaveBtn.setVisible(false);
+            NotesTextArea.setEditable(false);
         }
     }
 
