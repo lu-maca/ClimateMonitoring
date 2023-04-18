@@ -22,7 +22,7 @@ public class ClimateParametersFileHandler extends FileHandler {
     }
 
     public void addClimateParams(ClimateParams climateParams) {
-        this.climateParamsList.add(climateParams);
+        climateParamsList.add(climateParams);
     }
 
     /**
@@ -53,8 +53,8 @@ public class ClimateParametersFileHandler extends FileHandler {
             int size = climateParamsList.size();
             int i = 0;
             for (ClimateParams cp : climateParamsList){
-                i++;
                 if (i == size){ break; }
+                i++;
                 myWriter.write(cp.toJson());
                 myWriter.write(",");
                 myWriter.write("\n");

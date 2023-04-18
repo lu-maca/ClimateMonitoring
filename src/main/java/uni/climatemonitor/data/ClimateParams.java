@@ -187,9 +187,6 @@ public class ClimateParams {
     }
 
     public String toJson() {
-        System.out.println(wind.toString());
-        System.out.println("[" + wind[0] + "," + wind[1] + "]");
-        String windS = "[" + wind[0] + "," + wind[1] + "]";
         String out = String.format(
                 jsonFormat,
                 state,

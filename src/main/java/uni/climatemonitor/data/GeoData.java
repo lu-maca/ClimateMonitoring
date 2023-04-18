@@ -11,38 +11,20 @@ public class GeoData {
     /* files */
     private LocationsFileHandler geoFile;
     private ClimateParametersFileHandler climateInfoFile;
-    /* locations and climate params */
-    private ArrayList<Location> geoLocationsList;
-    private ArrayList<ClimateParams> climateParamsList;
 
     public GeoData() throws ParseException, IOException {
         geoFile = new LocationsFileHandler(Constants.MONITORING_COORDS_S);
         climateInfoFile = new ClimateParametersFileHandler(Constants.CLIMATE_PARAMS_S);
-
-        /* climate parameters */
-        getClimateParams();
-
-        /* geographical locations file */
-        getGeographicalLocations();
-    }
-
-    private void getClimateParams() throws ParseException, IOException {
-        climateInfoFile.readFile();
-        climateParamsList = climateInfoFile.getClimateParams();
-    }
-
-    private void getGeographicalLocations(){
         geoFile.readFile();
-        geoLocationsList = geoFile.getLocationsList();
+        climateInfoFile.readFile();
     }
 
     public void addClimateParams(ClimateParams climateParams){
-        climateParamsList.add(climateParams);
         climateInfoFile.addClimateParams(climateParams);
     }
 
     public ClimateParams getClimateParamsFor(String geonameID){
-        for (ClimateParams cp : climateParamsList){
+        for (ClimateParams cp : climateInfoFile.getClimateParams()){
             if (cp.getGeonameID().equals(geonameID)){
                 return cp;
             }
@@ -50,7 +32,7 @@ public class GeoData {
         return null;
     }
 
-    public ArrayList<Location> getGeoLocationsList(){ return geoLocationsList; }
+    public ArrayList<Location> getGeoLocationsList(){ return geoFile.getLocationsList(); }
 
     public void updateClimateParamsFile(){
         climateInfoFile.writeFile();
