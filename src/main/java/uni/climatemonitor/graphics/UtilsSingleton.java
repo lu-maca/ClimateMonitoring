@@ -1,10 +1,14 @@
 package uni.climatemonitor.graphics;
 
+import org.json.simple.parser.ParseException;
+import uni.climatemonitor.data.CentersData;
+import uni.climatemonitor.data.GeoData;
 import uni.climatemonitor.data.Operator;
 import uni.climatemonitor.generics.Constants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 /**
  * Singleton for utilities
@@ -16,25 +20,34 @@ public final class UtilsSingleton {
     private DetailsPage DetailsPnl;
     private boolean isLoggedIn;
     private Operator whoisLoggedIn;
+    private GeoData geoData;
+    private CentersData centersData;
+
     private static UtilsSingleton INSTANCE = null;
 
-    private UtilsSingleton(JPanel pageSelector, DetailsPage detailsPnl){
-        PageSelector = pageSelector;
-        DetailsPnl = detailsPnl;
+    private UtilsSingleton() throws ParseException, IOException {
+        geoData = new GeoData();
+        centersData  = new CentersData();
         whoisLoggedIn = null;
         isLoggedIn = false;
     }
 
     public static UtilsSingleton getInstance(){
-        return INSTANCE;
-    }
-
-    public static UtilsSingleton getInstance(JPanel pageSelector, DetailsPage detailsPnl){
         if (INSTANCE == null){
-            INSTANCE = new UtilsSingleton(pageSelector, detailsPnl);
+            try {
+                INSTANCE = new UtilsSingleton();
+            } catch (Exception e){
+                System.out.println(e);
+            }
         }
         return INSTANCE;
     }
+
+    public void setMExCInfo(JPanel pageSelector, DetailsPage detailsPnl){
+        PageSelector = pageSelector;
+        DetailsPnl = detailsPnl;
+    }
+
 
     public void switchPage(String pageName){
         CardLayout cl = (CardLayout)(PageSelector.getLayout());
@@ -92,5 +105,13 @@ public final class UtilsSingleton {
     public void logoutUser(){
         whoisLoggedIn = null;
         isLoggedIn = false;
+    }
+
+    public CentersData getCentersData() {
+        return centersData;
+    }
+
+    public GeoData getGeoData() {
+        return geoData;
     }
 }

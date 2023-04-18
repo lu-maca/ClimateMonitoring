@@ -1,10 +1,12 @@
 package uni.climatemonitor.graphics;
 
-import jdk.jshell.execution.Util;
 import uni.climatemonitor.data.ClimateParams;
 import uni.climatemonitor.data.Location;
+import uni.climatemonitor.data.MonitoringCenter;
+import uni.climatemonitor.data.Operator;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
@@ -64,6 +66,8 @@ public class DetailsPage {
     private JPanel GMassMostRecentPnl;
     private JPanel GMassAveragePnl;
     private JComboBox GMassComboBox;
+    private JTextArea NotesTextArea;
+    private JPanel NotesPnl;
 
     /* location info */
     private Location location;
@@ -86,22 +90,51 @@ public class DetailsPage {
         UTILS
 
      */
+    public boolean isOperatorEnabledForThisPlace(){
+        /* local variables */
+        boolean out = false;
+        UtilsSingleton utils = UtilsSingleton.getInstance();
+
+        Operator operator = utils.getWhoisLoggedIn();
+
+        if (operator != null){
+            String[] monitoredAreas = utils.getCentersData().getEnabledLocationsForOperator(operator);
+            /* check if the chosen location is in the areas monitored by the operator logged in */
+            for (String s : monitoredAreas){
+                if (s.equals(location.getGeonameID())) {
+                    out = true;
+                }
+            }
+        }
+        return out;
+    }
+
     public void setUIPnl(Location loc, ClimateParams par){
         location = loc;
         params = par;
         PlaceNameLbl.setText(location.toString());
 
         /* if an operator is logged in, set the combo box for detections and remove current values */
-        if (UtilsSingleton.getInstance().getWhoisLoggedIn() != null) {
+        if (isOperatorEnabledForThisPlace()) {
             setOperatorsView();
             MostRecentTitleLbl.setText("Set new detection");
         }
+
+        /* set notes area settings */
+        NotesTextArea.setBackground(new Color(238, 238, 238));
+        NotesTextArea.setSize(new Dimension(200, 150));
+        NotesTextArea.setMaximumSize(new Dimension(200, 150));
+        NotesTextArea.setMinimumSize(new Dimension(200, 150));
+        NotesPnl.setSize(new Dimension(200,150));
+        NotesPnl.setMaximumSize(new Dimension(200,150));
+        NotesPnl.setMinimumSize(new Dimension(200,150));
 
         /* if climate params is null (i.e. when no detections are found, maintain the "unknown" state */
         if (par == null){ return; }
 
         /* if history on climate params exists, set it */
-        setParamsFromHistory(par);
+        setParamsFromHistory();
+
     }
 
     private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
@@ -111,23 +144,25 @@ public class DetailsPage {
         average.setText(averageValue + " / 5");
     }
 
-    private void setParamsFromHistory(ClimateParams par){
-        AverageTitleLbl.setText("Average (on a total of " + par.getTot_measure() + " detections)");
+    private void setParamsFromHistory(){
+        AverageTitleLbl.setText("Average (on a total of " + params.getTot_measure() + " detections)");
 
         /* set wind */
-        setLblValues(WindMostRecentValueLbl, par.getWind()[0], WindAverageValueLbl, par.getWind()[1]);
+        setLblValues(WindMostRecentValueLbl, params.getWind()[0], WindAverageValueLbl, params.getWind()[1]);
         /* set humidity */
-        setLblValues(HumidityMostRecentValueLbl, par.getHumidity()[0], HumidityAverageValueLbl, par.getHumidity()[1]);
+        setLblValues(HumidityMostRecentValueLbl, params.getHumidity()[0], HumidityAverageValueLbl, params.getHumidity()[1]);
         /* set pressure */
-        setLblValues(PressureMostRecentValueLbl, par.getPressure()[0], PressureAverageValueLbl, par.getPressure()[1]);
+        setLblValues(PressureMostRecentValueLbl, params.getPressure()[0], PressureAverageValueLbl, params.getPressure()[1]);
         /* set temperature */
-        setLblValues(TemperatureMostRecentValueLbl, par.getTemperature()[0], TemperatureAverageValueLbl, par.getTemperature()[1]);
+        setLblValues(TemperatureMostRecentValueLbl, params.getTemperature()[0], TemperatureAverageValueLbl, params.getTemperature()[1]);
         /* set rainfall */
-        setLblValues(RainfallMostRecentValueLbl, par.getRainfall()[0], RainfallAverageValueLbl, par.getRainfall()[1]);
+        setLblValues(RainfallMostRecentValueLbl, params.getRainfall()[0], RainfallAverageValueLbl, params.getRainfall()[1]);
         /* set glaciers alt */
-        setLblValues(GAltMostRecentValueLbl, par.getGlacier_alt()[0], GAltAverageValueLbl, par.getGlacier_alt()[1]);
+        setLblValues(GAltMostRecentValueLbl, params.getGlacier_alt()[0], GAltAverageValueLbl, params.getGlacier_alt()[1]);
         /* set glaciers mass */
-        setLblValues(GMassMostRecentValueLbl, par.getGlacier_mass()[0], GMassAverageValueLbl, par.getGlacier_mass()[1]);
+        setLblValues(GMassMostRecentValueLbl, params.getGlacier_mass()[0], GMassAverageValueLbl, params.getGlacier_mass()[1]);
+        /* set notes */
+        NotesTextArea.setText(params.getNotes());
     }
 
     private void setOperatorsView(){
@@ -145,6 +180,36 @@ public class DetailsPage {
         RainfallComboBox.setVisible(true);
         GAltComboBox.setVisible(true);
         GMassComboBox.setVisible(true);
+        NotesTextArea.setEditable(true);
+    }
+
+    private void resetAllFields(){
+        AverageTitleLbl.setText("Average (no detection found)");
+        MostRecentTitleLbl.setText("Most recent detection");
+        /* set wind */
+        setLblValues(WindMostRecentValueLbl, "??", WindAverageValueLbl, "??");
+        /* set humidity */
+        setLblValues(HumidityMostRecentValueLbl, "??", HumidityAverageValueLbl, "??");
+        /* set pressure */
+        setLblValues(PressureMostRecentValueLbl, "??", PressureAverageValueLbl, "??");
+        /* set temperature */
+        setLblValues(TemperatureMostRecentValueLbl, "??", TemperatureAverageValueLbl, "??");
+        /* set rainfall */
+        setLblValues(RainfallMostRecentValueLbl, "??", RainfallAverageValueLbl, "??");
+        /* set glaciers alt */
+        setLblValues(GAltMostRecentValueLbl, "??", GAltAverageValueLbl, "??");
+        /* set glaciers mass */
+        setLblValues(GMassMostRecentValueLbl, "??", GMassAverageValueLbl, "??");
+        /* if operator mode, reset all the combo boxes */
+        if (UtilsSingleton.getInstance().getWhoisLoggedIn() != null) {
+            WindComboBox.setSelectedIndex(0);
+            HumidityComboBox.setSelectedIndex(0);
+            PressureComboBox.setSelectedIndex(0);
+            TemperatureComboBox.setSelectedIndex(0);
+            RainfallComboBox.setSelectedIndex(0);
+            GAltComboBox.setSelectedIndex(0);
+            GMassComboBox.setSelectedIndex(0);
+        }
     }
 
     /*
@@ -157,7 +222,7 @@ public class DetailsPage {
      * When the details page is closed, perform some reset actions,
      * for example:
      *  - set climate params info to "?? / 5"
-     *
+     *  - reset the combo boxes values when in operator mode
      */
     private void DetailsPnl_at_visibility_change(){
         ParentPnl.addHierarchyListener(new HierarchyListener() {
@@ -167,22 +232,7 @@ public class DetailsPage {
                 JComponent component = (JComponent)e.getSource();
                 if ((HierarchyEvent.SHOWING_CHANGED & e.getChangeFlags()) != 0
                         &&  ! component.isShowing()){
-                    AverageTitleLbl.setText("Average (no detection found)");
-                    MostRecentTitleLbl.setText("Most recent detection");
-                    /* set wind */
-                    setLblValues(WindMostRecentValueLbl, "??", WindAverageValueLbl, "??");
-                    /* set humidity */
-                    setLblValues(HumidityMostRecentValueLbl, "??", HumidityAverageValueLbl, "??");
-                    /* set pressure */
-                    setLblValues(PressureMostRecentValueLbl, "??", PressureAverageValueLbl, "??");
-                    /* set temperature */
-                    setLblValues(TemperatureMostRecentValueLbl, "??", TemperatureAverageValueLbl, "??");
-                    /* set rainfall */
-                    setLblValues(RainfallMostRecentValueLbl, "??", RainfallAverageValueLbl, "??");
-                    /* set glaciers alt */
-                    setLblValues(GAltMostRecentValueLbl, "??", GAltAverageValueLbl, "??");
-                    /* set glaciers mass */
-                    setLblValues(GMassMostRecentValueLbl, "??", GMassAverageValueLbl, "??");
+                    resetAllFields();
                 }
             }
         });

@@ -44,4 +44,15 @@ public class CentersData {
         }
         return null;
     }
+
+    public String[] getEnabledLocationsForOperator(Operator operator){
+        String monitoringCenter = operator.getMonitoringCenter();
+
+        for (MonitoringCenter m : monitoringCentersList){
+            if (m.getName().equals(monitoringCenter)){
+                return m.getMonitoredAreas();
+            }
+        }
+        return null;
+    }
 }

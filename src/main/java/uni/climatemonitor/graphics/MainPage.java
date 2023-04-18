@@ -1,5 +1,6 @@
 package uni.climatemonitor.graphics;
 
+import jdk.jshell.execution.Util;
 import org.json.simple.parser.ParseException;
 import uni.climatemonitor.data.*;
 import uni.climatemonitor.generics.Constants;
@@ -43,23 +44,23 @@ public class MainPage {
 
     /* utilities for locations */
     private DefaultListModel<Location> searchListModel;
-    private GeoData geoData = new GeoData();
+
     private Location clickedElement;
     /* utilities for operators */
-    private CentersData centersData = new CentersData();
 
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
 
-    public MainPage() throws ParseException, IOException {
+    public MainPage() {
         /* set the logo */
         ImageIcon iconLogo = new ImageIcon(Constants.LOGO_PATH_S);
         Logo.setIcon(iconLogo);
 
         /* set initial search list and its gui options */
         searchListModel = new DefaultListModel<>();
-        for (Location elem : geoData.getGeoLocationsList()) {
+        UtilsSingleton utils = UtilsSingleton.getInstance();
+        for (Location elem : utils.getGeoData().getGeoLocationsList()) {
             searchListModel.addElement(elem);
         }
         SearchList.setModel(searchListModel);
@@ -210,7 +211,8 @@ public class MainPage {
         }
 
         public void filterModel(String filter) {
-            for (Location l : geoData.getGeoLocationsList()) {
+            UtilsSingleton utils = UtilsSingleton.getInstance();
+            for (Location l : utils.getGeoData().getGeoLocationsList()) {
                 if (!l.toString().contains(filter)) {
                     if (searchListModel.contains(l)) {
                         searchListModel.removeElement(l);
@@ -254,7 +256,7 @@ public class MainPage {
                     * null object will be passed to the details panel and will be handled
                     * by the details panel itself.
                      */
-                    ClimateParams climateParams = geoData.getClimateParamsFor(clickedElement.getGeonameID());
+                    ClimateParams climateParams = utils.getGeoData().getClimateParamsFor(clickedElement.getGeonameID());
 
                     /* remove the document listener to avoid infinite loops */
                     typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
@@ -349,9 +351,10 @@ public class MainPage {
                 String username = userLoginTextField.getText();
                 char[] pwd = pwdLoginTextField.getPassword();
 
-                /* if the user exists and nobody else is logged in, operators features are shown */
-                Operator operator = centersData.checkOperatorExistance(username, pwd);
                 UtilsSingleton utils = UtilsSingleton.getInstance();
+                /* if the user exists and nobody else is logged in, operators features are shown */
+                Operator operator = utils.getCentersData().checkOperatorExistance(username, pwd);
+
                 if (operator != null && utils.giveAccessTo(operator)) {
                     WelcomeBackLbl.setText("Welcome back, " + operator);
                     LoginPnl.setVisible(false);
