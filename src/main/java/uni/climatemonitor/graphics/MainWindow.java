@@ -1,10 +1,12 @@
 package uni.climatemonitor.graphics;
 
+import org.json.simple.parser.ParseException;
 import uni.climatemonitor.generics.Constants;
 import uni.climatemonitor.graphics.UtilsSingleton;
 import uni.climatemonitor.graphics.DetailsPage;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class MainWindow extends JFrame {
 
@@ -17,15 +19,15 @@ public class MainWindow extends JFrame {
     private JPanel MainPnl;
 
     /* utils */
-    private UtilsSingleton u = UtilsSingleton.getInstance(MainMExC, DetailsPnl, MainParentPnl, DetailsParentPnl);
+    private UtilsSingleton u;
+
 
     /**
      * Constructor for the MainWindow object.
      */
-    public MainWindow() {
+    public MainWindow() throws ParseException, IOException {
         setTitle(Constants.APP_NAME_S);
-        setSize(1100,600);
-        setMinimumSize(new Dimension(1100,600));
+        setSize(1100,650);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -38,6 +40,10 @@ public class MainWindow extends JFrame {
         MainMExC.add(MainParentPnl, "Main Page");
         MainMExC.add(DetailsParentPnl, "Location Details Page");
 
+        /* utils */
+        u = UtilsSingleton.getInstance();
+        u.setMExCInfo( MainMExC, DetailsPnl);
+
         /* set visibility */
         setContentPane(MainWindow);
         setVisible(true);
@@ -48,7 +54,7 @@ public class MainWindow extends JFrame {
      * main method
      *
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException, IOException {
         uni.climatemonitor.graphics.MainWindow mainWindow = new MainWindow();
     }
 

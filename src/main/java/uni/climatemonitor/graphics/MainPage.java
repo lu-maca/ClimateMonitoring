@@ -1,9 +1,8 @@
 package uni.climatemonitor.graphics;
 
+import jdk.jshell.execution.Util;
 import org.json.simple.parser.ParseException;
-import uni.climatemonitor.data.ClimateParams;
-import uni.climatemonitor.data.GeoData;
-import uni.climatemonitor.data.Location;
+import uni.climatemonitor.data.*;
 import uni.climatemonitor.generics.Constants;
 
 import javax.swing.*;
@@ -37,29 +36,40 @@ public class MainPage {
     private JPanel SearchListPnl;
     private JScrollPane SearchListScrollPnl;
     private JList SearchList;
+    private JButton LogoutBtn;
+    private JLabel WelcomeBackLbl;
+    private JPanel LoginBtnsPnl;
+    private JPanel LogoutBtnPnl;
+    private JPanel UserMessagesPnl;
 
-    /* utilities */
+    /* utilities for locations */
     private DefaultListModel<Location> searchListModel;
-    private GeoData geoData = new GeoData();
-    public Location clickedElement;
+
+    private Location clickedElement;
+    /* utilities for operators */
+
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
 
-    public MainPage() throws ParseException, IOException {
+    public MainPage() {
         /* set the logo */
         ImageIcon iconLogo = new ImageIcon(Constants.LOGO_PATH_S);
         Logo.setIcon(iconLogo);
 
         /* set initial search list and its gui options */
         searchListModel = new DefaultListModel<>();
-        for (Location elem : geoData.getGeoLocationsList()) {
+        UtilsSingleton utils = UtilsSingleton.getInstance();
+        for (Location elem : utils.getGeoData().getGeoLocationsList()) {
             searchListModel.addElement(elem);
         }
         SearchList.setModel(searchListModel);
         SearchList.setVisibleRowCount(16);
         SearchList.setBackground(new Color(238, 238, 238));
         SearchListPnl.setVisible(false);
+
+        /* set initial login */
+        LogoutBtnPnl.setVisible(false);
 
         /*
             Callbacks for the main page
@@ -91,7 +101,20 @@ public class MainPage {
          */
         loginEnterBtn_at_click();
         loginExitBtn_at_click();
+        /* restore main page to initial condition when logout button is pushed */
+        logoutBtn_at_click();
+    }
 
+    /*************************************************************
+
+     UTILS
+
+     */
+
+    private void setLoggedInMode(boolean isLoggedInModeActive){
+        LoginBtnsPnl.setVisible(!isLoggedInModeActive);
+        LogoutBtnPnl.setVisible(isLoggedInModeActive);
+        UserMessagesPnl.setVisible(isLoggedInModeActive);
     }
 
     /*************************************************************
@@ -116,6 +139,7 @@ public class MainPage {
                         &&  component.isShowing()){
                     SearchListPnl.setVisible(false);
                     LoginPnl.setVisible(false);
+                    ButtonsPnl.setVisible(true);
                 }
             }
         });
@@ -177,7 +201,7 @@ public class MainPage {
 
         public void suggest() {
             String searched = typeAPlaceTextField.getText();
-            if (searched.length() == 1){
+            if (searched.length() > 0){
                 SearchListPnl.setVisible(true);
             } else if (searched.length() == 0){
                 SearchListPnl.setVisible(false);
@@ -188,8 +212,8 @@ public class MainPage {
         }
 
         public void filterModel(String filter) {
-            SearchListPnl.setVisible(true);
-            for (Location l : geoData.getGeoLocationsList()) {
+            UtilsSingleton utils = UtilsSingleton.getInstance();
+            for (Location l : utils.getGeoData().getGeoLocationsList()) {
                 if (!l.toString().contains(filter)) {
                     if (searchListModel.contains(l)) {
                         searchListModel.removeElement(l);
@@ -233,7 +257,7 @@ public class MainPage {
                     * null object will be passed to the details panel and will be handled
                     * by the details panel itself.
                      */
-                    ClimateParams climateParams = geoData.getClimateParamsFor(clickedElement.getGeonameID());
+
 
                     /* remove the document listener to avoid infinite loops */
                     typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
@@ -241,7 +265,7 @@ public class MainPage {
                     utils.textFieldExit(typeAPlaceTextField, "Type a place...");
                     typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
 
-                    utils.DetailsPnl.setUIPnl(clickedElement, climateParams);
+                    utils.getDetailsPnl().setUIPnl(clickedElement);
                     utils.switchPage("Location Details Page");
                 }
             }
@@ -325,12 +349,19 @@ public class MainPage {
                     Otherwise, show again the login/register buttons
                     and warn the user for the wrong login request
                  */
-                boolean isValid = false;
-                if (isValid) {
-                    /* if the user exists... */
-                    LoginPnl.setVisible(false);
-                } else {
+                String username = userLoginTextField.getText();
+                char[] pwd = pwdLoginTextField.getPassword();
 
+                UtilsSingleton utils = UtilsSingleton.getInstance();
+                /* if the user exists and nobody else is logged in, operators features are shown */
+                Operator operator = utils.getCentersData().checkOperatorExistance(username, pwd);
+
+                if (operator != null && utils.giveAccessTo(operator)) {
+                    WelcomeBackLbl.setText("Welcome back, " + operator);
+                    LoginPnl.setVisible(false);
+                    ButtonsPnl.setVisible(true);
+                    setLoggedInMode(true);
+                } else {
                     userLoginTextField.setBorder(new LineBorder(Color.RED, 3));
                     pwdLoginTextField.setBorder(new LineBorder(Color.RED, 3));
                 }
@@ -340,7 +371,7 @@ public class MainPage {
 
 
     /**
-     *
+     * Callback for exit button in the login form
      */
     private void loginExitBtn_at_click() {
         loginExitButton.addActionListener(new ActionListener(){
@@ -350,6 +381,30 @@ public class MainPage {
                 LoginPnl.setVisible(false);
                 ButtonsPnl.setVisible(true);
 
+                /* restore initial configuration for username and pwd */
+                userLoginTextField.setText(Constants.USERNAME_S);
+                userLoginTextField.setForeground(new Color(187,187,187));
+                pwdLoginTextField.setText(Constants.PWD_S);
+                pwdLoginTextField.setForeground(new Color(187,187,187));
+            }
+        });
+    }
+
+
+    /**
+     * Callback for logout button for logged in users
+     */
+    private void logoutBtn_at_click() {
+        LogoutBtn.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /* reset all the info for logged in users */
+                UtilsSingleton utils = UtilsSingleton.getInstance();
+                utils.logoutUser();
+
+                /* gui elements */
+                setLoggedInMode(false);
+                ButtonsPnl.setVisible(true);
                 /* restore initial configuration for username and pwd */
                 userLoginTextField.setText(Constants.USERNAME_S);
                 userLoginTextField.setForeground(new Color(187,187,187));

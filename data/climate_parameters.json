@@ -1,44 +1,18 @@
 [
-  {
-    "state": "Italy",
-    "geoname_id": 3173435,
-    "ascii_name": "Milan",
-    "wind": [4.0,4.0],
-    "humidity": [3,3],
-    "pressure": [2,2],
-    "temperature": [1,1],
-    "rainfall": [2,2],
-    "glaciers_alt": [0,0],
-    "glaciers_mass": [0, 0],
-    "tot_measure": 1,
-    "notes": ""
-  },
-  {
-    "state": "Italy",
-    "geoname_id": 3176053,
-    "ascii_name": "Giulianova",
-    "wind": [2.0,2.0],
-    "humidity": [1,1],
-    "pressure": [5,5],
-    "temperature": [4,4],
-    "rainfall": [1,1],
-    "glaciers_alt": [1,1],
-    "glaciers_mass": [0,0],
-    "tot_measure": 1,
-    "notes": ""
-  },
-  {
-    "state": "United Kingdom",
-    "geoname_id": 2646580, 
-    "ascii_name": "Hornsey",
-    "wind": [1.0,1.0],
-    "humidity": [1,1],
-    "pressure": [2,2],
-    "temperature": [3,3],
-    "rainfall": [4,4],
-    "glaciers_alt": [0,0],
-    "glaciers_mass": [0,0],
-    "tot_measure": 1,
-    "notes": ""
-  }
+{
+  "state": "Italy (IT)",
+  "geoname_id": 3173435,
+  "ascii_name": "Milan",
+  "wind": [1, 1, 1],
+  "humidity": [1, 1, 3],
+  "pressure": [1, 3, 1],
+  "temperature": [5, 1, 1],
+  "rainfall": [1, 1, 1],
+  "glaciers_alt": [1, 1, 1],
+  "glaciers_mass": [1, 1, 1],
+  "tot_measure": 3,
+  "notes": "",
+  "date": ["20-04-2023 | 18:46:12", "20-04-2023 | 17:50:15", "20-04-2023 | 17:49:59"]
+},
+
 ]

@@ -1,10 +1,14 @@
 package uni.climatemonitor.graphics;
 
-import uni.climatemonitor.Main;
+import org.json.simple.parser.ParseException;
+import uni.climatemonitor.data.CentersData;
+import uni.climatemonitor.data.GeoData;
+import uni.climatemonitor.data.Operator;
 import uni.climatemonitor.generics.Constants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 /**
  * Singleton for utilities
@@ -13,44 +17,41 @@ import java.awt.*;
  */
 public final class UtilsSingleton {
     private JPanel PageSelector;
-    public DetailsPage DetailsPnl;
-    private static JPanel MainPanel;
-    private static JPanel DetailsPanel;
+    private DetailsPage DetailsPnl;
+    private boolean isLoggedIn;
+    private Operator whoisLoggedIn;
+    private GeoData geoData;
+    private CentersData centersData;
+
     private static UtilsSingleton INSTANCE = null;
 
-    private UtilsSingleton(JPanel pageSelector, DetailsPage detailsPnl, JPanel details, JPanel main){
-        PageSelector = pageSelector;
-        DetailsPnl = detailsPnl;
-        MainPanel = main;
-        DetailsPanel = details;
+    private UtilsSingleton() throws ParseException, IOException {
+        geoData = new GeoData();
+        centersData  = new CentersData();
+        whoisLoggedIn = null;
+        isLoggedIn = false;
     }
 
     public static UtilsSingleton getInstance(){
-        return INSTANCE;
-    }
-
-    public static UtilsSingleton getInstance(JPanel pageSelector, DetailsPage detailsPnl, JPanel details, JPanel main){
         if (INSTANCE == null){
-            INSTANCE = new UtilsSingleton(pageSelector, detailsPnl, details, main);
+            try {
+                INSTANCE = new UtilsSingleton();
+            } catch (Exception e){
+                System.out.println(e);
+            }
         }
         return INSTANCE;
     }
+
+    public void setMExCInfo(JPanel pageSelector, DetailsPage detailsPnl){
+        PageSelector = pageSelector;
+        DetailsPnl = detailsPnl;
+    }
+
 
     public void switchPage(String pageName){
         CardLayout cl = (CardLayout)(PageSelector.getLayout());
         cl.show(PageSelector, pageName);
-
-        switch (pageName){
-            case "Main Page":
-                MainPanel.setFocusable(true);
-                DetailsPanel.setFocusable(false);
-                break;
-            case "Location Details Page":
-                MainPanel.setFocusable(false);
-                DetailsPanel.setFocusable(true);
-                break;
-        }
-
     }
 
     public void textFieldEnter(JTextField f, String oldString){
@@ -72,5 +73,45 @@ public final class UtilsSingleton {
         }
     }
 
+    public DetailsPage getDetailsPnl() {
+        return DetailsPnl;
+    }
 
+    private boolean isSomeoneAlreadyLoggedIn() throws Exception {
+        if (isLoggedIn && whoisLoggedIn != null){
+            return true;
+        } else if (isLoggedIn) {
+            throw new Exception("Someone is logged in, but I don't know who it is.");
+        }
+        return false;
+    }
+
+    public boolean giveAccessTo(Operator operator){
+        try{
+            if (isSomeoneAlreadyLoggedIn()){
+                return false;
+            }
+            whoisLoggedIn = operator;
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
+    public Operator getWhoisLoggedIn() {
+        return whoisLoggedIn;
+    }
+
+    public void logoutUser(){
+        whoisLoggedIn = null;
+        isLoggedIn = false;
+    }
+
+    public CentersData getCentersData() {
+        return centersData;
+    }
+
+    public GeoData getGeoData() {
+        return geoData;
+    }
 }

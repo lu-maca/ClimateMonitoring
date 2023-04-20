@@ -19,4 +19,6 @@ public abstract class FileHandler {
     }
 
     public abstract void readFile() throws IOException, ParseException;
+
+    public abstract void writeFile();
 }

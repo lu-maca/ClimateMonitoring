@@ -1,6 +1,6 @@
 package uni.climatemonitor.generics;
 
-public class Constants {
+public final class Constants {
     /* some generic constants for graphics */
     public static final String APP_NAME_S = "ClimaScope";
     public static final String LOGO_PATH_S = "./src/main/images/logo.png";
@@ -12,7 +12,7 @@ public class Constants {
 
     /* data paths */
     public static final String CLIMATE_PARAMS_S = "./data/climate_parameters.json";
-    public static final String MONITORING_CENTERS_S = "./data/monitoring_centers.data";
+    public static final String MONITORING_CENTERS_S = "./data/monitoring_centers.json";
     public static final String MONITORING_COORDS_S = "./data/monitoring_coordinates.csv";
-    public static final String REGISTERED_OPS_S = "./data/registered_operators.data";
+    public static final String REGISTERED_OPS_S = "./data/registered_operators.json";
 }
