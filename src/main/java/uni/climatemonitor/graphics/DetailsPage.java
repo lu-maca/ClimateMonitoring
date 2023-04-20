@@ -10,12 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
-import java.beans.PropertyChangeListener;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class DetailsPage {
     private JLabel PlaceNameLbl;
@@ -78,6 +75,7 @@ public class DetailsPage {
     private JPanel ButtonsPnl;
     private JComboBox DateComboBox;
     private JPanel ChooseDatePnl;
+
 
     /* location info */
     private Location location;
@@ -147,7 +145,7 @@ public class DetailsPage {
         if (!isOperatorEnabledForThisPlace() && params != null) {
             DateComboBox.setModel(new DefaultComboBoxModel<String>(params.getBeautifulDate().toArray(new String[0])));
         } else {
-            ChooseDatePnl.setEnabled(false);
+            DateComboBox.setEnabled(false);
         }
 
         /* if an operator is logged in, set the combo box for detections and remove current values */
@@ -164,6 +162,7 @@ public class DetailsPage {
         NotesPnl.setSize(new Dimension(200,150));
         NotesPnl.setMaximumSize(new Dimension(200,150));
         NotesPnl.setMinimumSize(new Dimension(200,150));
+
 
         /* if climate params is null (i.e. when no detections are found, maintain the "unknown" state */
         if (params == null){ return; }
@@ -242,7 +241,7 @@ public class DetailsPage {
         /* notes field */
         NotesTextArea.setText("");
         /* date combo box */
-        ChooseDatePnl.setEnabled(true);
+        DateComboBox.setEnabled(true);
         /* if operator mode, reset all the combo boxes */
         if (UtilsSingleton.getInstance().getWhoisLoggedIn() != null) {
             WindComboBox.setSelectedIndex(0);

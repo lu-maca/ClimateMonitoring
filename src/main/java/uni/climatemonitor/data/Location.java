@@ -1,38 +1,4 @@
 package uni.climatemonitor.data;
-/**
- * Coordinates handling with some useful methods
- */
-class Coordinates {
-    private double latitude;
-    private double longitude;
-
-    /**
-     * Constructor
-     * @param lat
-     * @param lon
-     */
-    public Coordinates(double lat, double lon){
-        this.latitude = lat;
-        this.longitude = lon;
-    }
-
-    /**
-     * Get a beautiful representation for coordinates in the form:
-     *      N... E...
-     */
-    public String toString(){
-        String lat = String.valueOf(Math.abs(latitude));
-        String lon = String.valueOf(Math.abs(longitude));
-        String NS = "N";
-        String EW = "E";
-        if (latitude < 0){ NS = "S"; }
-        if (longitude < 0){ EW = "W"; }
-        String out = lat + "° " + NS + " " + lon + "° " + EW;
-        return out;
-    }
-
-}
-
 
 /**
  * This class implements a container for Locations with associated
@@ -94,4 +60,11 @@ public class Location {
      * geoname_id getter
      */
     public String getGeonameID(){ return geonameID; }
+
+    /**
+     * coordinates getter
+     */
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
 }
