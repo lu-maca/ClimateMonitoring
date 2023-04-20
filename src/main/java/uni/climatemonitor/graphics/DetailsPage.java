@@ -144,10 +144,10 @@ public class DetailsPage {
         PlaceNameLbl.setText(location.toString());
 
         DateComboBox.setPreferredSize(new Dimension(185, 24));
-        if (params != null) {
+        if (!isOperatorEnabledForThisPlace() && params != null) {
             DateComboBox.setModel(new DefaultComboBoxModel<String>(params.getBeautifulDate().toArray(new String[0])));
         } else {
-            ChooseDatePnl.setVisible(false);
+            ChooseDatePnl.setEnabled(false);
         }
 
         /* if an operator is logged in, set the combo box for detections and remove current values */
@@ -242,7 +242,7 @@ public class DetailsPage {
         /* notes field */
         NotesTextArea.setText("");
         /* date combo box */
-        ChooseDatePnl.setVisible(true);
+        ChooseDatePnl.setEnabled(true);
         /* if operator mode, reset all the combo boxes */
         if (UtilsSingleton.getInstance().getWhoisLoggedIn() != null) {
             WindComboBox.setSelectedIndex(0);
