@@ -257,7 +257,7 @@ public class MainPage {
                     * null object will be passed to the details panel and will be handled
                     * by the details panel itself.
                      */
-                    ClimateParams climateParams = utils.getGeoData().getClimateParamsFor(clickedElement.getGeonameID());
+
 
                     /* remove the document listener to avoid infinite loops */
                     typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
@@ -265,7 +265,7 @@ public class MainPage {
                     utils.textFieldExit(typeAPlaceTextField, "Type a place...");
                     typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
 
-                    utils.getDetailsPnl().setUIPnl(clickedElement, climateParams);
+                    utils.getDetailsPnl().setUIPnl(clickedElement);
                     utils.switchPage("Location Details Page");
                 }
             }

@@ -1,17 +1,19 @@
 package uni.climatemonitor.data;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class ClimateParams {
     private String ascii_name;
     private String state;
-    private String[] wind;
-    private String[] humidity;
-    private String[] pressure;
-    private String[] temperature;
-    private String[] rainfall;
-    private String[] glacier_alt;
-    private String[] glacier_mass;
+    private ArrayList<String> wind = new ArrayList<>();
+    private ArrayList<String> humidity = new ArrayList<>();
+    private ArrayList<String> pressure = new ArrayList<>();
+    private ArrayList<String> temperature = new ArrayList<>();
+    private ArrayList<String> rainfall = new ArrayList<>();
+    private ArrayList<String> glacier_alt = new ArrayList<>();
+    private ArrayList<String> glacier_mass = new ArrayList<>();
+    private ArrayList<String> date = new ArrayList<>();
     private int tot_measure;
     private String geonameID;
     private String notes;
@@ -30,7 +32,8 @@ public class ClimateParams {
     "glaciers_alt": %s,
     "glaciers_mass": %s,
     "tot_measure": %d,
-    "notes": "%s"
+    "notes": "%s",
+    "date": %s
   }""";
 
     public ClimateParams(){}
@@ -74,42 +77,45 @@ public class ClimateParams {
                 case "geoname_id":
                     this.geonameID = o.get(key).toString();
                     break;
+                case "date":
+                    this.date = unpackStringToStringArray(o.get(key).toString());
+                    break;
             }
         }
     }
 
-    private String[] unpackStringToStringArray(String s){
+    private ArrayList<String> unpackStringToStringArray(String s){
         String sWithoutBrackets = s.replaceAll("\\[|\\]", "").trim();
-        String[] split = sWithoutBrackets.split(",");
+        ArrayList<String> split = new ArrayList<>(Arrays.asList(sWithoutBrackets.split(",")));
 
         return split;
     }
 
-    public String[] getGlacier_alt() {
+    public ArrayList<String> getGlacier_alt() {
         return glacier_alt;
     }
 
-    public String[] getHumidity() {
+    public ArrayList<String> getHumidity() {
         return humidity;
     }
 
-    public String[] getGlacier_mass() {
+    public ArrayList<String> getGlacier_mass() {
         return glacier_mass;
     }
 
-    public String[] getPressure() {
+    public ArrayList<String> getPressure() {
         return pressure;
     }
 
-    public String[] getRainfall() {
+    public ArrayList<String> getRainfall() {
         return rainfall;
     }
 
-    public String[] getTemperature() {
+    public ArrayList<String> getTemperature() {
         return temperature;
     }
 
-    public String[] getWind() {
+    public ArrayList<String> getWind() {
         return wind;
     }
 
@@ -133,6 +139,18 @@ public class ClimateParams {
         return geonameID;
     }
 
+    public ArrayList<String> getDate() {
+        return date;
+    }
+
+    public ArrayList<String> getBeautifulDate() {
+        ArrayList<String> beautifulDate = new ArrayList<>();
+        for (String s : date) {
+            beautifulDate.add(s.replaceAll("\"", ""));
+        }
+        return beautifulDate;
+    }
+
     public void setAscii_name(String ascii_name) {
         this.ascii_name = ascii_name;
     }
@@ -141,49 +159,16 @@ public class ClimateParams {
         this.geonameID = geonameID;
     }
 
-    public void setGlacier_alt(String[] glacier_alt) {
-        this.glacier_alt = glacier_alt;
-    }
-
-    public void setGlacier_mass(String[] glacier_mass) {
-        this.glacier_mass = glacier_mass;
-    }
-
-    public void setHumidity(String[] humidity) {
-        this.humidity = humidity;
-    }
-
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public void setPressure(String[] pressure) {
-        this.pressure = pressure;
-    }
-
-    public void setRainfall(String[] rainfall) {
-        this.rainfall = rainfall;
     }
 
     public void setState(String state) {
         this.state = state;
     }
 
-    public void setTemperature(String[] temperature) {
-        this.temperature = temperature;
-    }
-
     public void setTot_measure(int tot_measure) {
         this.tot_measure = tot_measure;
-    }
-
-    public void setWind(String[] wind) {
-        this.wind = wind;
-    }
-
-    @Override
-    public String toString() {
-        return ascii_name + " " + state + " " +  wind[0] + wind[1] + " " + tot_measure;
     }
 
     public String toJson() {
@@ -192,15 +177,16 @@ public class ClimateParams {
                 state,
                 geonameID,
                 ascii_name,
-                Arrays.toString(wind),
-                Arrays.toString(humidity),
-                Arrays.toString(pressure),
-                Arrays.toString(temperature),
-                Arrays.toString(rainfall),
-                Arrays.toString(glacier_alt),
-                Arrays.toString(glacier_mass),
+                wind,
+                humidity,
+                pressure,
+                temperature,
+                rainfall,
+                glacier_alt,
+                glacier_mass,
                 tot_measure,
-                notes
+                notes,
+                date
                 );
         return out;
     }

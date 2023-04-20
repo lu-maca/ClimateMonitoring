@@ -55,7 +55,7 @@ public class Location {
         geonameID = locationInfo[0];
         name = locationInfo[1];
         asciiName = locationInfo[2];
-        state = locationInfo[4] + " (" + locationInfo[3] + ")";
+        state = locationInfo[3];
         double[] coords = unpackCoordinateString(locationInfo[5]);
         coordinates = new Coordinates(coords[0], coords[1]);
     }
@@ -74,7 +74,7 @@ public class Location {
      */
     @Override
     public String toString() {
-        String out = asciiName + ", " + state + ", " + coordinates.toString();
+        String out = asciiName + ", " + state;
         return out;
     }
 
