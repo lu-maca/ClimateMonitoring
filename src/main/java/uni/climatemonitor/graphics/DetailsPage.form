@@ -3,10 +3,10 @@
   <grid id="27dc6" binding="ParentPnl" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="1100" height="800"/>
+      <xy x="20" y="20" width="1200" height="800"/>
     </constraints>
     <properties>
-      <minimumSize width="1100" height="800"/>
+      <minimumSize width="1200" height="800"/>
     </properties>
     <border type="none"/>
     <children>

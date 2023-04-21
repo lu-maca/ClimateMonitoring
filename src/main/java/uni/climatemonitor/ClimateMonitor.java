@@ -16,7 +16,7 @@ public class ClimateMonitor {
         try {
             MainWindow frame = new MainWindow();
         } catch (Exception e){
-            //
+            e.printStackTrace();
         }
     }
 

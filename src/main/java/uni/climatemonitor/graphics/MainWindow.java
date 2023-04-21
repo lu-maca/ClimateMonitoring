@@ -30,7 +30,7 @@ public class MainWindow extends JFrame {
      */
     public MainWindow() throws ParseException, IOException {
         setTitle(Constants.APP_NAME_S);
-        setSize(1100,650);
+        setSize(1200,650);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

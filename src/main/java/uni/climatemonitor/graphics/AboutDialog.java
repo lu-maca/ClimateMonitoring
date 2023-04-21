@@ -15,7 +15,7 @@ public class AboutDialog extends JDialog {
 
     public AboutDialog() {
         setContentPane(contentPane);
-        setSize(610,170);
+        setSize(610,200);
         setResizable(false);
         setLocationRelativeTo(null);
         setTitle("About");
