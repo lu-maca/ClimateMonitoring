@@ -1,3 +1,10 @@
+/*************************************************
+ * ClimateParametersFileHandler class
+ * @author Luca Macavero, 755091, lmacavero@studenti.uninsubria.it, VA
+ *
+ */
+
+
 package uni.climatemonitor.data;
 
 import org.json.simple.parser.JSONParser;

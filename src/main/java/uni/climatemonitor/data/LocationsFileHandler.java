@@ -1,3 +1,10 @@
+/*************************************************
+ * LocationsFileHandler class
+ * @author Luca Macavero, 755091, lmacavero@studenti.uninsubria.it, VA
+ *
+ */
+
+
 package uni.climatemonitor.data;
 
 import com.opencsv.CSVParser;
@@ -7,8 +14,6 @@ import com.opencsv.CSVReaderBuilder;
 
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Implements methods to handle monitoring_coordinates.data

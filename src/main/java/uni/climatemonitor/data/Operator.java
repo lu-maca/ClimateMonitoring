@@ -1,3 +1,10 @@
+/*************************************************
+ * Operator class
+ * @author Luca Macavero, 755091, lmacavero@studenti.uninsubria.it, VA
+ *
+ */
+
+
 package uni.climatemonitor.data;
 
 import java.util.HashMap;
@@ -11,28 +18,12 @@ public class Operator {
     private String monitoringCenter;
 
     public Operator(HashMap o){
-        for (Object key: o.keySet()) {
-            switch (key.toString()) {
-                case "name":
-                    this.name = o.get(key).toString();
-                    break;
-                case "tax_code":
-                    this.taxCode = o.get(key).toString();
-                    break;
-                case "email":
-                    this.email = o.get(key).toString();
-                    break;
-                case "username":
-                    this.username = o.get(key).toString();
-                    break;
-                case "password":
-                    this.password = o.get(key).toString();
-                    break;
-                case "monitoring_center":
-                    this.monitoringCenter = o.get(key).toString();
-                    break;
-            }
-        }
+        this.name = o.get("name").toString();
+        this.taxCode = o.get("tax_code").toString();
+        this.email = o.get("email").toString();
+        this.username = o.get("username").toString();
+        this.password = o.get("password").toString();
+        this.monitoringCenter = o.get("monitoring_center").toString();
     }
 
     public String getName() {

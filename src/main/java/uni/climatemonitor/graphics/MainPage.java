@@ -1,7 +1,11 @@
+/*************************************************
+ * OperatorsFileHandler class
+ * @author Luca Macavero, 755091, lmacavero@studenti.uninsubria.it, VA
+ *
+ */
+
 package uni.climatemonitor.graphics;
 
-import jdk.jshell.execution.Util;
-import org.json.simple.parser.ParseException;
 import uni.climatemonitor.data.*;
 import uni.climatemonitor.generics.Constants;
 
@@ -12,7 +16,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import java.util.Arrays;
 
 public class MainPage {

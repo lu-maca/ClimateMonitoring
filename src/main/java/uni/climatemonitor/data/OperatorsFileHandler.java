@@ -1,14 +1,21 @@
+/*************************************************
+ * OperatorsFileHandler class
+ * @author Luca Macavero, 755091, lmacavero@studenti.uninsubria.it, VA
+ *
+ */
+
+
 package uni.climatemonitor.data;
 
-        import org.json.simple.parser.JSONParser;
-        import org.json.simple.parser.ParseException;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-        import java.io.IOException;
-        import java.nio.file.Files;
-        import java.nio.file.Path;
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class OperatorsFileHandler extends FileHandler{
     private ArrayList<Operator> operators = new ArrayList<>();
