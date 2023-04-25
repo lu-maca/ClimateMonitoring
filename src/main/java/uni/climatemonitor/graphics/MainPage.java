@@ -16,7 +16,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainPage {
     private JPanel ParentPnl;
@@ -45,13 +49,13 @@ public class MainPage {
     private JPanel LogoutBtnPnl;
     private JPanel UserMessagesPnl;
     private JPanel UserGeneralPnl;
-    private JPanel RegistrationPnl;
+    private JPanel UserInfoPnl;
     private JLabel NameLbl;
     private JTextField NameTextField;
     private JTextField SurnameTextFIeld;
     private JLabel SurnameLbl;
     private JLabel TaxCodeLbl;
-    private JTextField textField1;
+    private JTextField TaxCodeTextField;
     private JLabel EmailLbl;
     private JTextField EmailTextField;
     private JLabel UsernameLbl;
@@ -60,29 +64,45 @@ public class MainPage {
     private JTextField PwdTextField;
     private JPanel MonitoringCenterPnl;
     private JLabel MonitoringCenterNameLbl;
-    private JTextField textField2;
-    private JCheckBox newCheckBox;
     private JTextField AddressTextField;
     private JLabel AddressLbl;
+    private JPanel RegistrationPnl;
+    private JButton ConfirmRegisterBtn;
+    private JPanel RegistrationPnlButtonsPnl;
+    private JButton ExitFromRegistrationBtn;
+    private JComboBox MonitoringCenterComboBox;
+    private JTextField NewNameTextField;
+    private JLabel NewNameLbl;
+    private JPanel IsNewPnl;
+    private JCheckBox IsNewCheckBox;
+    private JLabel NewMonCenterLbl;
+    private JPanel CenterCreationOptionPnl;
+    private JPanel ExistingMonCenterPnl;
+    private JList NewMonitoredAreasList;
+    private JPanel NewMonitoredAreasPnl;
+    private JLabel SelectedAreasLbl;
 
     /* utilities for locations */
     private DefaultListModel<Location> searchListModel;
-
     private Location clickedElement;
-    /* utilities for operators */
 
+    /* utilities for registration */
+    private DefaultComboBoxModel<MonitoringCenter> monitoringCenterComboBoxModel;
+    private DefaultListModel<Location> newSelectedAreasModel;
+    private boolean isRegistrationModeActive = false;
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
 
     public MainPage() {
+        UtilsSingleton utils = UtilsSingleton.getInstance();
+
         /* set the logo */
         ImageIcon iconLogo = new ImageIcon(Constants.LOGO_PATH_S);
         Logo.setIcon(iconLogo);
 
         /* set initial search list and its gui options */
         searchListModel = new DefaultListModel<>();
-        UtilsSingleton utils = UtilsSingleton.getInstance();
         for (Location elem : utils.getGeoData().getGeoLocationsList()) {
             searchListModel.addElement(elem);
         }
@@ -91,12 +111,22 @@ public class MainPage {
         SearchList.setBackground(new Color(238, 238, 238));
         SearchListPnl.setVisible(false);
 
+        /* set initial combo box model for the creation of new monitoring centers */
+        monitoringCenterComboBoxModel = new DefaultComboBoxModel<>();
+        for (MonitoringCenter mc : utils.getCentersData().getMonitoringCentersList()){
+            monitoringCenterComboBoxModel.addElement(mc);
+        }
+        MonitoringCenterComboBox.setModel(monitoringCenterComboBoxModel);
+        newSelectedAreasModel = new DefaultListModel<>();
+        NewMonitoredAreasList.setModel(newSelectedAreasModel);
+        NewMonitoredAreasPnl.setVisible(false);
+
+
         /* set initial login */
         LogoutBtnPnl.setVisible(false);
 
         /* set initial registration */
         RegistrationPnl.setVisible(false);
-        MonitoringCenterPnl.setVisible(false);
 
         /*
             Callbacks for the main page
@@ -130,6 +160,14 @@ public class MainPage {
         loginExitBtn_at_click();
         /* registration panel management */
         registerBtn_at_click();
+        /* new center options */
+        isNewCheckBox_at_selection();
+        /* remove previously selected area */
+        newMonitoredAreasList_at_selection();
+        /* confirm registration */
+        confirmRegisterBtn_at_click();
+        /* registration panel exit */
+        exitFromRegistrationBtn_at_click();
         /* restore main page to initial condition when logout button is pushed */
         logoutBtn_at_click();
     }
@@ -140,10 +178,39 @@ public class MainPage {
 
      */
 
+    private void showMessage(String message) {
+        WelcomeBackLbl.setText(message);
+        UserMessagesPnl.setVisible(true);
+    }
+
     private void setLoggedInMode(boolean isLoggedInModeActive){
         LoginBtnsPnl.setVisible(!isLoggedInModeActive);
         LogoutBtnPnl.setVisible(isLoggedInModeActive);
         UserMessagesPnl.setVisible(isLoggedInModeActive);
+    }
+
+    public void resetRegistrationForm(){
+        /* new operator options reset */
+        NameTextField.setText("");
+        SurnameTextFIeld.setText("");
+        TaxCodeTextField.setText("");
+        EmailTextField.setText("");
+        UsernameTextField.setText("");
+        PwdTextField.setText("");
+        NewNameTextField.setText("");
+
+        /* new monitoring center options reset */
+        ExistingMonCenterPnl.setVisible(true);
+        CenterCreationOptionPnl.setVisible(false);
+        NewMonitoredAreasPnl.setVisible(false);
+        IsNewCheckBox.setSelected(false);
+
+        /* reset registration mode */
+        isRegistrationModeActive = false;
+
+        /* restore the main page in the initial condition */
+        ButtonsPnl.setVisible(true);
+        RegistrationPnl.setVisible(false);
     }
 
     /*************************************************************
@@ -259,6 +326,8 @@ public class MainPage {
             }
         }
     };
+
+
     /**
      * This is the callback for a change in the location text edit field
      */
@@ -278,28 +347,26 @@ public class MainPage {
                     UtilsSingleton utils = UtilsSingleton.getInstance();
                     clickedElement = (Location) SearchList.getSelectedValue();
 
-                    /*
-                    * get the climate parameters for the clicked element filtering
-                    * between the climate params structure through the geoname ID (that
-                    * is unique); if the climate params for the clicked place does not
-                    * exist, it means that no operator has inserted it: in this case a
-                    * null object will be passed to the details panel and will be handled
-                    * by the details panel itself.
-                     */
-
+                    /* if registration mode is active, add the clicked element to the list of selected areas,
+                    * else open the details page */
+                    if (! isRegistrationModeActive) {
+                        utils.getDetailsPnl().setUIPnl(clickedElement);
+                        utils.switchPage("Location Details Page");
+                    } else {
+                        if (! newSelectedAreasModel.contains(clickedElement)) {
+                            newSelectedAreasModel.addElement(clickedElement);
+                        }
+                        SearchListPnl.setVisible(false);
+                    }
 
                     /* remove the document listener to avoid infinite loops */
                     typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
                     typeAPlaceTextField.setText("");
                     utils.textFieldExit(typeAPlaceTextField, "Type a place...");
                     typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
-
-                    utils.getDetailsPnl().setUIPnl(clickedElement);
-                    utils.switchPage("Location Details Page");
                 }
             }
         });
-
     }
 
 
@@ -320,19 +387,187 @@ public class MainPage {
 
 
     /**
-     * Callback for About button push. Open the dialog with some info
-     * about the authors and the project.
-     *
+     * Callback for Register button push. It shall open the registration panel
+     * without showing the options for new centers.
      */
     private void registerBtn_at_click(){
         RegisterBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ButtonsPnl.setVisible(false);
+                CenterCreationOptionPnl.setVisible(false);
                 RegistrationPnl.setVisible(true);
-                MonitoringCenterPnl.setVisible(true);
             }
         });
+    }
+
+
+    /**
+     * Callback for new monitoring center check box: if it is selected, the new monitoring
+     * center options (name and address shall be added); remove them otherwise.
+     */
+    private void isNewCheckBox_at_selection(){
+        IsNewCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ExistingMonCenterPnl.setVisible(! IsNewCheckBox.isSelected());
+                CenterCreationOptionPnl.setVisible(IsNewCheckBox.isSelected());
+                NewMonitoredAreasPnl.setVisible(IsNewCheckBox.isSelected());
+                isRegistrationModeActive = IsNewCheckBox.isSelected();
+            }
+        });
+    }
+
+
+    /**
+     * Callback for selection of a location on the new monitored areas list (with a
+     * double click): remove the area from the list
+     */
+    private void newMonitoredAreasList_at_selection(){
+        NewMonitoredAreasList.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    clickedElement = (Location) SearchList.getSelectedValue();
+                    newSelectedAreasModel.removeElement(clickedElement);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * Callback for Confirm registration button:
+     *  - if is a new center, add the operator to the operator file
+     *     and add the operator to the monitoring centers file
+     *  - if is a new center, add operator and center
+     */
+    private void confirmRegisterBtn_at_click(){
+        ConfirmRegisterBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UtilsSingleton utils = UtilsSingleton.getInstance();
+
+                if (! areUserDataValid() || ! areCenterDataValid()){
+                    return;
+                }
+
+                /* update operators file */
+                Operator newOperator = new Operator(newOperator(IsNewCheckBox.isSelected()));
+                utils.getCentersData().addOperator(newOperator);
+                utils.getCentersData().updateOperatorsFile();
+
+                /* update monitoring centers file */
+                MonitoringCenter newMonitoringCenter = new MonitoringCenter(newMonitoringCenter());
+                ArrayList<String> newMonitoredAreasArrayList = new ArrayList<>();
+                for (int i = 0; i < newSelectedAreasModel.getSize(); i++){
+                    String geonameID = newSelectedAreasModel.getElementAt(i).getGeonameID();
+                    newMonitoredAreasArrayList.add(geonameID);
+                }
+                newMonitoringCenter.setMonitoredAreas(newMonitoredAreasArrayList);
+                utils.getCentersData().addMonitoringCenter(newMonitoringCenter);
+                utils.getCentersData().updateMonitoringCentersFile();
+
+                /* exit from the registration panel */
+                resetRegistrationForm();
+            }
+
+            private boolean areUserDataValid(){
+                /* check if data are valid */
+                if  (! (
+                        NameTextField.getText() != "" &&
+                        SurnameTextFIeld.getText() != "" &&
+                        TaxCodeTextField.getText() != "" &&
+                        EmailTextField.getText() != "" &&
+                        UsernameTextField.getText() != ""
+                )){
+                    showMessage("Fill all the fields!");
+                    return false;
+                }
+
+                /* and if pwd contains number/special char */
+                String password = PwdTextField.getText();
+                if(password.length() < 8) {
+                    showMessage("Password must be longer than 8 chars!");
+                    return false;
+                } else {
+                    Pattern letter = Pattern.compile("[a-zA-z]");
+                    Pattern digit = Pattern.compile("[0-9]");
+                    Pattern special = Pattern.compile("[!@#$%&*()_+=|<>?{}\\[\\]~-]");
+
+                    Matcher hasLetter = letter.matcher(password);
+                    Matcher hasDigit = digit.matcher(password);
+                    Matcher hasSpecial = special.matcher(password);
+
+                    if (! (hasLetter.find() && hasDigit.find() && hasSpecial.find())){
+                        showMessage("Password must contain numbers and special chars!");
+                        return false;
+                    }
+                    return true;
+                }
+            }
+
+            private boolean areCenterDataValid(){
+                if (NewNameTextField.getText() == "" || AddressTextField.getText() == ""){
+                    showMessage("Assign a non empty name to the center!");
+                    return false;
+                } else if (newSelectedAreasModel.isEmpty()) {
+                    showMessage("Choose at least one monitored area!");
+                    return false;
+                }
+                return true;
+            }
+
+            private HashMap newOperator(boolean isNewCenter){
+                HashMap<String, String> operator = new HashMap<>();
+
+                operator.put("name", NameTextField.getText() + " " + SurnameTextFIeld.getText());
+                operator.put("tax_code", TaxCodeTextField.getText());
+                operator.put("email", EmailTextField.getText());
+                operator.put("username", UsernameTextField.getText());
+                operator.put("password", PwdTextField.getText());
+                if (isNewCenter){
+                    operator.put("monitoring_center", NewNameTextField.getText());
+                } else {
+                    operator.put("monitoring_center", MonitoringCenterComboBox.getSelectedItem().toString());
+                }
+                return operator;
+            }
+
+            private HashMap newMonitoringCenter(){
+                HashMap<String, String> monitoredAreas = new HashMap<>();
+                monitoredAreas.put("name", NewNameTextField.getText());
+                monitoredAreas.put("address", AddressTextField.getText());
+                /* set a fictitious monitored area, will be overwritten */
+                monitoredAreas.put("monitored_areas", "");
+                return monitoredAreas;
+            }
+        });
+    }
+
+
+
+    /**
+     * Callback for Exit button push in the registration panel. Come back to the main page
+     *
+     */
+    private void exitFromRegistrationBtn_at_click(){
+        ExitFromRegistrationBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resetRegistrationForm();
+            }
+        });
+    }
+
+
+    /**
+     * Callback for the monitoring center name combo box.
+     * Filter on the list of existing monitoring centers: if the inserted
+     * monitoring center already exists, the confirm registration button
+     * shall be enabled, otherwise it shall enable the address text field.
+     */
+    private void monitoringCenterComboBox_at_selection(){
+
     }
 
 
@@ -459,5 +694,4 @@ public class MainPage {
             }
         });
     }
-
 }

@@ -10,6 +10,7 @@ package uni.climatemonitor.data;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,5 +46,24 @@ public class OperatorsFileHandler extends FileHandler{
     }
 
     @Override
-    public void writeFile(){}
+    public void writeFile(){
+        try {
+            FileWriter myWriter = new FileWriter(fileName);
+            myWriter.write("[\n");
+            int size = operators.size();
+            int i = 0;
+            for (Operator op : operators){
+                if (i == size){ break; }
+                i++;
+                myWriter.write(op.toJson());
+                myWriter.write(",");
+                myWriter.write("\n");
+            }
+            myWriter.write("\n]");
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
 }
