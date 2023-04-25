@@ -62,4 +62,8 @@ public class CentersData {
         }
         return null;
     }
+
+    public ArrayList<MonitoringCenter> getMonitoringCentersList(){
+        return monitoringCentersList;
+    }
 }

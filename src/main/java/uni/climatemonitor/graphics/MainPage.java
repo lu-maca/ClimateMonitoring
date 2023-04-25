@@ -45,13 +45,13 @@ public class MainPage {
     private JPanel LogoutBtnPnl;
     private JPanel UserMessagesPnl;
     private JPanel UserGeneralPnl;
-    private JPanel RegistrationPnl;
+    private JPanel UserInfoPnl;
     private JLabel NameLbl;
     private JTextField NameTextField;
     private JTextField SurnameTextFIeld;
     private JLabel SurnameLbl;
     private JLabel TaxCodeLbl;
-    private JTextField textField1;
+    private JTextField TaxCodeTextField;
     private JLabel EmailLbl;
     private JTextField EmailTextField;
     private JLabel UsernameLbl;
@@ -60,29 +60,40 @@ public class MainPage {
     private JTextField PwdTextField;
     private JPanel MonitoringCenterPnl;
     private JLabel MonitoringCenterNameLbl;
-    private JTextField textField2;
-    private JCheckBox newCheckBox;
     private JTextField AddressTextField;
     private JLabel AddressLbl;
+    private JPanel RegistrationPnl;
+    private JButton ConfirmRegisterBtn;
+    private JPanel RegistrationPnlButtonsPnl;
+    private JButton ExitFromRegistrationBtn;
+    private JComboBox MonitoringCenterComboBox;
+    private JTextField NewNameTextField;
+    private JLabel NewNameLbl;
+    private JPanel IsNewPnl;
+    private JCheckBox IsNewCheckBox;
+    private JLabel NewMonCenterLbl;
+    private JPanel CenterCreationOptionPnl;
+    private JPanel ExistingMonCenterPnl;
 
     /* utilities for locations */
     private DefaultListModel<Location> searchListModel;
-
     private Location clickedElement;
-    /* utilities for operators */
 
+    /* utilities for registration */
+    private DefaultComboBoxModel<MonitoringCenter> monitoringCenterComboBoxModel;
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
 
     public MainPage() {
+        UtilsSingleton utils = UtilsSingleton.getInstance();
+
         /* set the logo */
         ImageIcon iconLogo = new ImageIcon(Constants.LOGO_PATH_S);
         Logo.setIcon(iconLogo);
 
         /* set initial search list and its gui options */
         searchListModel = new DefaultListModel<>();
-        UtilsSingleton utils = UtilsSingleton.getInstance();
         for (Location elem : utils.getGeoData().getGeoLocationsList()) {
             searchListModel.addElement(elem);
         }
@@ -91,12 +102,19 @@ public class MainPage {
         SearchList.setBackground(new Color(238, 238, 238));
         SearchListPnl.setVisible(false);
 
+        /* set initial combo box model for the creation of new monitoring centers */
+        monitoringCenterComboBoxModel = new DefaultComboBoxModel<>();
+        for (MonitoringCenter mc : utils.getCentersData().getMonitoringCentersList()){
+            monitoringCenterComboBoxModel.addElement(mc);
+        }
+        MonitoringCenterComboBox.setModel(monitoringCenterComboBoxModel);
+
+
         /* set initial login */
         LogoutBtnPnl.setVisible(false);
 
         /* set initial registration */
         RegistrationPnl.setVisible(false);
-        MonitoringCenterPnl.setVisible(false);
 
         /*
             Callbacks for the main page
@@ -130,6 +148,10 @@ public class MainPage {
         loginExitBtn_at_click();
         /* registration panel management */
         registerBtn_at_click();
+        /* new center options */
+        isNewCheckBox_at_selection();
+        /* registration panel exit */
+        exitFromRegistrationBtn_at_click();
         /* restore main page to initial condition when logout button is pushed */
         logoutBtn_at_click();
     }
@@ -259,6 +281,8 @@ public class MainPage {
             }
         }
     };
+
+
     /**
      * This is the callback for a change in the location text edit field
      */
@@ -277,16 +301,6 @@ public class MainPage {
                 if (evt.getClickCount() == 2) {
                     UtilsSingleton utils = UtilsSingleton.getInstance();
                     clickedElement = (Location) SearchList.getSelectedValue();
-
-                    /*
-                    * get the climate parameters for the clicked element filtering
-                    * between the climate params structure through the geoname ID (that
-                    * is unique); if the climate params for the clicked place does not
-                    * exist, it means that no operator has inserted it: in this case a
-                    * null object will be passed to the details panel and will be handled
-                    * by the details panel itself.
-                     */
-
 
                     /* remove the document listener to avoid infinite loops */
                     typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
@@ -320,19 +334,74 @@ public class MainPage {
 
 
     /**
-     * Callback for About button push. Open the dialog with some info
-     * about the authors and the project.
-     *
+     * Callback for Register button push. It shall open the registration panel
+     * without showing the options for new centers.
      */
     private void registerBtn_at_click(){
         RegisterBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ButtonsPnl.setVisible(false);
+                CenterCreationOptionPnl.setVisible(false);
                 RegistrationPnl.setVisible(true);
-                MonitoringCenterPnl.setVisible(true);
             }
         });
+    }
+
+
+    /**
+     * Callback for new monitoring center check box: if it is selected, the new monitoring
+     * center options (name and address shall be added); remove them otherwise.
+     */
+    private void isNewCheckBox_at_selection(){
+        IsNewCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ExistingMonCenterPnl.setVisible(! IsNewCheckBox.isSelected());
+                CenterCreationOptionPnl.setVisible(IsNewCheckBox.isSelected());
+            }
+        });
+    }
+
+
+    /**
+     * Callback for Exit button push in the registration panel. Come back to the main page
+     *
+     */
+    private void exitFromRegistrationBtn_at_click(){
+        ExitFromRegistrationBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /* new operator options reset */
+                NameTextField.setText("");
+                SurnameTextFIeld.setText("");
+                TaxCodeTextField.setText("");
+                EmailTextField.setText("");
+                UsernameTextField.setText("");
+                PwdTextField.setText("");
+                NewNameTextField.setText("");
+
+                /* new monitoring center options reset */
+                ExistingMonCenterPnl.setVisible(true);
+                CenterCreationOptionPnl.setVisible(false);
+                IsNewCheckBox.setSelected(false);
+
+                /* restore the main page in the initial condition */
+                ButtonsPnl.setVisible(true);
+                RegistrationPnl.setVisible(false);
+            }
+        });
+    }
+
+
+    /**
+     * Callback for the monitoring center name combo box.
+     * Filter on the list of existing monitoring centers: if the inserted
+     * monitoring center already exists, the confirm registration button
+     * shall be enabled, otherwise it shall enable the address text field.
+     */
+    private void monitoringCenterComboBox_at_selection(){
+
     }
 
 

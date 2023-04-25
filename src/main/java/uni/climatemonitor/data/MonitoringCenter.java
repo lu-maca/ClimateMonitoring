@@ -38,4 +38,9 @@ public class MonitoringCenter {
     public String[] getMonitoredAreas() {
         return monitoredAreas;
     }
+
+    @Override
+    public String toString(){
+        return name;
+    }
 }
