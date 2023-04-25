@@ -16,6 +16,17 @@ public class Operator {
     private String username;
     private String password;
     private String monitoringCenter;
+    private String jsonFormat =
+            """
+  {
+      "name": "%s",
+      "tax_code": "%s",
+      "email": "%s",
+      "username": "%s",
+      "password": "%s",
+      "monitoring_center": "%s"
+    }""";
+
 
     public Operator(HashMap o){
         this.name = o.get("name").toString();
@@ -52,4 +63,17 @@ public class Operator {
 
     @Override
     public String toString(){ return getUsername(); }
+
+    public String toJson(){
+        String out = String.format(
+                jsonFormat,
+                name,
+                taxCode,
+                email,
+                username,
+                password,
+                monitoringCenter
+        );
+        return out;
+    }
 }

@@ -32,6 +32,10 @@ public class CentersData {
         getOperators();
     }
 
+    public void addOperator(Operator o){
+        operatorsList.add(o);
+    }
+
     private void getOperators() throws ParseException, IOException {
         operatorsFile.readFile();
         operatorsList = operatorsFile.getOperators();
@@ -65,5 +69,9 @@ public class CentersData {
 
     public ArrayList<MonitoringCenter> getMonitoringCentersList(){
         return monitoringCentersList;
+    }
+
+    public void updateOperatorsFile(){
+        operatorsFile.writeFile();
     }
 }

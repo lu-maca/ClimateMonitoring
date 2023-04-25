@@ -17,6 +17,9 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainPage {
     private JPanel ParentPnl;
@@ -150,6 +153,8 @@ public class MainPage {
         registerBtn_at_click();
         /* new center options */
         isNewCheckBox_at_selection();
+        /* confirm registration */
+        confirmRegisterBtn_at_click();
         /* registration panel exit */
         exitFromRegistrationBtn_at_click();
         /* restore main page to initial condition when logout button is pushed */
@@ -166,6 +171,26 @@ public class MainPage {
         LoginBtnsPnl.setVisible(!isLoggedInModeActive);
         LogoutBtnPnl.setVisible(isLoggedInModeActive);
         UserMessagesPnl.setVisible(isLoggedInModeActive);
+    }
+
+    public void resetRegistrationForm(){
+        /* new operator options reset */
+        NameTextField.setText("");
+        SurnameTextFIeld.setText("");
+        TaxCodeTextField.setText("");
+        EmailTextField.setText("");
+        UsernameTextField.setText("");
+        PwdTextField.setText("");
+        NewNameTextField.setText("");
+
+        /* new monitoring center options reset */
+        ExistingMonCenterPnl.setVisible(true);
+        CenterCreationOptionPnl.setVisible(false);
+        IsNewCheckBox.setSelected(false);
+
+        /* restore the main page in the initial condition */
+        ButtonsPnl.setVisible(true);
+        RegistrationPnl.setVisible(false);
     }
 
     /*************************************************************
@@ -365,6 +390,86 @@ public class MainPage {
 
 
     /**
+     * Callback for Confirm registration button:
+     *  - if is a new center, add the operator to the operator file
+     *     and add the operator to the monitoring centers file
+     *  - if is a new center, add operator and center
+     */
+    private void confirmRegisterBtn_at_click(){
+        ConfirmRegisterBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UtilsSingleton utils = UtilsSingleton.getInstance();
+                if (! areDataValid()){
+                    return;
+                }
+                if (! IsNewCheckBox.isSelected()){
+                    /* simple case */
+                    Operator newOperator = new Operator(newOperator());
+                    utils.getCentersData().addOperator(newOperator);
+                    utils.getCentersData().updateOperatorsFile();
+                } else {
+                    // implement
+                }
+                /* exit from the registration panel */
+                resetRegistrationForm();
+            }
+
+            private boolean areDataValid(){
+                /* check if data are valid */
+                if  (! (
+                        NameTextField.getText() != "" &&
+                        SurnameTextFIeld.getText() != "" &&
+                        TaxCodeTextField.getText() != "" &&
+                        EmailTextField.getText() != "" &&
+                        UsernameTextField.getText() != ""
+                )){
+                    WelcomeBackLbl.setText("Fill all the fields!");
+                    UserMessagesPnl.setVisible(true);
+                    return false;
+                }
+
+                /* and if pwd contains number/special char */
+                String password = PwdTextField.getText();
+                if(password.length() < 8) {
+                    WelcomeBackLbl.setText("Password must be longer than 8 chars!");
+                    UserMessagesPnl.setVisible(true);
+                    return false;
+                } else {
+                    Pattern letter = Pattern.compile("[a-zA-z]");
+                    Pattern digit = Pattern.compile("[0-9]");
+                    Pattern special = Pattern.compile("[!@#$%&*()_+=|<>?{}\\[\\]~-]");
+
+                    Matcher hasLetter = letter.matcher(password);
+                    Matcher hasDigit = digit.matcher(password);
+                    Matcher hasSpecial = special.matcher(password);
+
+                    if (! (hasLetter.find() && hasDigit.find() && hasSpecial.find())){
+                        WelcomeBackLbl.setText("Password must contain special chars!");
+                        UserMessagesPnl.setVisible(true);
+                        return false;
+                    }
+                    return true;
+                }
+            }
+
+            private HashMap newOperator(){
+                HashMap<String, String> operator = new HashMap<>();
+
+                operator.put("name", NameTextField.getText() + " " + SurnameTextFIeld.getText());
+                operator.put("tax_code", TaxCodeTextField.getText());
+                operator.put("email", EmailTextField.getText());
+                operator.put("username", UsernameTextField.getText());
+                operator.put("password", PwdTextField.getText());
+                operator.put("monitoring_center", MonitoringCenterComboBox.getSelectedItem().toString());
+                return operator;
+            }
+        });
+    }
+
+
+
+    /**
      * Callback for Exit button push in the registration panel. Come back to the main page
      *
      */
@@ -372,23 +477,7 @@ public class MainPage {
         ExitFromRegistrationBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /* new operator options reset */
-                NameTextField.setText("");
-                SurnameTextFIeld.setText("");
-                TaxCodeTextField.setText("");
-                EmailTextField.setText("");
-                UsernameTextField.setText("");
-                PwdTextField.setText("");
-                NewNameTextField.setText("");
-
-                /* new monitoring center options reset */
-                ExistingMonCenterPnl.setVisible(true);
-                CenterCreationOptionPnl.setVisible(false);
-                IsNewCheckBox.setSelected(false);
-
-                /* restore the main page in the initial condition */
-                ButtonsPnl.setVisible(true);
-                RegistrationPnl.setVisible(false);
+                resetRegistrationForm();
             }
         });
     }
@@ -528,5 +617,4 @@ public class MainPage {
             }
         });
     }
-
 }

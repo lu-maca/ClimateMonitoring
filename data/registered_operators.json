@@ -1,5 +1,5 @@
 [
-  {
+{
     "name": "Pippo Bear",
     "tax_code": "BREPPO86P14H101J",
     "email": "pippo.pelo@gmail.com",
@@ -7,7 +7,7 @@
     "password": "ForzaComo!1",
     "monitoring_center": "Centro Climatico Como"
   },
-  {
+{
     "name": "Peppa Pig",
     "tax_code": "PIGPPA82T54H101A",
     "email": "peppa.pig82@gmail.com",
@@ -15,12 +15,21 @@
     "password": "AleComoAle!1",
     "monitoring_center": "Centro Climatico Como"
   },
-  {
+{
     "name": "Truppa Luppa",
     "tax_code": "LPPTRP92F63H101B",
     "email": "truppaluppa@gmail.com",
     "username": "Lutru",
     "password": "ComoCampione_1907",
     "monitoring_center": "Centro Climatico Milano"
-  }
+  },
+{
+    "name": "a a",
+    "tax_code": "a",
+    "email": "a",
+    "username": "a",
+    "password": "1a_/adwsas",
+    "monitoring_center": "Centro Climatico Como"
+  },
+
 ]

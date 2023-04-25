@@ -19,6 +19,7 @@ import java.awt.event.HierarchyListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class DetailsPage {
     private JLabel PlaceNameLbl;
@@ -151,6 +152,9 @@ public class DetailsPage {
         if (!isOperatorEnabledForThisPlace() && params != null) {
             DateComboBox.setModel(new DefaultComboBoxModel<String>(params.getBeautifulDate().toArray(new String[0])));
         } else {
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+            model.addElement("---");
+            DateComboBox.setModel(model);
             DateComboBox.setEnabled(false);
         }
 
@@ -179,9 +183,9 @@ public class DetailsPage {
     }
 
     private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
-        if (UtilsSingleton.getInstance().getWhoisLoggedIn() == null) {
-            current.setText(currentValue + " / 5");
-        }
+//        if (UtilsSingleton.getInstance().getWhoisLoggedIn() == null) {
+        current.setText(currentValue + " / 5");
+//        }
         average.setText(averageValue + " / 5");
     }
 
