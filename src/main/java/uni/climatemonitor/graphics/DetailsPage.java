@@ -9,13 +9,13 @@ package uni.climatemonitor.graphics;
 import uni.climatemonitor.data.ClimateParams;
 import uni.climatemonitor.data.Location;
 import uni.climatemonitor.data.Operator;
+import uni.climatemonitor.generics.Constants;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
+import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -82,6 +82,9 @@ public class DetailsPage {
     private JPanel ButtonsPnl;
     private JComboBox DateComboBox;
     private JPanel ChooseDatePnl;
+    private JLabel MaxNumOfCharErrLbl;
+    private JLabel NotesErrorLbl;
+    private JPanel NotesErrorPnl;
 
 
     /* location info */
@@ -101,7 +104,8 @@ public class DetailsPage {
         saveBtn_at_selection();
         /* at date selection change */
         dateComboBox_at_item_change();
-
+        /* notes text area max number of characters check */
+        notesTextArea_at_change();
     }
 
 
@@ -172,6 +176,8 @@ public class DetailsPage {
         NotesPnl.setSize(new Dimension(200,150));
         NotesPnl.setMaximumSize(new Dimension(200,150));
         NotesPnl.setMinimumSize(new Dimension(200,150));
+        NotesErrorPnl.setVisible(false);
+        NotesTextArea.setText("");
 
 
         /* if climate params is null (i.e. when no detections are found, maintain the "unknown" state */
@@ -378,7 +384,12 @@ public class DetailsPage {
 
                 params.getDate().add(0, dateString);
                 /* set also new notes */
-                params.setNotes(NotesTextArea.getText());
+                String notes = NotesTextArea.getText();
+                String filteredNotes = "";
+                for (int i = 0; i < Constants.NOTES_MAX_CHAR_NUM; i++){
+                    filteredNotes += notes.charAt(i);
+                }
+                params.setNotes(filteredNotes);
 
                 /* update file */
                 utils.getGeoData().updateClimateParamsFile();
@@ -399,6 +410,34 @@ public class DetailsPage {
             public void actionPerformed(ActionEvent e) {
                 int selectedIdx = DateComboBox.getSelectedIndex();
                 setParamsFromHistory(selectedIdx);
+            }
+        });
+    }
+
+
+    /**
+     * Callback for check on the number of characters in notes
+     */
+    private void notesTextArea_at_change(){
+        NotesTextArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                checkMaxNumberReached();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) { checkMaxNumberReached(); }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) { }
+
+            private void checkMaxNumberReached(){
+                if (NotesTextArea.getText().length() > Constants.NOTES_MAX_CHAR_NUM) {
+                    NotesErrorPnl.setVisible(true);
+                }
+                else {
+                    NotesErrorPnl.setVisible(false);
+                }
             }
         });
     }
