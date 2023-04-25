@@ -36,6 +36,10 @@ public class CentersData {
         operatorsList.add(o);
     }
 
+    public void addMonitoringCenter(MonitoringCenter mc){
+        monitoringCentersList.add(mc);
+    }
+
     private void getOperators() throws ParseException, IOException {
         operatorsFile.readFile();
         operatorsList = operatorsFile.getOperators();
@@ -56,7 +60,7 @@ public class CentersData {
         return null;
     }
 
-    public String[] getEnabledLocationsForOperator(Operator operator){
+    public ArrayList<String> getEnabledLocationsForOperator(Operator operator){
         String monitoringCenter = operator.getMonitoringCenter();
 
         for (MonitoringCenter m : monitoringCentersList){
@@ -73,5 +77,9 @@ public class CentersData {
 
     public void updateOperatorsFile(){
         operatorsFile.writeFile();
+    }
+
+    public void updateMonitoringCentersFile(){
+        monitoringCentersFile.writeFile();
     }
 }

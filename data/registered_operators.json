@@ -24,12 +24,12 @@
     "monitoring_center": "Centro Climatico Milano"
   },
 {
-    "name": "a a",
-    "tax_code": "a",
-    "email": "a",
-    "username": "a",
-    "password": "1a_/adwsas",
-    "monitoring_center": "Centro Climatico Como"
+    "name": "Utente Sconosciuto",
+    "tax_code": "PORVA",
+    "email": "utente@gmail.com",
+    "username": "utente1",
+    "password": "qwert12!",
+    "monitoring_center": "Centro climatico Catania"
   },
 
 ]

@@ -29,5 +29,35 @@
   "notes": "",
   "date": ["25-04-2023 | 18:03:57", "25-04-2023 | 18:03:50", "25-04-2023 | 18:03:38", "25-04-2023 | 18:03:20", "25-04-2023 | 18:03:00"]
 },
+{
+  "state": "IT",
+  "geoname_id": 6534275,
+  "ascii_name": "Gravina di Catania",
+  "wind": [3],
+  "humidity": [4],
+  "pressure": [2],
+  "temperature": [5],
+  "rainfall": [1],
+  "glaciers_alt": [1],
+  "glaciers_mass": [1],
+  "tot_measure": 1,
+  "notes": "",
+  "date": ["25-04-2023 | 20:06:11"]
+},
+{
+  "state": "IT",
+  "geoname_id": 2525068,
+  "ascii_name": "Catania",
+  "wind": [3],
+  "humidity": [5],
+  "pressure": [4],
+  "temperature": [1],
+  "rainfall": [3],
+  "glaciers_alt": [1],
+  "glaciers_mass": [1],
+  "tot_measure": 1,
+  "notes": "",
+  "date": ["25-04-2023 | 20:06:35"]
+},
 
 ]

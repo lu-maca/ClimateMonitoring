@@ -16,6 +16,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -77,6 +78,9 @@ public class MainPage {
     private JLabel NewMonCenterLbl;
     private JPanel CenterCreationOptionPnl;
     private JPanel ExistingMonCenterPnl;
+    private JList NewMonitoredAreasList;
+    private JPanel NewMonitoredAreasPnl;
+    private JLabel SelectedAreasLbl;
 
     /* utilities for locations */
     private DefaultListModel<Location> searchListModel;
@@ -84,6 +88,8 @@ public class MainPage {
 
     /* utilities for registration */
     private DefaultComboBoxModel<MonitoringCenter> monitoringCenterComboBoxModel;
+    private DefaultListModel<Location> newSelectedAreasModel;
+    private boolean isRegistrationModeActive = false;
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
@@ -111,6 +117,9 @@ public class MainPage {
             monitoringCenterComboBoxModel.addElement(mc);
         }
         MonitoringCenterComboBox.setModel(monitoringCenterComboBoxModel);
+        newSelectedAreasModel = new DefaultListModel<>();
+        NewMonitoredAreasList.setModel(newSelectedAreasModel);
+        NewMonitoredAreasPnl.setVisible(false);
 
 
         /* set initial login */
@@ -153,6 +162,8 @@ public class MainPage {
         registerBtn_at_click();
         /* new center options */
         isNewCheckBox_at_selection();
+        /* remove previously selected area */
+        newMonitoredAreasList_at_selection();
         /* confirm registration */
         confirmRegisterBtn_at_click();
         /* registration panel exit */
@@ -186,7 +197,11 @@ public class MainPage {
         /* new monitoring center options reset */
         ExistingMonCenterPnl.setVisible(true);
         CenterCreationOptionPnl.setVisible(false);
+        NewMonitoredAreasPnl.setVisible(false);
         IsNewCheckBox.setSelected(false);
+
+        /* reset registration mode */
+        isRegistrationModeActive = false;
 
         /* restore the main page in the initial condition */
         ButtonsPnl.setVisible(true);
@@ -327,18 +342,26 @@ public class MainPage {
                     UtilsSingleton utils = UtilsSingleton.getInstance();
                     clickedElement = (Location) SearchList.getSelectedValue();
 
+                    /* if registration mode is active, add the clicked element to the list of selected areas,
+                    * else open the details page */
+                    if (! isRegistrationModeActive) {
+                        utils.getDetailsPnl().setUIPnl(clickedElement);
+                        utils.switchPage("Location Details Page");
+                    } else {
+                        if (! newSelectedAreasModel.contains(clickedElement)) {
+                            newSelectedAreasModel.addElement(clickedElement);
+                        }
+                        SearchListPnl.setVisible(false);
+                    }
+
                     /* remove the document listener to avoid infinite loops */
                     typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
                     typeAPlaceTextField.setText("");
                     utils.textFieldExit(typeAPlaceTextField, "Type a place...");
                     typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
-
-                    utils.getDetailsPnl().setUIPnl(clickedElement);
-                    utils.switchPage("Location Details Page");
                 }
             }
         });
-
     }
 
 
@@ -384,6 +407,24 @@ public class MainPage {
             public void actionPerformed(ActionEvent e) {
                 ExistingMonCenterPnl.setVisible(! IsNewCheckBox.isSelected());
                 CenterCreationOptionPnl.setVisible(IsNewCheckBox.isSelected());
+                NewMonitoredAreasPnl.setVisible(IsNewCheckBox.isSelected());
+                isRegistrationModeActive = IsNewCheckBox.isSelected();
+            }
+        });
+    }
+
+
+    /**
+     * Callback for selection of a location on the new monitored areas list (with a
+     * double click): remove the area from the list
+     */
+    private void newMonitoredAreasList_at_selection(){
+        NewMonitoredAreasList.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    clickedElement = (Location) SearchList.getSelectedValue();
+                    newSelectedAreasModel.removeElement(clickedElement);
+                }
             }
         });
     }
@@ -400,17 +441,27 @@ public class MainPage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 UtilsSingleton utils = UtilsSingleton.getInstance();
+
                 if (! areDataValid()){
                     return;
                 }
-                if (! IsNewCheckBox.isSelected()){
-                    /* simple case */
-                    Operator newOperator = new Operator(newOperator());
-                    utils.getCentersData().addOperator(newOperator);
-                    utils.getCentersData().updateOperatorsFile();
-                } else {
-                    // implement
+
+                /* update operators file */
+                Operator newOperator = new Operator(newOperator(IsNewCheckBox.isSelected()));
+                utils.getCentersData().addOperator(newOperator);
+                utils.getCentersData().updateOperatorsFile();
+
+                /* update monitoring centers file */
+                MonitoringCenter newMonitoringCenter = new MonitoringCenter(newMonitoringCenter());
+                ArrayList<String> newMonitoredAreasArrayList = new ArrayList<>();
+                for (int i = 0; i < newSelectedAreasModel.getSize(); i++){
+                    String geonameID = newSelectedAreasModel.getElementAt(i).getGeonameID();
+                    newMonitoredAreasArrayList.add(geonameID);
                 }
+                newMonitoringCenter.setMonitoredAreas(newMonitoredAreasArrayList);
+                utils.getCentersData().addMonitoringCenter(newMonitoringCenter);
+                utils.getCentersData().updateMonitoringCentersFile();
+
                 /* exit from the registration panel */
                 resetRegistrationForm();
             }
@@ -453,7 +504,7 @@ public class MainPage {
                 }
             }
 
-            private HashMap newOperator(){
+            private HashMap newOperator(boolean isNewCenter){
                 HashMap<String, String> operator = new HashMap<>();
 
                 operator.put("name", NameTextField.getText() + " " + SurnameTextFIeld.getText());
@@ -461,8 +512,21 @@ public class MainPage {
                 operator.put("email", EmailTextField.getText());
                 operator.put("username", UsernameTextField.getText());
                 operator.put("password", PwdTextField.getText());
-                operator.put("monitoring_center", MonitoringCenterComboBox.getSelectedItem().toString());
+                if (isNewCenter){
+                    operator.put("monitoring_center", NewNameTextField.getText());
+                } else {
+                    operator.put("monitoring_center", MonitoringCenterComboBox.getSelectedItem().toString());
+                }
                 return operator;
+            }
+
+            private HashMap newMonitoringCenter(){
+                HashMap<String, String> monitoredAreas = new HashMap<>();
+                monitoredAreas.put("name", NewNameTextField.getText());
+                monitoredAreas.put("address", AddressTextField.getText());
+                /* set a fictitious monitored area, will be overwritten */
+                monitoredAreas.put("monitored_areas", "");
+                return monitoredAreas;
             }
         });
     }

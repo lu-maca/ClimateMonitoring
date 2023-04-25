@@ -130,7 +130,7 @@ public class DetailsPage {
         Operator operator = utils.getWhoisLoggedIn();
 
         if (operator != null){
-            String[] monitoredAreas = utils.getCentersData().getEnabledLocationsForOperator(operator);
+            ArrayList<String> monitoredAreas = utils.getCentersData().getEnabledLocationsForOperator(operator);
             /* check if the chosen location is in the areas monitored by the operator logged in */
             for (String s : monitoredAreas){
                 if (s.equals(location.getGeonameID())) {

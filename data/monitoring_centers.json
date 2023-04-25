@@ -1,12 +1,18 @@
 [
-    {
-        "name": "Centro Climatico Como",
-        "address": "via Pasquale Paoli 47, 22100 Como (CO)",
-        "monitored_areas": [3178229, 3164699]
-    },
-    {
-        "name": "Centro Climatico Milano",
-        "address": "viale Certosa 47, 22100 Milano (MI)",
-        "monitored_areas": [3173435, 3164699, 3178229, 3171366]
-    }
+{
+    "name": "Centro Climatico Como",
+    "address": "via Pasquale Paoli 47, 22100 Como (CO)",
+    "monitored_areas": [3178229, 3164699]
+  },
+{
+    "name": "Centro Climatico Milano",
+    "address": "viale Certosa 47, 22100 Milano (MI)",
+    "monitored_areas": [3173435, 3164699, 3178229, 3171366]
+  },
+{
+    "name": "Centro climatico Catania",
+    "address": "via pippo michi, 47 Catania",
+    "monitored_areas": [2525068, 6534275]
+  },
+
 ]
