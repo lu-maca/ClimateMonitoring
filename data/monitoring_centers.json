@@ -14,5 +14,9 @@
     "address": "via pippo michi, 47 Catania",
     "monitored_areas": [2525068, 6534275]
   },
-
+{
+    "name": "New York Climate Center",
+    "address": "Baker street 123, New York",
+    "monitored_areas": [5115985, 5106292, 5128581, 5125771, 5370082]
+  },
 ]

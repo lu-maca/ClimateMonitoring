@@ -31,5 +31,21 @@
     "password": "qwert12!",
     "monitoring_center": "Centro climatico Catania"
   },
+{
+    "name": "Utento Otentu",
+    "tax_code": "UTTU",
+    "email": "utento@yaboo.com",
+    "username": "utento",
+    "password": "popopo12_",
+    "monitoring_center": "New York Climate Center"
+  },
+{
+    "name": "Minnie Topolino",
+    "tax_code": "MINNCS",
+    "email": "minnie@hotmeil.com",
+    "username": "minnie",
+    "password": "topolino21_",
+    "monitoring_center": "New York Climate Center"
+  },
 
 ]

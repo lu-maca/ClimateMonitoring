@@ -178,6 +178,11 @@ public class MainPage {
 
      */
 
+    private void showMessage(String message) {
+        WelcomeBackLbl.setText(message);
+        UserMessagesPnl.setVisible(true);
+    }
+
     private void setLoggedInMode(boolean isLoggedInModeActive){
         LoginBtnsPnl.setVisible(!isLoggedInModeActive);
         LogoutBtnPnl.setVisible(isLoggedInModeActive);
@@ -442,7 +447,7 @@ public class MainPage {
             public void actionPerformed(ActionEvent e) {
                 UtilsSingleton utils = UtilsSingleton.getInstance();
 
-                if (! areDataValid()){
+                if (! areUserDataValid() || ! areCenterDataValid()){
                     return;
                 }
 
@@ -466,7 +471,7 @@ public class MainPage {
                 resetRegistrationForm();
             }
 
-            private boolean areDataValid(){
+            private boolean areUserDataValid(){
                 /* check if data are valid */
                 if  (! (
                         NameTextField.getText() != "" &&
@@ -475,16 +480,14 @@ public class MainPage {
                         EmailTextField.getText() != "" &&
                         UsernameTextField.getText() != ""
                 )){
-                    WelcomeBackLbl.setText("Fill all the fields!");
-                    UserMessagesPnl.setVisible(true);
+                    showMessage("Fill all the fields!");
                     return false;
                 }
 
                 /* and if pwd contains number/special char */
                 String password = PwdTextField.getText();
                 if(password.length() < 8) {
-                    WelcomeBackLbl.setText("Password must be longer than 8 chars!");
-                    UserMessagesPnl.setVisible(true);
+                    showMessage("Password must be longer than 8 chars!");
                     return false;
                 } else {
                     Pattern letter = Pattern.compile("[a-zA-z]");
@@ -496,12 +499,22 @@ public class MainPage {
                     Matcher hasSpecial = special.matcher(password);
 
                     if (! (hasLetter.find() && hasDigit.find() && hasSpecial.find())){
-                        WelcomeBackLbl.setText("Password must contain special chars!");
-                        UserMessagesPnl.setVisible(true);
+                        showMessage("Password must contain numbers and special chars!");
                         return false;
                     }
                     return true;
                 }
+            }
+
+            private boolean areCenterDataValid(){
+                if (NewNameTextField.getText() == "" || AddressTextField.getText() == ""){
+                    showMessage("Assign a non empty name to the center!");
+                    return false;
+                } else if (newSelectedAreasModel.isEmpty()) {
+                    showMessage("Choose at least one monitored area!");
+                    return false;
+                }
+                return true;
             }
 
             private HashMap newOperator(boolean isNewCenter){

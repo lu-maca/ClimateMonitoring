@@ -59,5 +59,20 @@
   "notes": "",
   "date": ["25-04-2023 | 20:06:35"]
 },
+{
+  "state": "US",
+  "geoname_id": 5115985,
+  "ascii_name": "East New York",
+  "wind": [3],
+  "humidity": [3],
+  "pressure": [4],
+  "temperature": [3],
+  "rainfall": [4],
+  "glaciers_alt": [1],
+  "glaciers_mass": [1],
+  "tot_measure": 1,
+  "notes": "",
+  "date": ["25-04-2023 | 23:05:43"]
+},
 
 ]
