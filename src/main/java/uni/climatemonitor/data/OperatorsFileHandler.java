@@ -10,10 +10,7 @@ package uni.climatemonitor.data;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,9 +28,9 @@ public class OperatorsFileHandler extends FileHandler{
 
     @Override
     public void readFile() throws ParseException, IOException {
-        Path path = Path.of(fileName);
-        String text = Files.readString(path);
-
+        InputStream input = getClass().getResourceAsStream(fileName);
+        String text = readFromInputStream(input);
+        input.close();
         JSONParser parser = new JSONParser();
 
         Object obj = parser.parse(text);

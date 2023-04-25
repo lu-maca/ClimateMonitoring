@@ -7,12 +7,7 @@
 
 package uni.climatemonitor.data;
 
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -42,21 +37,19 @@ public class LocationsFileHandler extends FileHandler {
     public void readFile(){
 
         try {
-            FileReader filereader = new FileReader(fileName);
-
-            CSVParser csvParser = new CSVParserBuilder().withSeparator(';')
-                                        .build();
-            CSVReader csvReader = new CSVReaderBuilder(filereader)
-                                        .withCSVParser(csvParser)
-                                        .withSkipLines(1)
-                                        .build();
-            String[] nextRecord;
+            InputStream input = getClass().getResourceAsStream(fileName);
+            BufferedReader in = new BufferedReader(new InputStreamReader(input));
+            in.readLine();
+            String nextRecord = in.readLine();
 
             // we are going to read data line by line
-            while ((nextRecord = csvReader.readNext()) != null) {
-                Location tmpLoc = new Location(nextRecord);
+            while (nextRecord != null) {
+                Location tmpLoc = new Location(nextRecord.split(";"));
                 locationsList.add(tmpLoc);
+                nextRecord = in.readLine();
             }
+
+            in.close();
         }
         catch (Exception e) {
             e.printStackTrace();

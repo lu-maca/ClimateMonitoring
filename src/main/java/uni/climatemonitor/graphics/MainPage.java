@@ -16,6 +16,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -98,8 +99,9 @@ public class MainPage {
         UtilsSingleton utils = UtilsSingleton.getInstance();
 
         /* set the logo */
-        ImageIcon iconLogo = new ImageIcon(Constants.LOGO_PATH_S);
-        Logo.setIcon(iconLogo);
+        URL imgURL = getClass().getResource(Constants.LOGO_PATH_S);
+        ImageIcon image = new ImageIcon(imgURL);
+        Logo.setIcon(image);
 
         /* set initial search list and its gui options */
         searchListModel = new DefaultListModel<>();

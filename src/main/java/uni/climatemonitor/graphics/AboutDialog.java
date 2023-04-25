@@ -7,6 +7,7 @@
 package uni.climatemonitor.graphics;
 import uni.climatemonitor.generics.Constants;
 import javax.swing.*;
+import java.net.URL;
 
 public class AboutDialog extends JDialog {
     private JPanel contentPane;
@@ -20,8 +21,9 @@ public class AboutDialog extends JDialog {
         setLocationRelativeTo(null);
         setTitle("About");
 
-        ImageIcon iconLogo = new ImageIcon(Constants.EARTH_LOGO_PATH_S);
-        logoEarthLbl.setIcon(iconLogo);
+        URL imgURL = getClass().getResource(Constants.EARTH_LOGO_PATH_S);
+        ImageIcon image = new ImageIcon(imgURL);
+        logoEarthLbl.setIcon(image);
     }
 
 }
