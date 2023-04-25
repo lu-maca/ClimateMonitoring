@@ -1,3 +1,10 @@
+/*************************************************
+ * GeoData class
+ * @author Luca Macavero, 755091, lmacavero@studenti.uninsubria.it, VA
+ *
+ */
+
+
 package uni.climatemonitor.data;
 
 import org.json.simple.parser.ParseException;
@@ -5,7 +12,6 @@ import uni.climatemonitor.generics.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class GeoData {
     /* files */

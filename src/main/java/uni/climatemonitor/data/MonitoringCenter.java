@@ -1,3 +1,10 @@
+/*************************************************
+ * MonitoringCenters class
+ * @author Luca Macavero, 755091, lmacavero@studenti.uninsubria.it, VA
+ *
+ */
+
+
 package uni.climatemonitor.data;
 
 import java.util.HashMap;
@@ -8,19 +15,9 @@ public class MonitoringCenter {
     private String[] monitoredAreas;
 
     public MonitoringCenter(HashMap o){
-        for (Object key: o.keySet()) {
-            switch (key.toString()) {
-                case "name":
-                    this.name = o.get(key).toString();
-                    break;
-                case "address":
-                    this.address = o.get(key).toString();
-                    break;
-                case "monitored_areas":
-                    this.monitoredAreas = unpackStringToStringArray(o.get(key).toString());
-                    break;
-            }
-        }
+        this.name = o.get("name").toString();
+        this.address = o.get("address").toString();
+        this.monitoredAreas = unpackStringToStringArray(o.get("monitored_areas").toString());
     }
 
     private String[] unpackStringToStringArray(String s){

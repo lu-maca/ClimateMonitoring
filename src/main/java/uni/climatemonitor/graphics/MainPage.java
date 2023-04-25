@@ -1,7 +1,11 @@
+/*************************************************
+ * OperatorsFileHandler class
+ * @author Luca Macavero, 755091, lmacavero@studenti.uninsubria.it, VA
+ *
+ */
+
 package uni.climatemonitor.graphics;
 
-import jdk.jshell.execution.Util;
-import org.json.simple.parser.ParseException;
 import uni.climatemonitor.data.*;
 import uni.climatemonitor.generics.Constants;
 
@@ -12,7 +16,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import java.util.Arrays;
 
 public class MainPage {
@@ -41,6 +44,26 @@ public class MainPage {
     private JPanel LoginBtnsPnl;
     private JPanel LogoutBtnPnl;
     private JPanel UserMessagesPnl;
+    private JPanel UserGeneralPnl;
+    private JPanel RegistrationPnl;
+    private JLabel NameLbl;
+    private JTextField NameTextField;
+    private JTextField SurnameTextFIeld;
+    private JLabel SurnameLbl;
+    private JLabel TaxCodeLbl;
+    private JTextField textField1;
+    private JLabel EmailLbl;
+    private JTextField EmailTextField;
+    private JLabel UsernameLbl;
+    private JTextField UsernameTextField;
+    private JLabel PwdLbl;
+    private JTextField PwdTextField;
+    private JPanel MonitoringCenterPnl;
+    private JLabel MonitoringCenterNameLbl;
+    private JTextField textField2;
+    private JCheckBox newCheckBox;
+    private JTextField AddressTextField;
+    private JLabel AddressLbl;
 
     /* utilities for locations */
     private DefaultListModel<Location> searchListModel;
@@ -70,6 +93,10 @@ public class MainPage {
 
         /* set initial login */
         LogoutBtnPnl.setVisible(false);
+
+        /* set initial registration */
+        RegistrationPnl.setVisible(false);
+        MonitoringCenterPnl.setVisible(false);
 
         /*
             Callbacks for the main page
@@ -101,6 +128,8 @@ public class MainPage {
          */
         loginEnterBtn_at_click();
         loginExitBtn_at_click();
+        /* registration panel management */
+        registerBtn_at_click();
         /* restore main page to initial condition when logout button is pushed */
         logoutBtn_at_click();
     }
@@ -285,6 +314,23 @@ public class MainPage {
                 pwdLoginTextField.setBorder(pwdLoginTextFieldBorder);
                 ButtonsPnl.setVisible(false);
                 LoginPnl.setVisible(true);
+            }
+        });
+    }
+
+
+    /**
+     * Callback for About button push. Open the dialog with some info
+     * about the authors and the project.
+     *
+     */
+    private void registerBtn_at_click(){
+        RegisterBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ButtonsPnl.setVisible(false);
+                RegistrationPnl.setVisible(true);
+                MonitoringCenterPnl.setVisible(true);
             }
         });
     }

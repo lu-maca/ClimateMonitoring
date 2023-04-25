@@ -1,7 +1,12 @@
+/*************************************************
+ * OperatorsFileHandler class
+ * @author Luca Macavero, 755091, lmacavero@studenti.uninsubria.it, VA
+ *
+ */
+
 package uni.climatemonitor.graphics;
 import uni.climatemonitor.generics.Constants;
 import javax.swing.*;
-
 
 public class AboutDialog extends JDialog {
     private JPanel contentPane;
@@ -10,7 +15,7 @@ public class AboutDialog extends JDialog {
 
     public AboutDialog() {
         setContentPane(contentPane);
-        setSize(610,170);
+        setSize(610,200);
         setResizable(false);
         setLocationRelativeTo(null);
         setTitle("About");
