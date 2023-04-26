@@ -305,11 +305,19 @@ public class MainPage {
                 SearchListPnl.setVisible(false);
                 SearchList.clearSelection();
             }
-            /* filter places */
-            filterModel(searched);
+            /* filter places:
+                if the searched string does not contain numbers,
+                it is a simple search, but if contains numbers (or +/-)
+                it is a lat-long search
+             */
+            if ( ! searched.matches("[.*\\d.*]") ) {
+                filterModel(searched);
+            } else {
+
+            }
         }
 
-        public void filterModel(String filter) {
+        private void filterModel(String filter) {
             UtilsSingleton utils = UtilsSingleton.getInstance();
             for (Location l : utils.getGeoData().getGeoLocationsList()) {
                 if (!l.toString().contains(filter)) {
@@ -326,6 +334,10 @@ public class MainPage {
             if (searchListModel.isEmpty()){
                 SearchListPnl.setVisible(false);
             }
+        }
+
+        private void filterModelByCoordinates(String coordinates) {
+            
         }
     };
 
@@ -348,6 +360,7 @@ public class MainPage {
                 if (evt.getClickCount() == 2) {
                     UtilsSingleton utils = UtilsSingleton.getInstance();
                     clickedElement = (Location) SearchList.getSelectedValue();
+                    if (clickedElement == null) { return; }
 
                     /* if registration mode is active, add the clicked element to the list of selected areas,
                     * else open the details page */

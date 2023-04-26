@@ -36,7 +36,7 @@ public class Coordinates {
         String EW = "E";
         if (latitude < 0){ NS = "S"; }
         if (longitude < 0){ EW = "W"; }
-        String out = "<html>" + lat + "° " + NS + "<br>" + lon + "° " + EW + "</html>";
+        String out = lat + "° " + NS + " " + lon + "° " + EW ;
         return out;
     }
 }

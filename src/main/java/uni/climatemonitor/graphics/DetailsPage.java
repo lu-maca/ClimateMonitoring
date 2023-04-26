@@ -150,7 +150,7 @@ public class DetailsPage {
         location = loc;
         UtilsSingleton utils = UtilsSingleton.getInstance();
         params = utils.getGeoData().getClimateParamsFor(location.getGeonameID());
-        PlaceNameLbl.setText(location.toString());
+        PlaceNameLbl.setText(location.toStringNoCoordinates());
 
         DateComboBox.setPreferredSize(new Dimension(185, 24));
         if (!isOperatorEnabledForThisPlace() && params != null) {

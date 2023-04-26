@@ -47,9 +47,18 @@ public class Location {
      */
     @Override
     public String toString() {
+        String out = asciiName + ", " + state + ", " + coordinates.toString();
+        return out;
+    }
+
+    /**
+     * return a representation of the object without coordinates
+     */
+    public String toStringNoCoordinates() {
         String out = asciiName + ", " + state;
         return out;
     }
+
 
     /**
      * state getter
