@@ -33,6 +33,7 @@ public class Location {
         coordinates = new Coordinates(coords[0], coords[1]);
     }
 
+
     private double[] unpackCoordinateString(String c) {
         String[] splittedLatLong = c.replaceAll(" ", "").split(",");
         double[] out = new double[2];
@@ -58,7 +59,6 @@ public class Location {
         String out = asciiName + ", " + state;
         return out;
     }
-
 
     /**
      * state getter

@@ -298,23 +298,33 @@ public class MainPage {
         public void removeUpdate(DocumentEvent e){ suggest(); }
 
         public void suggest() {
+            boolean isCoordValid = false;
             String searched = typeAPlaceTextField.getText();
-            if (searched.length() > 0){
-                SearchListPnl.setVisible(true);
-            } else if (searched.length() == 0){
-                SearchListPnl.setVisible(false);
-                SearchList.clearSelection();
-            }
             /* filter places:
                 if the searched string does not contain numbers,
                 it is a simple search, but if contains numbers (or +/-)
                 it is a lat-long search
              */
-            if ( ! searched.matches("[.*\\d.*]") ) {
+            final Pattern pattern = Pattern.compile("(\\d+\\.\\d+)° [N|S] (\\d+\\.\\d+)° [E|W]");
+            Matcher matcher = pattern.matcher(searched);
+            if ( ! matcher.matches() ) {
                 filterModel(searched);
             } else {
+                double lat = Double.parseDouble(matcher.group(1));
+                double lon = Double.parseDouble(matcher.group(2));
+                Coordinates searchedCoordinates = new Coordinates(lat, lon);
 
+                filterModelByCoordinates(searchedCoordinates);
             }
+
+            /* set visibility */
+            if (! searchListModel.isEmpty() && searched.length() > 0){
+                SearchListPnl.setVisible(true);
+            } else {
+                SearchListPnl.setVisible(false);
+                SearchList.clearSelection();
+            }
+
         }
 
         private void filterModel(String filter) {
@@ -330,14 +340,24 @@ public class MainPage {
                     }
                 }
             }
-            /* remove the list if it is empty*/
-            if (searchListModel.isEmpty()){
-                SearchListPnl.setVisible(false);
-            }
         }
 
-        private void filterModelByCoordinates(String coordinates) {
-            
+        private void filterModelByCoordinates(Coordinates coordinates) {
+            UtilsSingleton utils = UtilsSingleton.getInstance();
+            for (Location l : utils.getGeoData().getGeoLocationsList()) {
+                double dist = coordinates.distance(l.getCoordinates());
+                /* accept only those locations with a distance <= 50km*/
+                final double DIST = 50_000.0;
+                if (dist >= DIST){
+                    if (searchListModel.contains(l)) {
+                        searchListModel.removeElement(l);
+                    }
+                } else {
+                    if (!searchListModel.contains(l)) {
+                        searchListModel.addElement(l);
+                    }
+                }
+            }
         }
     };
 
