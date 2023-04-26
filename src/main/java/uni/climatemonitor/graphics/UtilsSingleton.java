@@ -43,7 +43,7 @@ public final class UtilsSingleton {
             try {
                 INSTANCE = new UtilsSingleton();
             } catch (Exception e){
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
         return INSTANCE;

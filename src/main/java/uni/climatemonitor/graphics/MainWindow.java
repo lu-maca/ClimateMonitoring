@@ -10,6 +10,7 @@ import org.json.simple.parser.ParseException;
 import uni.climatemonitor.generics.Constants;
 import javax.swing.*;
 import java.io.IOException;
+import java.net.URL;
 
 public class MainWindow extends JFrame {
 
@@ -36,8 +37,9 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         /* set the logo */
-        ImageIcon earthIcon = new ImageIcon(Constants.EARTH_LOGO_PATH_S);
-        setIconImage(earthIcon.getImage());
+        URL imgURL = getClass().getResource(Constants.EARTH_LOGO_PATH_S);
+        ImageIcon image = new ImageIcon(imgURL);
+        setIconImage(image.getImage());
 
         /* set mutually exclusive panel */
         MainMExC.add(MainParentPnl, "Main Page");
