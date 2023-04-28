@@ -33,6 +33,7 @@ public class Location {
         coordinates = new Coordinates(coords[0], coords[1]);
     }
 
+
     private double[] unpackCoordinateString(String c) {
         String[] splittedLatLong = c.replaceAll(" ", "").split(",");
         double[] out = new double[2];
@@ -47,6 +48,14 @@ public class Location {
      */
     @Override
     public String toString() {
+        String out = asciiName + ", " + state + ", " + coordinates.toString();
+        return out;
+    }
+
+    /**
+     * return a representation of the object without coordinates
+     */
+    public String toStringNoCoordinates() {
         String out = asciiName + ", " + state;
         return out;
     }

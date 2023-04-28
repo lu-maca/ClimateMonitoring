@@ -14,6 +14,12 @@
         <version>1.1.1</version>
     </dependency>
 
+    <dependency>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-spatial</artifactId>
+        <version>8.2.0</version>
+    </dependency>
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>

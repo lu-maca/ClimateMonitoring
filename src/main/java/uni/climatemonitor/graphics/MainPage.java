@@ -17,9 +17,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -299,17 +297,38 @@ public class MainPage {
 
         public void suggest() {
             String searched = typeAPlaceTextField.getText();
-            if (searched.length() > 0){
+            /* filter places:
+                if the searched string does not contain numbers,
+                it is a simple search, but if contains numbers (or +/-)
+                it is a lat-long search
+             */
+            final Pattern pattern = Pattern.compile("(\\d+\\.\\d+)° (N|S) (\\d+\\.\\d+)° (E|W)");
+            Matcher matcher = pattern.matcher(searched);
+            if ( ! matcher.matches() ) {
+                filterModel(searched);
+            } else {
+                /* get the coordinates value with signs */
+                double latSign = (matcher.group(2).equals("N")) ? 1.0 : -1.0;
+                double lat = latSign * Double.parseDouble(matcher.group(1));
+                double longSign = (matcher.group(4).equals("E")) ? 1.0 : -1.0;
+                double lon = longSign * Double.parseDouble(matcher.group(3));
+
+                Coordinates searchedCoordinates = new Coordinates(lat, lon);
+
+                filterModelByCoordinates(searchedCoordinates);
+            }
+
+            /* set visibility */
+            if (! searchListModel.isEmpty() && searched.length() > 0){
                 SearchListPnl.setVisible(true);
-            } else if (searched.length() == 0){
+            } else {
                 SearchListPnl.setVisible(false);
                 SearchList.clearSelection();
             }
-            /* filter places */
-            filterModel(searched);
+
         }
 
-        public void filterModel(String filter) {
+        private void filterModel(String filter) {
             UtilsSingleton utils = UtilsSingleton.getInstance();
             for (Location l : utils.getGeoData().getGeoLocationsList()) {
                 if (!l.toString().contains(filter)) {
@@ -322,9 +341,33 @@ public class MainPage {
                     }
                 }
             }
-            /* remove the list if it is empty*/
-            if (searchListModel.isEmpty()){
-                SearchListPnl.setVisible(false);
+        }
+
+        private void filterModelByCoordinates(Coordinates coordinates) {
+            /* local variables */
+            UtilsSingleton utils = UtilsSingleton.getInstance();
+            final double DIST = 50_000.0;
+            double dist;
+            Map<Double, Location> sortedMap;
+            Map<Double, Location> unsortedMap = new HashMap<>();
+
+            /* remove all elements just to be sure the list is empty */
+            searchListModel.removeAllElements();
+
+            for (Location l : utils.getGeoData().getGeoLocationsList()) {
+                dist = coordinates.distance(l.getCoordinates());
+                /* accept only those locations with a distance <= 50km */
+                if (dist <= DIST) {
+                    unsortedMap.put(dist, l);
+                }
+            }
+            /* get a sorted map by keys: keys are distances from the searched
+            * coordinates to the ones in the locations' file. */
+            sortedMap = new TreeMap<Double, Location>(unsortedMap);
+            /* at the end we can add to the suggestion list in the right order,
+            * from the nearest to the furthest */
+            for (Map.Entry<Double, Location> entry : sortedMap.entrySet()){
+                searchListModel.addElement(entry.getValue());
             }
         }
     };
@@ -348,6 +391,7 @@ public class MainPage {
                 if (evt.getClickCount() == 2) {
                     UtilsSingleton utils = UtilsSingleton.getInstance();
                     clickedElement = (Location) SearchList.getSelectedValue();
+                    if (clickedElement == null) { return; }
 
                     /* if registration mode is active, add the clicked element to the list of selected areas,
                     * else open the details page */
