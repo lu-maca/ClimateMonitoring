@@ -19,7 +19,8 @@ import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
+
 
 public class DetailsPage {
     private JLabel PlaceNameLbl;
@@ -33,25 +34,18 @@ public class DetailsPage {
     private JPanel WindPnl;
     private JLabel WindAverageValueLbl;
     private JPanel ParametersContainer;
-    private JPanel Humidity;
     private JLabel HumidityMostRecentValueLbl;
     private JLabel HumidityAverageValueLbl;
-    private JPanel Pressure;
     private JLabel PressureMostRecentValueLbl;
     private JLabel PressureAverageValueLbl;
-    private JPanel ColumnsPnl;
     private JLabel AverageTitleLbl;
     private JLabel MostRecentTitleLbl;
-    private JPanel Temperature;
     private JLabel TemperatureMostRecentValueLbl;
     private JLabel TemperatureAverageValueLbl;
-    private JPanel Rainfall;
     private JLabel RainfallMostRecentValueLbl;
     private JLabel RainfallAverageValueLbl;
-    private JPanel GlaciersAlt;
     private JLabel GAltMostRecentValueLbl;
     private JLabel GAltAverageValueLbl;
-    private JPanel GlaciersMass;
     private JLabel GMassMostRecentValueLbl;
     private JLabel GMassAverageValueLbl;
     private JPanel WindAveragePnl;
@@ -73,7 +67,6 @@ public class DetailsPage {
     private JPanel GAltAveragePnl;
     private JComboBox GAltComboBox;
     private JPanel GMassMostRecentPnl;
-    private JPanel GMassAveragePnl;
     private JComboBox GMassComboBox;
     private JTextArea NotesTextArea;
     private JPanel NotesPnl;
@@ -85,13 +78,30 @@ public class DetailsPage {
     private JLabel MaxNumOfCharErrLbl;
     private JLabel NotesErrorLbl;
     private JPanel NotesErrorPnl;
+    private JLabel WindLbl;
+    private JLabel HumidityLbl;
+    private JLabel PressureLbl;
+    private JLabel TemperatureLbl;
+    private JLabel RainfallLbl;
+    private JLabel GAltLbl;
+    private JLabel GMassLbl;
 
 
     /* location info */
     private Location location;
     private ClimateParams params;
 
+    /* weather criticality levels */
+    HashMap<String, String> criticality = new HashMap<>();
+
     public DetailsPage(){
+        /* set criticality levels */
+        criticality.put("1", "CRITICAL");
+        criticality.put("2", "SEVERE");
+        criticality.put("3", "MODERATE");
+        criticality.put("4", "FAVORABLE");
+        criticality.put("5", "EXCELLENT");
+
         /*
             Callbacks for the detailed location page
          */
@@ -189,29 +199,62 @@ public class DetailsPage {
     }
 
     private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
-//        if (UtilsSingleton.getInstance().getWhoisLoggedIn() == null) {
-        current.setText(currentValue + " / 5");
-//        }
-        average.setText(averageValue + " / 5");
+        current.setText(currentValue);
+        average.setText(averageValue);
+    }
+
+    private String assignCriticalityLevelFromNumber(String number) {
+        String integerPart;
+        Integer decimalPart = 0;
+        boolean isDecimalPartValid = false;
+        /* get the integer and decimal parts of the number */
+        try {
+            decimalPart = Integer.parseInt(number.substring(number.indexOf(".") + 1));
+            integerPart = number.substring(0, number.indexOf("."));
+            isDecimalPartValid = true;
+        } catch(java.lang.StringIndexOutOfBoundsException e) {
+            integerPart = number;
+        }
+
+        String currentCriticality = criticality.get(integerPart);
+
+        if (isDecimalPartValid){
+            String subLevel;
+            if (decimalPart < 50) {
+                subLevel = "LOW";
+            } else {
+                subLevel = "HIGH";
+            }
+            currentCriticality = subLevel + " " + currentCriticality;
+        }
+
+        return currentCriticality;
     }
 
     private void setParamsFromHistory(int idx){
         AverageTitleLbl.setText("Average (on a total of " + params.getTot_measure() + " records)");
 
         /* set wind */
-        setLblValues(WindMostRecentValueLbl, params.getWind().get(idx), WindAverageValueLbl, computeAverage(params.getWind()));
+        setLblValues(WindMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getWind().get(idx)),
+                WindAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getWind())));
         /* set humidity */
-        setLblValues(HumidityMostRecentValueLbl, params.getHumidity().get(idx), HumidityAverageValueLbl, computeAverage(params.getHumidity()));
+        setLblValues(HumidityMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getHumidity().get(idx)),
+                HumidityAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getHumidity())));
         /* set pressure */
-        setLblValues(PressureMostRecentValueLbl, params.getPressure().get(idx), PressureAverageValueLbl, computeAverage(params.getPressure()));
+        setLblValues(PressureMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getPressure().get(idx)),
+                PressureAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getPressure())));
         /* set temperature */
-        setLblValues(TemperatureMostRecentValueLbl, params.getTemperature().get(idx), TemperatureAverageValueLbl, computeAverage(params.getTemperature()));
+        setLblValues(TemperatureMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getTemperature().get(idx)),
+                TemperatureAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getTemperature())));
         /* set rainfall */
-        setLblValues(RainfallMostRecentValueLbl, params.getRainfall().get(idx), RainfallAverageValueLbl, computeAverage(params.getRainfall()));
+        setLblValues(RainfallMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getRainfall().get(idx)),
+                RainfallAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getRainfall())));
         /* set glaciers alt */
-        setLblValues(GAltMostRecentValueLbl, params.getGlacier_alt().get(idx), GAltAverageValueLbl, computeAverage(params.getGlacier_alt()));
+        setLblValues(GAltMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getGlacier_alt().get(idx)),
+                GAltAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getGlacier_alt())));
         /* set glaciers mass */
-        setLblValues(GMassMostRecentValueLbl, params.getGlacier_mass().get(idx), GMassAverageValueLbl, computeAverage(params.getGlacier_mass()));
+        setLblValues(GMassMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getGlacier_mass().get(idx)),
+                GMassAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getGlacier_mass())));
         /* set notes */
         NotesTextArea.setText(params.getNotes());
     }
@@ -241,19 +284,19 @@ public class DetailsPage {
         AverageTitleLbl.setText("Average (no detection found)");
         MostRecentTitleLbl.setText("Most recent detection");
         /* set wind */
-        setLblValues(WindMostRecentValueLbl, "??", WindAverageValueLbl, "??");
+        setLblValues(WindMostRecentValueLbl, Constants.NONE, WindAverageValueLbl, Constants.NONE);
         /* set humidity */
-        setLblValues(HumidityMostRecentValueLbl, "??", HumidityAverageValueLbl, "??");
+        setLblValues(HumidityMostRecentValueLbl, Constants.NONE, HumidityAverageValueLbl, Constants.NONE);
         /* set pressure */
-        setLblValues(PressureMostRecentValueLbl, "??", PressureAverageValueLbl, "??");
+        setLblValues(PressureMostRecentValueLbl, Constants.NONE, PressureAverageValueLbl, Constants.NONE);
         /* set temperature */
-        setLblValues(TemperatureMostRecentValueLbl, "??", TemperatureAverageValueLbl, "??");
+        setLblValues(TemperatureMostRecentValueLbl, Constants.NONE, TemperatureAverageValueLbl, Constants.NONE);
         /* set rainfall */
-        setLblValues(RainfallMostRecentValueLbl, "??", RainfallAverageValueLbl, "??");
+        setLblValues(RainfallMostRecentValueLbl, Constants.NONE, RainfallAverageValueLbl, Constants.NONE);
         /* set glaciers alt */
-        setLblValues(GAltMostRecentValueLbl, "??", GAltAverageValueLbl, "??");
+        setLblValues(GAltMostRecentValueLbl, Constants.NONE, GAltAverageValueLbl, Constants.NONE);
         /* set glaciers mass */
-        setLblValues(GMassMostRecentValueLbl, "??", GMassAverageValueLbl, "??");
+        setLblValues(GMassMostRecentValueLbl, Constants.NONE, GMassAverageValueLbl, Constants.NONE);
         /* notes field */
         NotesTextArea.setText("");
         /* date combo box */
@@ -295,7 +338,7 @@ public class DetailsPage {
     /**
      * When the details page is closed, perform some reset actions,
      * for example:
-     *  - set climate params info to "?? / 5"
+     *  - set climate params info to "NONE"
      *  - reset the combo boxes values when in operator mode
      */
     private void DetailsPnl_at_visibility_change(){
@@ -450,4 +493,5 @@ public class DetailsPage {
     public static void main(String[] args) {
         DetailsPage detailsPage = new DetailsPage();
     }
+
 }

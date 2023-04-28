@@ -24,5 +24,9 @@ public final class Constants {
 
     /* generics data */
     public static final int NOTES_MAX_CHAR_NUM = 256;
-    public static final int EARTH_RADIUS =  6371000;
+    public static final double MAX_DIST = 50_000.0;
+    public static final String NONE = "NONE";
+
+
 }
+
