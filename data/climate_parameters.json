@@ -67,5 +67,39 @@
   "center": ["Centro lecce"],
   "who": ["Pippo pero"]
 },
+{
+  "state": "US",
+  "geoname_id": 5115985,
+  "ascii_name": "East New York",
+  "wind": [3],
+  "humidity": [1],
+  "pressure": [3],
+  "temperature": [4],
+  "rainfall": [4],
+  "glaciers_alt": [4],
+  "glaciers_mass": [4],
+  "tot_measure": 1,
+  "notes": "prova",
+  "date": ["29-04-2023 | 13:12:38"],
+  "center": ["New York Climate Center"],
+  "who": ["Poli Moli"]
+},
+{
+  "state": "US",
+  "geoname_id": 5128581,
+  "ascii_name": "New York City",
+  "wind": [1],
+  "humidity": [5],
+  "pressure": [1],
+  "temperature": [3],
+  "rainfall": [4],
+  "glaciers_alt": [5],
+  "glaciers_mass": [5],
+  "tot_measure": 1,
+  "notes": "Prova per superare 256 caratteri con un discorso abbastanza sensato, in modo che possa controllare che tale messaggio venga tagliato nel punto corretto. Quanto mancherà ai 256 caratteri? Boh, spero poco perché non ho più nient'altro da dire aaaaaa che sbat",
+  "date": ["29-04-2023 | 13:14:11"],
+  "center": ["New York Climate Center"],
+  "who": ["Poli Moli"]
+},
 
 ]
