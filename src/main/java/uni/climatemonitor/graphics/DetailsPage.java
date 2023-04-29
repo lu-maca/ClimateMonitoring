@@ -203,7 +203,11 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
 
         DateComboBox.setPreferredSize(new Dimension(185, 24));
         if (!isOperatorEnabledForThisPlace() && params != null) {
-            DateComboBox.setModel(new DefaultComboBoxModel<String>(params.getDate().toArray(new String[0])));
+            DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+            for (String s : params.getDate()){
+                comboBoxModel.addElement(s);
+            }
+            DateComboBox.setModel(comboBoxModel);
         } else {
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             model.addElement("---");
@@ -228,12 +232,14 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         NotesPnl.setMaximumSize(new Dimension(150,50));
         NotesPnl.setMinimumSize(new Dimension(150,50));
         NotesErrorPnl.setVisible(false);
-        NotesTextArea.setText("");
-
 
         /* if climate params is null (i.e. when no detections are found, maintain the "unknown" state */
-        NotesTextArea.setText("None.");
-        if (params == null){ return; }
+
+        if (params == null){
+            NotesTextArea.setText("None.");
+            return;
+        }
+        NotesTextArea.setText("");
 
         /* if history on climate params exists, set it */
         setParamsFromHistory(0);
