@@ -170,9 +170,9 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         UtilsSingleton utils = UtilsSingleton.getInstance();
         AboutLastRecordTextArea.setBackground(new Color(238,238,238));
         if (params != null) {
-            String monCenter = params.getCenter().get(0);
+            String monCenter = params.getCenter().get(0).replaceAll("\"", "");
             String who =  params.getWho().get(0);
-            String date = params.getDate().get(0);
+            String date = params.getDate().get(0).replaceAll("\"", "");
             MonitoringCenter mc = utils.getCentersData().getMonitoringCenterFromName(monCenter);
             String monCenterInfo = mc.getAddress();
             ArrayList<String> monCenterArea = mc.getMonitoredAreas();
@@ -278,6 +278,11 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         }
 
         return currentCriticality;
+    }
+
+    private String quoteString(String s){
+        String out = "\"" + s + "\"";
+        return out;
     }
 
     private void setParamsFromHistory(int idx){
@@ -468,13 +473,13 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
                 params.getRainfall().add(0, String.format("%d", rainfallItem));
                 params.getGlacier_alt().add(0, String.format("%d", galtItem));
                 params.getGlacier_mass().add(0, String.format("%d", gmassItem));
-                params.getWho().add(0,  "\"" + utils.getWhoisLoggedIn().getName() + "\"");
-                params.getCenter().add(0, "\"" + utils.getWhoisLoggedIn().getMonitoringCenter() + "\"" );
+                params.getWho().add(0,  quoteString(utils.getWhoisLoggedIn().getName()));
+                params.getCenter().add(0, quoteString(utils.getWhoisLoggedIn().getMonitoringCenter() ));
 
                 /* set today */
                 LocalDateTime ld = LocalDateTime.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy | HH:mm:ss");
-                String dateString = "\"" + ld.format(formatter) + "\"";
+                String dateString = quoteString(ld.format(formatter));
 
                 params.getDate().add(0, dateString);
                 /* set also new notes */

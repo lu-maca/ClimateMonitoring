@@ -73,7 +73,7 @@ public class CentersData {
 
     public MonitoringCenter getMonitoringCenterFromName(String name){
         for (MonitoringCenter mc : getMonitoringCentersList()) {
-            if (mc.getName().equals(name)) {
+             if (mc.getName().equals(name)) {
                 return mc;
             }
         }

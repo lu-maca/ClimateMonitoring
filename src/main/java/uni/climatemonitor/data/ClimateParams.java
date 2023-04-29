@@ -69,7 +69,6 @@ public class ClimateParams {
 
     private ArrayList<String> unpackStringToStringArray(String s){
         String sWithoutBrackets = s.replaceAll("\\[|\\]", "").trim();
-        sWithoutBrackets = sWithoutBrackets.replaceAll("\"", "");
         ArrayList<String> split = new ArrayList<>(Arrays.asList(sWithoutBrackets.split(",")));
 
         return split;
