@@ -50,5 +50,22 @@
   "center": ["Centro Climatico Milano", "Centro Climatico Milano"],
   "who": ["Truppa Luppa", "Truppa Luppa"]
 },
+{
+  "state": "IT",
+  "geoname_id": 3174953,
+  "ascii_name": "Lecce",
+  "wind": [5],
+  "humidity": [5],
+  "pressure": [3],
+  "temperature": [1],
+  "rainfall": [5],
+  "glaciers_alt": [5],
+  "glaciers_mass": [5],
+  "tot_measure": 1,
+  "notes": "Fa troppo caldo",
+  "date": ["29-04-2023 | 04:09:59"],
+  "center": ["Centro lecce"],
+  "who": ["Pippo pero"]
+},
 
 ]
