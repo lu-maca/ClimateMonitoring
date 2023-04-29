@@ -205,7 +205,8 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         if (!isOperatorEnabledForThisPlace() && params != null) {
             DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
             for (String s : params.getDate()){
-                comboBoxModel.addElement(s);
+                /* remove quotes if any */
+                comboBoxModel.addElement(s.replaceAll("\"", ""));
             }
             DateComboBox.setModel(comboBoxModel);
         } else {
@@ -467,8 +468,8 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
                 params.getRainfall().add(0, String.format("%d", rainfallItem));
                 params.getGlacier_alt().add(0, String.format("%d", galtItem));
                 params.getGlacier_mass().add(0, String.format("%d", gmassItem));
-                params.getWho().add(0, utils.getWhoisLoggedIn().getName() );
-                params.getCenter().add(0, utils.getWhoisLoggedIn().getMonitoringCenter() );
+                params.getWho().add(0,  "\"" + utils.getWhoisLoggedIn().getName() + "\"");
+                params.getCenter().add(0, "\"" + utils.getWhoisLoggedIn().getMonitoringCenter() + "\"" );
 
                 /* set today */
                 LocalDateTime ld = LocalDateTime.now();

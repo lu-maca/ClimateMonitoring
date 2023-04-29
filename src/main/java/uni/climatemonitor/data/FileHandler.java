@@ -10,8 +10,7 @@ package uni.climatemonitor.data;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
-import java.util.List;
-import java.util.Scanner;
+
 
 /**
  * Generic class for data files handling

@@ -12,6 +12,8 @@ import org.json.simple.parser.ParseException;
 import uni.climatemonitor.generics.Constants;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class ClimateParametersFileHandler extends FileHandler {
@@ -35,11 +37,10 @@ public class ClimateParametersFileHandler extends FileHandler {
      */
     @Override
     public void readFile() throws ParseException, IOException {
-        InputStream input = getClass().getResourceAsStream(fileName);
-        String text = readFromInputStream(input);
-        input.close();
-        JSONParser parser = new JSONParser();
+        Path path = Path.of(fileName);
+        String text = Files.readString(path);
 
+        JSONParser parser = new JSONParser();
         Object obj = parser.parse(text);
 
         /* for all elements of the list */

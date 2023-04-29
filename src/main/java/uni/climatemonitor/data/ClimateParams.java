@@ -42,7 +42,7 @@ public class ClimateParams {
     "glaciers_mass": %s,
     "tot_measure": %d,
     "notes": "%s",
-    "date": %s
+    "date": %s,
     "center": %s,
     "who": %s
   }""";

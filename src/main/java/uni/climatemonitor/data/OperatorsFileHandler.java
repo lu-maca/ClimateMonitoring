@@ -11,6 +11,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,9 +30,9 @@ public class OperatorsFileHandler extends FileHandler{
 
     @Override
     public void readFile() throws ParseException, IOException {
-        InputStream input = getClass().getResourceAsStream(fileName);
-        String text = readFromInputStream(input);
-        input.close();
+        Path path = Path.of(fileName);
+        String text = Files.readString(path);
+
         JSONParser parser = new JSONParser();
 
         Object obj = parser.parse(text);

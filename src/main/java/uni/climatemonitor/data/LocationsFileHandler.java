@@ -37,8 +37,8 @@ public class LocationsFileHandler extends FileHandler {
     public void readFile(){
 
         try {
-            InputStream input = getClass().getResourceAsStream(fileName);
-            BufferedReader in = new BufferedReader(new InputStreamReader(input));
+
+            BufferedReader in = new BufferedReader(new FileReader(fileName));
             in.readLine();
             String nextRecord = in.readLine();
 

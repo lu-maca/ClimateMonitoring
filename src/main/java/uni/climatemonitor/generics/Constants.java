@@ -17,10 +17,10 @@ public final class Constants {
     public static final String PWD_S = "Password";
 
     /* data paths */
-    public static final String CLIMATE_PARAMS_S = "/data/climate_parameters.json";
-    public static final String MONITORING_CENTERS_S = "/data/monitoring_centers.json";
-    public static final String MONITORING_COORDS_S = "/data/monitoring_coordinates.csv";
-    public static final String REGISTERED_OPS_S = "/data/registered_operators.json";
+    public static final String CLIMATE_PARAMS_S = "./data/climate_parameters.json";
+    public static final String MONITORING_CENTERS_S = "./data/monitoring_centers.json";
+    public static final String MONITORING_COORDS_S = "./data/monitoring_coordinates.csv";
+    public static final String REGISTERED_OPS_S = "./data/registered_operators.json";
 
     /* generics data */
     public static final int NOTES_MAX_CHAR_NUM = 256;
