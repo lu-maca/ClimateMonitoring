@@ -106,11 +106,11 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
 
     public DetailsPage(){
         /* set criticality levels */
-        criticality.put("1", "CRITICAL");
-        criticality.put("2", "SEVERE");
+        criticality.put("5", "CRITICAL");
+        criticality.put("4", "SEVERE");
         criticality.put("3", "MODERATE");
-        criticality.put("4", "FAVORABLE");
-        criticality.put("5", "EXCELLENT");
+        criticality.put("2", "FAVORABLE");
+        criticality.put("1", "EXCELLENT");
 
         /*
             Callbacks for the detailed location page
@@ -266,13 +266,22 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         }
 
         String currentCriticality = criticality.get(integerPart);
-
+        /* set sublevels according to the decimal part */
         if (isDecimalPartValid){
             String subLevel;
-            if (decimalPart < 50) {
-                subLevel = "LOW";
+            if (decimalPart == 0) {
+                subLevel = "";
+            }
+            else if (decimalPart < 10){
+                subLevel = "RARELY";
+            }
+            else if (decimalPart < 40){
+                subLevel = "OCCASIONALLY";
+            }
+            else if (decimalPart < 70) {
+                subLevel = "FREQUENTLY";
             } else {
-                subLevel = "HIGH";
+                subLevel = "NORMALLY";
             }
             currentCriticality = subLevel + " " + currentCriticality;
         }
