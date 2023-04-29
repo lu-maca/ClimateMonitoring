@@ -502,19 +502,23 @@ public class MainPage {
                 utils.getCentersData().addOperator(newOperator);
                 utils.getCentersData().updateOperatorsFile();
 
-                /* update monitoring centers file */
-                MonitoringCenter newMonitoringCenter = new MonitoringCenter(newMonitoringCenter());
-                ArrayList<String> newMonitoredAreasArrayList = new ArrayList<>();
-                for (int i = 0; i < newSelectedAreasModel.getSize(); i++){
-                    String geonameID = newSelectedAreasModel.getElementAt(i).getGeonameID();
-                    newMonitoredAreasArrayList.add(geonameID);
+                /* update monitoring centers file (only if a new center is added) */
+                if (IsNewCheckBox.isSelected()) {
+                    MonitoringCenter newMonitoringCenter = new MonitoringCenter(newMonitoringCenter());
+                    ArrayList<String> newMonitoredAreasArrayList = new ArrayList<>();
+                    for (int i = 0; i < newSelectedAreasModel.getSize(); i++) {
+                        String geonameID = newSelectedAreasModel.getElementAt(i).getGeonameID();
+                        newMonitoredAreasArrayList.add(geonameID);
+                    }
+                    newMonitoringCenter.setMonitoredAreas(newMonitoredAreasArrayList);
+                    utils.getCentersData().addMonitoringCenter(newMonitoringCenter);
+                    utils.getCentersData().updateMonitoringCentersFile();
                 }
-                newMonitoringCenter.setMonitoredAreas(newMonitoredAreasArrayList);
-                utils.getCentersData().addMonitoringCenter(newMonitoringCenter);
-                utils.getCentersData().updateMonitoringCentersFile();
 
                 /* exit from the registration panel */
+                showMessage(String.format("Welcome, %s! Login to operate.", newOperator.getName()));
                 resetRegistrationForm();
+
             }
 
             private boolean areUserDataValid(){
@@ -553,6 +557,10 @@ public class MainPage {
             }
 
             private boolean areCenterDataValid(){
+                /* data center data are always valid if the center already exists */
+                if (! IsNewCheckBox.isSelected()){ return true; }
+
+                /* instead, when it's new, check the data */
                 if (NewNameTextField.getText() == "" || AddressTextField.getText() == ""){
                     showMessage("Assign a non empty name to the center!");
                     return false;

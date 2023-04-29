@@ -55,5 +55,53 @@
     "password": "pippo123!",
     "monitoring_center": "Centro lecce"
   },
+{
+    "name": "Mauriziolo Paguronto",
+    "tax_code": "PGRMRZECCECC",
+    "email": "yaaaa@mail.com",
+    "username": "mpaguro",
+    "password": "Napoli86&",
+    "monitoring_center": "Centro lecce"
+  },
+{
+    "name": "Bruno Brunooo",
+    "tax_code": "BRNBRNECC",
+    "email": "brunooooo@mail.com",
+    "username": "brunooo",
+    "password": "caspita3_",
+    "monitoring_center": "Centro climatico Catania"
+  },
+{
+    "name": "Pino Pinocchio",
+    "tax_code": "PNCPNIECC",
+    "email": "pinocchiozzo@mail.com",
+    "username": "pinocchio",
+    "password": "cheroba11!",
+    "monitoring_center": "New York Climate Center"
+  },
+{
+    "name": "Bello Figo",
+    "tax_code": "FGIBLL",
+    "email": "bello@pikachu.com",
+    "username": "pikachu",
+    "password": "pikapika00?",
+    "monitoring_center": "Centro climatico Catania"
+  },
+{
+    "name": "Kekko Sè",
+    "tax_code": "AAAA",
+    "email": "kekkose@2.com",
+    "username": "kekkose",
+    "password": "nonloso!2",
+    "monitoring_center": "Clima Grosseto"
+  },
+{
+    "name": "Poli Moli",
+    "tax_code": "MLIPLI",
+    "email": "plimli@mail.com",
+    "username": "OpenMPI",
+    "password": "isreallyquick!!8",
+    "monitoring_center": "New York Climate Center"
+  },
 
 ]

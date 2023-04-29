@@ -24,5 +24,10 @@
     "address": "via del mare 41, lecce (LE)",
     "monitored_areas": [3174953, 3182351, 3165926]
   },
+{
+    "name": "Clima Grosseto", 
+    "address": "Via Quintino Sella 1, Grosseto (GR)",
+    "monitored_areas": [3175786, 3174659, 3179235]
+  },
 
 ]
