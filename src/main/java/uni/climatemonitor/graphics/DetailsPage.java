@@ -8,6 +8,7 @@ package uni.climatemonitor.graphics;
 
 import uni.climatemonitor.data.ClimateParams;
 import uni.climatemonitor.data.Location;
+import uni.climatemonitor.data.MonitoringCenter;
 import uni.climatemonitor.data.Operator;
 import uni.climatemonitor.generics.Constants;
 
@@ -27,13 +28,11 @@ public class DetailsPage {
     private JButton CloseBtn;
     private JPanel ParentPnl;
     private JPanel LocationDetailPnl;
-    private JPanel DetailsPnl;
     private JPanel ClosePnl;
     private JPanel PlaceNamePnl;
     private JLabel WindMostRecentValueLbl;
-    private JPanel WindPnl;
+    private JPanel ParamsPnl;
     private JLabel WindAverageValueLbl;
-    private JPanel ParametersContainer;
     private JLabel HumidityMostRecentValueLbl;
     private JLabel HumidityAverageValueLbl;
     private JLabel PressureMostRecentValueLbl;
@@ -71,12 +70,9 @@ public class DetailsPage {
     private JTextArea NotesTextArea;
     private JPanel NotesPnl;
     private JButton SaveBtn;
-    private JPanel NotesSurrounderPnl;
     private JPanel ButtonsPnl;
     private JComboBox DateComboBox;
     private JPanel ChooseDatePnl;
-    private JLabel MaxNumOfCharErrLbl;
-    private JLabel NotesErrorLbl;
     private JPanel NotesErrorPnl;
     private JLabel WindLbl;
     private JLabel HumidityLbl;
@@ -85,7 +81,12 @@ public class DetailsPage {
     private JLabel RainfallLbl;
     private JLabel GAltLbl;
     private JLabel GMassLbl;
-
+    private JPanel GMassAveragePnl;
+    private JPanel DetailsPnl;
+    private JLabel MaxNumOfCharErrLbl;
+    private JLabel NotesLbl;
+    private JPanel AboutLastRecordPnl;
+    private JTextArea AboutLastRecordTextArea;
 
     /* location info */
     private Location location;
@@ -93,6 +94,15 @@ public class DetailsPage {
 
     /* weather criticality levels */
     HashMap<String, String> criticality = new HashMap<>();
+
+    /* info about last record (to be formatted) */
+    private String aboutLastRecord =
+            """
+The last detection has been recorded by operator %s, from Monitoring Center "%s", on %s.
+
+%s is a monitoring center based in %s and is currently monitoring the following areas:
+%s.
+""";
 
     public DetailsPage(){
         /* set criticality levels */
@@ -156,15 +166,44 @@ public class DetailsPage {
         return out;
     }
 
+    private void setAboutLastRecordTestArea(){
+        UtilsSingleton utils = UtilsSingleton.getInstance();
+        AboutLastRecordTextArea.setBackground(new Color(238,238,238));
+        if (params != null) {
+            String monCenter = params.getCenter().get(0);
+            String who =  params.getWho().get(0);
+            String date = params.getDate().get(0);
+            MonitoringCenter mc = utils.getCentersData().getMonitoringCenterFromName(monCenter);
+            String monCenterInfo = mc.getAddress();
+            ArrayList<String> monCenterArea = mc.getMonitoredAreas();
+            ArrayList<String> monitoredAreas = new ArrayList<>();
+            for (String s : monCenterArea) {
+                monitoredAreas.add(utils.getGeoData().getLocationFromGeoID(s).getAsciiName());
+            }
+            String areas = monitoredAreas.get(0);
+            for (int i = 1; i < monitoredAreas.size(); i++){
+                areas += ", " + monitoredAreas.get(i);
+            }
+            String info = String.format(aboutLastRecord, who, monCenter, date, monCenter, monCenterInfo, areas);
+            AboutLastRecordTextArea.setText(info);
+        } else {
+            AboutLastRecordTextArea.setText("No record found.");
+        }
+    }
+
     public void setUIPnl(Location loc){
         location = loc;
         UtilsSingleton utils = UtilsSingleton.getInstance();
         params = utils.getGeoData().getClimateParamsFor(location.getGeonameID());
+
+        /* set info about the last detection and the monitoring center */
+        setAboutLastRecordTestArea();
+
         PlaceNameLbl.setText(location.toStringNoCoordinates());
 
         DateComboBox.setPreferredSize(new Dimension(185, 24));
         if (!isOperatorEnabledForThisPlace() && params != null) {
-            DateComboBox.setModel(new DefaultComboBoxModel<String>(params.getBeautifulDate().toArray(new String[0])));
+            DateComboBox.setModel(new DefaultComboBoxModel<String>(params.getDate().toArray(new String[0])));
         } else {
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             model.addElement("---");
@@ -176,21 +215,24 @@ public class DetailsPage {
         if (isOperatorEnabledForThisPlace()) {
             setOperatorsView();
             MostRecentTitleLbl.setText("Set new record");
-        }
 
-        /* set notes area settings */
-        NotesTextArea.setBackground(new Color(238, 238, 238));
-        NotesTextArea.setSize(new Dimension(200, 150));
-        NotesTextArea.setMaximumSize(new Dimension(200, 150));
-        NotesTextArea.setMinimumSize(new Dimension(200, 150));
-        NotesPnl.setSize(new Dimension(200,150));
-        NotesPnl.setMaximumSize(new Dimension(200,150));
-        NotesPnl.setMinimumSize(new Dimension(200,150));
+            /* set notes area settings */
+            NotesTextArea.setBackground(new Color(255, 255, 255));
+        } else {
+            NotesTextArea.setBackground(new Color(238, 238, 238));
+        }
+        NotesTextArea.setSize(new Dimension(150, 50));
+        NotesTextArea.setMaximumSize(new Dimension(150, 50));
+        NotesTextArea.setMinimumSize(new Dimension(150, 50));
+        NotesPnl.setSize(new Dimension(150,50));
+        NotesPnl.setMaximumSize(new Dimension(150,50));
+        NotesPnl.setMinimumSize(new Dimension(150,50));
         NotesErrorPnl.setVisible(false);
         NotesTextArea.setText("");
 
 
         /* if climate params is null (i.e. when no detections are found, maintain the "unknown" state */
+        NotesTextArea.setText("None.");
         if (params == null){ return; }
 
         /* if history on climate params exists, set it */
@@ -419,6 +461,8 @@ public class DetailsPage {
                 params.getRainfall().add(0, String.format("%d", rainfallItem));
                 params.getGlacier_alt().add(0, String.format("%d", galtItem));
                 params.getGlacier_mass().add(0, String.format("%d", gmassItem));
+                params.getWho().add(0, utils.getWhoisLoggedIn().getName() );
+                params.getCenter().add(0, utils.getWhoisLoggedIn().getMonitoringCenter() );
 
                 /* set today */
                 LocalDateTime ld = LocalDateTime.now();
@@ -429,7 +473,8 @@ public class DetailsPage {
                 /* set also new notes */
                 String notes = NotesTextArea.getText();
                 String filteredNotes = "";
-                for (int i = 0; i < Constants.NOTES_MAX_CHAR_NUM; i++){
+                for (int i = 0; i < notes.length(); i++){
+                    if (i >= Constants.NOTES_MAX_CHAR_NUM) {break;}
                     filteredNotes += notes.charAt(i);
                 }
                 params.setNotes(filteredNotes);

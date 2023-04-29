@@ -11,8 +11,10 @@
   "glaciers_alt": [1, 1, 1],
   "glaciers_mass": [1, 1, 1],
   "tot_measure": 3,
-  "notes": "",
-  "date": ["20-04-2023 | 18:46:12", "20-04-2023 | 17:50:15", "20-04-2023 | 17:49:59"]
+  "notes": "Siamo andati a cagare",
+  "date": ["20-04-2023 | 18:46:12", "20-04-2023 | 17:50:15", "20-04-2023 | 17:49:59"],
+  "center": ["Centro Climatico Milano", "Centro Climatico Milano", "Centro Climatico Milano"],
+  "who": ["Truppa Luppa", "Truppa Luppa", "Truppa Luppa"]
 },
 {
   "state": "IT",
@@ -27,7 +29,9 @@
   "glaciers_mass": [1],
   "tot_measure": 1,
   "notes": "",
-  "date": ["25-04-2023 | 20:06:11"]
+  "date": ["25-04-2023 | 20:06:11"],
+  "center": ["Centro Climatico Catania", "Centro Climatico Catania"],
+  "who": ["Utente Sconosciuto", "Utente Sconosciuto"]
 },
 {
   "state": "IT",
@@ -42,7 +46,9 @@
   "glaciers_mass": [1],
   "tot_measure": 1,
   "notes": "",
-  "date": ["25-04-2023 | 20:06:35"]
+  "date": ["25-04-2023 | 20:06:35"],
+  "center": ["Centro Climatico Catania", "Centro Climatico Catania"],
+  "who": ["Utente Sconosciuto", "Utente Sconosciuto"]
 },
 {
   "state": "US",
@@ -57,7 +63,9 @@
   "glaciers_mass": [1],
   "tot_measure": 1,
   "notes": "",
-  "date": ["25-04-2023 | 23:05:43"]
+  "date": ["25-04-2023 | 23:05:43"],
+  "center": ["New York Climate Center"],
+  "who": ["Minnie Topolino", "Minnie Topolino"]
 },
 
 ]

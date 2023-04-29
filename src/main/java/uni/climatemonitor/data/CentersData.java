@@ -71,6 +71,15 @@ public class CentersData {
         return null;
     }
 
+    public MonitoringCenter getMonitoringCenterFromName(String name){
+        for (MonitoringCenter mc : getMonitoringCentersList()) {
+            if (mc.getName().equals(name)) {
+                return mc;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<MonitoringCenter> getMonitoringCentersList(){
         return monitoringCentersList;
     }
