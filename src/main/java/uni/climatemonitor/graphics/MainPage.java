@@ -346,7 +346,7 @@ public class MainPage {
         private void filterModelByCoordinates(Coordinates coordinates) {
             /* local variables */
             UtilsSingleton utils = UtilsSingleton.getInstance();
-            final double DIST = 50_000.0;
+
             double dist;
             Map<Double, Location> sortedMap;
             Map<Double, Location> unsortedMap = new HashMap<>();
@@ -357,7 +357,7 @@ public class MainPage {
             for (Location l : utils.getGeoData().getGeoLocationsList()) {
                 dist = coordinates.distance(l.getCoordinates());
                 /* accept only those locations with a distance <= 50km */
-                if (dist <= DIST) {
+                if (dist <= Constants.MAX_DIST) {
                     unsortedMap.put(dist, l);
                 }
             }

@@ -47,5 +47,13 @@
     "password": "topolino21_",
     "monitoring_center": "New York Climate Center"
   },
+{
+    "name": "Pippo pero",
+    "tax_code": "PPPP",
+    "email": "poc@wqe.com",
+    "username": "pippo",
+    "password": "pippo123!",
+    "monitoring_center": "Centro lecce"
+  },
 
 ]

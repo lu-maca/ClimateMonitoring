@@ -21,6 +21,8 @@ public class ClimateParams {
     private ArrayList<String> glacier_alt = new ArrayList<>();
     private ArrayList<String> glacier_mass = new ArrayList<>();
     private ArrayList<String> date = new ArrayList<>();
+    private ArrayList<String> who = new ArrayList<>();
+    private ArrayList<String> center = new ArrayList<>();
     private int tot_measure;
     private String geonameID;
     private String notes;
@@ -40,7 +42,9 @@ public class ClimateParams {
     "glaciers_mass": %s,
     "tot_measure": %d,
     "notes": "%s",
-    "date": %s
+    "date": %s,
+    "center": %s,
+    "who": %s
   }""";
 
     public ClimateParams(){}
@@ -55,6 +59,8 @@ public class ClimateParams {
         this.rainfall = unpackStringToStringArray(o.get("rainfall").toString());
         this.glacier_alt = unpackStringToStringArray(o.get("glaciers_alt").toString());
         this.glacier_mass = unpackStringToStringArray(o.get("glaciers_mass").toString());
+        this.who = unpackStringToStringArray(o.get("who").toString());
+        this.center = unpackStringToStringArray(o.get("center").toString());
         this.tot_measure = Math.toIntExact((long) o.get("tot_measure"));
         this.notes = o.get("notes").toString();
         this.geonameID = o.get("geoname_id").toString();
@@ -96,6 +102,14 @@ public class ClimateParams {
         return wind;
     }
 
+    public ArrayList<String> getCenter() {
+        return center;
+    }
+
+    public ArrayList<String> getWho() {
+        return who;
+    }
+
     public int getTot_measure() {
         return tot_measure;
     }
@@ -120,14 +134,6 @@ public class ClimateParams {
         return date;
     }
 
-    public ArrayList<String> getBeautifulDate() {
-        ArrayList<String> beautifulDate = new ArrayList<>();
-        for (String s : date) {
-            beautifulDate.add(s.replaceAll("\"", ""));
-        }
-        return beautifulDate;
-    }
-
     public void setAscii_name(String ascii_name) {
         this.ascii_name = ascii_name;
     }
@@ -150,20 +156,22 @@ public class ClimateParams {
 
     public String toJson() {
         String out = String.format(
-                jsonFormat,
-                state,
-                geonameID,
-                ascii_name,
-                wind,
-                humidity,
-                pressure,
-                temperature,
-                rainfall,
-                glacier_alt,
-                glacier_mass,
-                tot_measure,
-                notes,
-                date
+                    jsonFormat,
+                    state,
+                    geonameID,
+                    ascii_name,
+                    wind,
+                    humidity,
+                    pressure,
+                    temperature,
+                    rainfall,
+                    glacier_alt,
+                    glacier_mass,
+                    tot_measure,
+                    notes,
+                    date,
+                    center,
+                    who
                 );
         return out;
     }

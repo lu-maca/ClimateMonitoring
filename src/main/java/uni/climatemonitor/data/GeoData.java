@@ -38,6 +38,13 @@ public class GeoData {
         return null;
     }
 
+    public Location getLocationFromGeoID(String id) {
+        for (Location l : getGeoLocationsList()){
+            if (l.getGeonameID().equals(id)) { return l; }
+        }
+        return null;
+    }
+
     public ArrayList<Location> getGeoLocationsList(){ return geoFile.getLocationsList(); }
 
     public void updateClimateParamsFile(){

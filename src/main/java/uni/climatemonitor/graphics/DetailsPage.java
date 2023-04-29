@@ -8,6 +8,7 @@ package uni.climatemonitor.graphics;
 
 import uni.climatemonitor.data.ClimateParams;
 import uni.climatemonitor.data.Location;
+import uni.climatemonitor.data.MonitoringCenter;
 import uni.climatemonitor.data.Operator;
 import uni.climatemonitor.generics.Constants;
 
@@ -19,39 +20,31 @@ import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
+
 
 public class DetailsPage {
     private JLabel PlaceNameLbl;
     private JButton CloseBtn;
     private JPanel ParentPnl;
     private JPanel LocationDetailPnl;
-    private JPanel DetailsPnl;
     private JPanel ClosePnl;
     private JPanel PlaceNamePnl;
     private JLabel WindMostRecentValueLbl;
-    private JPanel WindPnl;
+    private JPanel ParamsPnl;
     private JLabel WindAverageValueLbl;
-    private JPanel ParametersContainer;
-    private JPanel Humidity;
     private JLabel HumidityMostRecentValueLbl;
     private JLabel HumidityAverageValueLbl;
-    private JPanel Pressure;
     private JLabel PressureMostRecentValueLbl;
     private JLabel PressureAverageValueLbl;
-    private JPanel ColumnsPnl;
     private JLabel AverageTitleLbl;
     private JLabel MostRecentTitleLbl;
-    private JPanel Temperature;
     private JLabel TemperatureMostRecentValueLbl;
     private JLabel TemperatureAverageValueLbl;
-    private JPanel Rainfall;
     private JLabel RainfallMostRecentValueLbl;
     private JLabel RainfallAverageValueLbl;
-    private JPanel GlaciersAlt;
     private JLabel GAltMostRecentValueLbl;
     private JLabel GAltAverageValueLbl;
-    private JPanel GlaciersMass;
     private JLabel GMassMostRecentValueLbl;
     private JLabel GMassAverageValueLbl;
     private JPanel WindAveragePnl;
@@ -73,25 +66,52 @@ public class DetailsPage {
     private JPanel GAltAveragePnl;
     private JComboBox GAltComboBox;
     private JPanel GMassMostRecentPnl;
-    private JPanel GMassAveragePnl;
     private JComboBox GMassComboBox;
     private JTextArea NotesTextArea;
     private JPanel NotesPnl;
     private JButton SaveBtn;
-    private JPanel NotesSurrounderPnl;
     private JPanel ButtonsPnl;
     private JComboBox DateComboBox;
     private JPanel ChooseDatePnl;
-    private JLabel MaxNumOfCharErrLbl;
-    private JLabel NotesErrorLbl;
     private JPanel NotesErrorPnl;
-
+    private JLabel WindLbl;
+    private JLabel HumidityLbl;
+    private JLabel PressureLbl;
+    private JLabel TemperatureLbl;
+    private JLabel RainfallLbl;
+    private JLabel GAltLbl;
+    private JLabel GMassLbl;
+    private JPanel GMassAveragePnl;
+    private JPanel DetailsPnl;
+    private JLabel MaxNumOfCharErrLbl;
+    private JLabel NotesLbl;
+    private JPanel AboutLastRecordPnl;
+    private JTextArea AboutLastRecordTextArea;
 
     /* location info */
     private Location location;
     private ClimateParams params;
 
+    /* weather criticality levels */
+    HashMap<String, String> criticality = new HashMap<>();
+
+    /* info about last record (to be formatted) */
+    private String aboutLastRecord =
+            """
+The last detection has been recorded by operator %s, from Monitoring Center "%s", on %s.
+
+%s is a monitoring center based in %s and is currently monitoring the following areas:
+%s.
+""";
+
     public DetailsPage(){
+        /* set criticality levels */
+        criticality.put("1", "CRITICAL");
+        criticality.put("2", "SEVERE");
+        criticality.put("3", "MODERATE");
+        criticality.put("4", "FAVORABLE");
+        criticality.put("5", "EXCELLENT");
+
         /*
             Callbacks for the detailed location page
          */
@@ -146,15 +166,49 @@ public class DetailsPage {
         return out;
     }
 
+    private void setAboutLastRecordTestArea(){
+        UtilsSingleton utils = UtilsSingleton.getInstance();
+        AboutLastRecordTextArea.setBackground(new Color(238,238,238));
+        if (params != null) {
+            String monCenter = params.getCenter().get(0).replaceAll("\"", "");
+            String who =  params.getWho().get(0);
+            String date = params.getDate().get(0).replaceAll("\"", "");
+            MonitoringCenter mc = utils.getCentersData().getMonitoringCenterFromName(monCenter);
+            String monCenterInfo = mc.getAddress();
+            ArrayList<String> monCenterArea = mc.getMonitoredAreas();
+            ArrayList<String> monitoredAreas = new ArrayList<>();
+            for (String s : monCenterArea) {
+                monitoredAreas.add(utils.getGeoData().getLocationFromGeoID(s).getAsciiName());
+            }
+            String areas = monitoredAreas.get(0);
+            for (int i = 1; i < monitoredAreas.size(); i++){
+                areas += ", " + monitoredAreas.get(i);
+            }
+            String info = String.format(aboutLastRecord, who, monCenter, date, monCenter, monCenterInfo, areas);
+            AboutLastRecordTextArea.setText(info);
+        } else {
+            AboutLastRecordTextArea.setText("No record found.");
+        }
+    }
+
     public void setUIPnl(Location loc){
         location = loc;
         UtilsSingleton utils = UtilsSingleton.getInstance();
         params = utils.getGeoData().getClimateParamsFor(location.getGeonameID());
+
+        /* set info about the last detection and the monitoring center */
+        setAboutLastRecordTestArea();
+
         PlaceNameLbl.setText(location.toStringNoCoordinates());
 
         DateComboBox.setPreferredSize(new Dimension(185, 24));
         if (!isOperatorEnabledForThisPlace() && params != null) {
-            DateComboBox.setModel(new DefaultComboBoxModel<String>(params.getBeautifulDate().toArray(new String[0])));
+            DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+            for (String s : params.getDate()){
+                /* remove quotes if any */
+                comboBoxModel.addElement(s.replaceAll("\"", ""));
+            }
+            DateComboBox.setModel(comboBoxModel);
         } else {
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
             model.addElement("---");
@@ -166,22 +220,27 @@ public class DetailsPage {
         if (isOperatorEnabledForThisPlace()) {
             setOperatorsView();
             MostRecentTitleLbl.setText("Set new record");
+
+            /* set notes area settings */
+            NotesTextArea.setBackground(new Color(255, 255, 255));
+        } else {
+            NotesTextArea.setBackground(new Color(238, 238, 238));
         }
-
-        /* set notes area settings */
-        NotesTextArea.setBackground(new Color(238, 238, 238));
-        NotesTextArea.setSize(new Dimension(200, 150));
-        NotesTextArea.setMaximumSize(new Dimension(200, 150));
-        NotesTextArea.setMinimumSize(new Dimension(200, 150));
-        NotesPnl.setSize(new Dimension(200,150));
-        NotesPnl.setMaximumSize(new Dimension(200,150));
-        NotesPnl.setMinimumSize(new Dimension(200,150));
+        NotesTextArea.setSize(new Dimension(150, 50));
+        NotesTextArea.setMaximumSize(new Dimension(150, 50));
+        NotesTextArea.setMinimumSize(new Dimension(150, 50));
+        NotesPnl.setSize(new Dimension(150,50));
+        NotesPnl.setMaximumSize(new Dimension(150,50));
+        NotesPnl.setMinimumSize(new Dimension(150,50));
         NotesErrorPnl.setVisible(false);
-        NotesTextArea.setText("");
-
 
         /* if climate params is null (i.e. when no detections are found, maintain the "unknown" state */
-        if (params == null){ return; }
+
+        if (params == null){
+            NotesTextArea.setText("None.");
+            return;
+        }
+        NotesTextArea.setText("");
 
         /* if history on climate params exists, set it */
         setParamsFromHistory(0);
@@ -189,29 +248,67 @@ public class DetailsPage {
     }
 
     private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
-//        if (UtilsSingleton.getInstance().getWhoisLoggedIn() == null) {
-        current.setText(currentValue + " / 5");
-//        }
-        average.setText(averageValue + " / 5");
+        current.setText(currentValue);
+        average.setText(averageValue);
+    }
+
+    private String assignCriticalityLevelFromNumber(String number) {
+        String integerPart;
+        Integer decimalPart = 0;
+        boolean isDecimalPartValid = false;
+        /* get the integer and decimal parts of the number */
+        try {
+            decimalPart = Integer.parseInt(number.substring(number.indexOf(".") + 1));
+            integerPart = number.substring(0, number.indexOf("."));
+            isDecimalPartValid = true;
+        } catch(java.lang.StringIndexOutOfBoundsException e) {
+            integerPart = number;
+        }
+
+        String currentCriticality = criticality.get(integerPart);
+
+        if (isDecimalPartValid){
+            String subLevel;
+            if (decimalPart < 50) {
+                subLevel = "LOW";
+            } else {
+                subLevel = "HIGH";
+            }
+            currentCriticality = subLevel + " " + currentCriticality;
+        }
+
+        return currentCriticality;
+    }
+
+    private String quoteString(String s){
+        String out = "\"" + s + "\"";
+        return out;
     }
 
     private void setParamsFromHistory(int idx){
         AverageTitleLbl.setText("Average (on a total of " + params.getTot_measure() + " records)");
 
         /* set wind */
-        setLblValues(WindMostRecentValueLbl, params.getWind().get(idx), WindAverageValueLbl, computeAverage(params.getWind()));
+        setLblValues(WindMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getWind().get(idx)),
+                WindAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getWind())));
         /* set humidity */
-        setLblValues(HumidityMostRecentValueLbl, params.getHumidity().get(idx), HumidityAverageValueLbl, computeAverage(params.getHumidity()));
+        setLblValues(HumidityMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getHumidity().get(idx)),
+                HumidityAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getHumidity())));
         /* set pressure */
-        setLblValues(PressureMostRecentValueLbl, params.getPressure().get(idx), PressureAverageValueLbl, computeAverage(params.getPressure()));
+        setLblValues(PressureMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getPressure().get(idx)),
+                PressureAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getPressure())));
         /* set temperature */
-        setLblValues(TemperatureMostRecentValueLbl, params.getTemperature().get(idx), TemperatureAverageValueLbl, computeAverage(params.getTemperature()));
+        setLblValues(TemperatureMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getTemperature().get(idx)),
+                TemperatureAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getTemperature())));
         /* set rainfall */
-        setLblValues(RainfallMostRecentValueLbl, params.getRainfall().get(idx), RainfallAverageValueLbl, computeAverage(params.getRainfall()));
+        setLblValues(RainfallMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getRainfall().get(idx)),
+                RainfallAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getRainfall())));
         /* set glaciers alt */
-        setLblValues(GAltMostRecentValueLbl, params.getGlacier_alt().get(idx), GAltAverageValueLbl, computeAverage(params.getGlacier_alt()));
+        setLblValues(GAltMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getGlacier_alt().get(idx)),
+                GAltAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getGlacier_alt())));
         /* set glaciers mass */
-        setLblValues(GMassMostRecentValueLbl, params.getGlacier_mass().get(idx), GMassAverageValueLbl, computeAverage(params.getGlacier_mass()));
+        setLblValues(GMassMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getGlacier_mass().get(idx)),
+                GMassAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getGlacier_mass())));
         /* set notes */
         NotesTextArea.setText(params.getNotes());
     }
@@ -241,19 +338,19 @@ public class DetailsPage {
         AverageTitleLbl.setText("Average (no detection found)");
         MostRecentTitleLbl.setText("Most recent detection");
         /* set wind */
-        setLblValues(WindMostRecentValueLbl, "??", WindAverageValueLbl, "??");
+        setLblValues(WindMostRecentValueLbl, Constants.NONE, WindAverageValueLbl, Constants.NONE);
         /* set humidity */
-        setLblValues(HumidityMostRecentValueLbl, "??", HumidityAverageValueLbl, "??");
+        setLblValues(HumidityMostRecentValueLbl, Constants.NONE, HumidityAverageValueLbl, Constants.NONE);
         /* set pressure */
-        setLblValues(PressureMostRecentValueLbl, "??", PressureAverageValueLbl, "??");
+        setLblValues(PressureMostRecentValueLbl, Constants.NONE, PressureAverageValueLbl, Constants.NONE);
         /* set temperature */
-        setLblValues(TemperatureMostRecentValueLbl, "??", TemperatureAverageValueLbl, "??");
+        setLblValues(TemperatureMostRecentValueLbl, Constants.NONE, TemperatureAverageValueLbl, Constants.NONE);
         /* set rainfall */
-        setLblValues(RainfallMostRecentValueLbl, "??", RainfallAverageValueLbl, "??");
+        setLblValues(RainfallMostRecentValueLbl, Constants.NONE, RainfallAverageValueLbl, Constants.NONE);
         /* set glaciers alt */
-        setLblValues(GAltMostRecentValueLbl, "??", GAltAverageValueLbl, "??");
+        setLblValues(GAltMostRecentValueLbl, Constants.NONE, GAltAverageValueLbl, Constants.NONE);
         /* set glaciers mass */
-        setLblValues(GMassMostRecentValueLbl, "??", GMassAverageValueLbl, "??");
+        setLblValues(GMassMostRecentValueLbl, Constants.NONE, GMassAverageValueLbl, Constants.NONE);
         /* notes field */
         NotesTextArea.setText("");
         /* date combo box */
@@ -295,7 +392,7 @@ public class DetailsPage {
     /**
      * When the details page is closed, perform some reset actions,
      * for example:
-     *  - set climate params info to "?? / 5"
+     *  - set climate params info to "NONE"
      *  - reset the combo boxes values when in operator mode
      */
     private void DetailsPnl_at_visibility_change(){
@@ -376,17 +473,20 @@ public class DetailsPage {
                 params.getRainfall().add(0, String.format("%d", rainfallItem));
                 params.getGlacier_alt().add(0, String.format("%d", galtItem));
                 params.getGlacier_mass().add(0, String.format("%d", gmassItem));
+                params.getWho().add(0,  quoteString(utils.getWhoisLoggedIn().getName()));
+                params.getCenter().add(0, quoteString(utils.getWhoisLoggedIn().getMonitoringCenter() ));
 
                 /* set today */
                 LocalDateTime ld = LocalDateTime.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy | HH:mm:ss");
-                String dateString = "\"" + ld.format(formatter) + "\"";
+                String dateString = quoteString(ld.format(formatter));
 
                 params.getDate().add(0, dateString);
                 /* set also new notes */
                 String notes = NotesTextArea.getText();
                 String filteredNotes = "";
-                for (int i = 0; i < Constants.NOTES_MAX_CHAR_NUM; i++){
+                for (int i = 0; i < notes.length(); i++){
+                    if (i >= Constants.NOTES_MAX_CHAR_NUM) {break;}
                     filteredNotes += notes.charAt(i);
                 }
                 params.setNotes(filteredNotes);
@@ -450,4 +550,5 @@ public class DetailsPage {
     public static void main(String[] args) {
         DetailsPage detailsPage = new DetailsPage();
     }
+
 }
