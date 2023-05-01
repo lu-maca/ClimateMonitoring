@@ -230,6 +230,7 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         NotesTextArea.setSize(new Dimension(150, 50));
         NotesTextArea.setMaximumSize(new Dimension(150, 50));
         NotesTextArea.setMinimumSize(new Dimension(150, 50));
+        NotesTextArea.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
         NotesPnl.setSize(new Dimension(150,50));
         NotesPnl.setMaximumSize(new Dimension(150,50));
         NotesPnl.setMinimumSize(new Dimension(150,50));

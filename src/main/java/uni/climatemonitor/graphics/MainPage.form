@@ -467,6 +467,7 @@
                                   <component id="e5608" class="javax.swing.JList" binding="NewMonitoredAreasList">
                                     <constraints/>
                                     <properties>
+                                      <valueIsAdjusting value="true"/>
                                       <visibleRowCount value="4"/>
                                     </properties>
                                   </component>

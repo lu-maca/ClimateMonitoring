@@ -597,7 +597,7 @@
                           <font style="0"/>
                           <foreground color="-16777216"/>
                           <lineWrap value="true"/>
-                          <margin top="0" left="0" bottom="0" right="0"/>
+                          <margin top="2" left="2" bottom="2" right="2"/>
                           <rows value="2"/>
                           <text value=""/>
                           <wrapStyleWord value="false"/>
