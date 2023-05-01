@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 public class DetailsPage {
@@ -142,7 +143,7 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         }
         average = average / ((float) numOfMeasures);
 
-        String averageStr = String.format("%.2f", average);
+        String averageStr = String.format(Locale.US, "%.2f", average);
         return averageStr;
     }
 
@@ -235,7 +236,6 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         NotesErrorPnl.setVisible(false);
 
         /* if climate params is null (i.e. when no detections are found, maintain the "unknown" state */
-
         if (params == null){
             NotesTextArea.setText("None.");
             return;
