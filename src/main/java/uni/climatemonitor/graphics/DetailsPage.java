@@ -167,13 +167,13 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         return out;
     }
 
-    private void setAboutLastRecordTestArea(){
+    private void setAboutLastRecordTestArea(int idx){
         UtilsSingleton utils = UtilsSingleton.getInstance();
         AboutLastRecordTextArea.setBackground(new Color(238,238,238));
         if (params != null) {
-            String monCenter = params.getCenter().get(0).replaceAll("\"", "");
-            String who =  params.getWho().get(0);
-            String date = params.getDate().get(0).replaceAll("\"", "");
+            String monCenter = params.getCenter().get(idx).replaceAll("\"", "");
+            String who =  params.getWho().get(idx);
+            String date = params.getDate().get(idx).replaceAll("\"", "");
             MonitoringCenter mc = utils.getCentersData().getMonitoringCenterFromName(monCenter);
             String monCenterInfo = mc.getAddress();
             ArrayList<String> monCenterArea = mc.getMonitoredAreas();
@@ -198,7 +198,7 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         params = utils.getGeoData().getClimateParamsFor(location.getGeonameID());
 
         /* set info about the last detection and the monitoring center */
-        setAboutLastRecordTestArea();
+        setAboutLastRecordTestArea(0);
 
         PlaceNameLbl.setText(location.toStringNoCoordinates());
 
@@ -519,6 +519,7 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
             public void actionPerformed(ActionEvent e) {
                 int selectedIdx = DateComboBox.getSelectedIndex();
                 setParamsFromHistory(selectedIdx);
+                setAboutLastRecordTestArea(selectedIdx);
             }
         });
     }
