@@ -43,6 +43,15 @@
                       <visible value="false"/>
                     </properties>
                   </component>
+                  <component id="90343" class="javax.swing.JButton" binding="AddBtn">
+                    <constraints/>
+                    <properties>
+                      <borderPainted value="false"/>
+                      <contentAreaFilled value="false"/>
+                      <text value="Add"/>
+                      <visible value="false"/>
+                    </properties>
+                  </component>
                   <component id="5b32b" class="javax.swing.JButton" binding="CloseBtn">
                     <constraints/>
                     <properties>

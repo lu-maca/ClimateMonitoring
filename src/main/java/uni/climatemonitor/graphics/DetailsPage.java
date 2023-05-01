@@ -88,6 +88,7 @@ public class DetailsPage {
     private JLabel NotesLbl;
     private JPanel AboutLastRecordPnl;
     private JTextArea AboutLastRecordTextArea;
+    private JButton AddBtn;
 
     /* location info */
     private Location location;
@@ -116,7 +117,8 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         /*
             Callbacks for the detailed location page
          */
-
+        /* add button */
+        addBtn_at_selection();
         /* close the detailed location page */
         closeBtn_at_selection();
         /* reset action when the page is closed */
@@ -195,6 +197,7 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
     public void setUIPnl(Location loc){
         location = loc;
         UtilsSingleton utils = UtilsSingleton.getInstance();
+        Operator operator = utils.getWhoisLoggedIn();
         params = utils.getGeoData().getClimateParamsFor(location.getGeonameID());
 
         /* set info about the last detection and the monitoring center */
@@ -205,7 +208,7 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         DateComboBox.setPreferredSize(new Dimension(185, 24));
         if (!isOperatorEnabledForThisPlace() && params != null) {
             DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-            for (String s : params.getDate()){
+            for (String s : params.getDate()) {
                 /* remove quotes if any */
                 comboBoxModel.addElement(s.replaceAll("\"", ""));
             }
@@ -218,14 +221,15 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         }
 
         /* if an operator is logged in, set the combo box for detections and remove current values */
+        NotesTextArea.setBackground(new Color(238, 238, 238));
         if (isOperatorEnabledForThisPlace()) {
             setOperatorsView();
             MostRecentTitleLbl.setText("Set new record");
 
             /* set notes area settings */
             NotesTextArea.setBackground(new Color(255, 255, 255));
-        } else {
-            NotesTextArea.setBackground(new Color(238, 238, 238));
+        } else if (operator != null) {
+            AddBtn.setVisible(true);
         }
         NotesTextArea.setSize(new Dimension(150, 50));
         NotesTextArea.setMaximumSize(new Dimension(150, 50));
@@ -390,6 +394,7 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
             GMassComboBox.setVisible(false);
             SaveBtn.setVisible(false);
             NotesTextArea.setEditable(false);
+            AddBtn.setVisible(false);
         }
     }
 
@@ -418,6 +423,36 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
             }
         });
     };
+
+
+    /**
+     * Callback for the add button: add location to the places monitored by the monitoring
+     * center off the operator that is logged in
+     */
+    private void addBtn_at_selection(){
+        AddBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /* get the operator */
+                UtilsSingleton utils = UtilsSingleton.getInstance();
+                Operator operator = utils.getWhoisLoggedIn();
+
+                /* get monitoring center of the operator */
+                String mc = operator.getMonitoringCenter();
+                MonitoringCenter monitoringCenter = utils.getCentersData().getMonitoringCenterFromName(mc);
+
+                /* add the location to the monitoring center */
+                monitoringCenter.getMonitoredAreas().add(location.getGeonameID());
+
+                /* rewrite the file */
+                utils.getCentersData().updateMonitoringCentersFile();
+
+                /* close the page */
+                utils.switchPage("Main Page");
+                PlaceNameLbl.setText("");
+            }
+        });
+    }
 
 
     /**

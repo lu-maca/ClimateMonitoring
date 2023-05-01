@@ -101,5 +101,22 @@
   "center": ["New York Climate Center"],
   "who": ["Poli Moli"]
 },
+{
+  "state": "IT",
+  "geoname_id": 3176885,
+  "ascii_name": "Foggia",
+  "wind": [3],
+  "humidity": [1],
+  "pressure": [4],
+  "temperature": [4],
+  "rainfall": [4],
+  "glaciers_alt": [1],
+  "glaciers_mass": [1],
+  "tot_measure": 1,
+  "notes": "Ecco una nuova rilevazione",
+  "date": ["02-05-2023 | 01:32:02"],
+  "center": ["Centro lecce"],
+  "who": ["Mauriziolo Paguronto"]
+},
 
 ]
