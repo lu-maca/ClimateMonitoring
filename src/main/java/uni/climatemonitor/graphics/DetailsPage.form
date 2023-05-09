@@ -153,11 +153,11 @@
                         <properties>
                           <maximumRowCount value="5"/>
                           <model>
-                            <item value="CRITICAL"/>
-                            <item value="SEVERE"/>
-                            <item value="MODERATE"/>
-                            <item value="FAVORABLE"/>
                             <item value="EXCELLENT"/>
+                            <item value="FAVORABLE"/>
+                            <item value="MODERATE"/>
+                            <item value="SEVERE"/>
+                            <item value="CRITICAL"/>
                           </model>
                           <visible value="false"/>
                         </properties>
@@ -232,11 +232,11 @@
                         <properties>
                           <maximumRowCount value="5"/>
                           <model>
-                            <item value="CRITICAL"/>
-                            <item value="SEVERE"/>
-                            <item value="MODERATE"/>
-                            <item value="FAVORABLE"/>
                             <item value="EXCELLENT"/>
+                            <item value="FAVORABLE"/>
+                            <item value="MODERATE"/>
+                            <item value="SEVERE"/>
+                            <item value="CRITICAL"/>
                           </model>
                           <visible value="false"/>
                         </properties>
@@ -295,11 +295,11 @@
                         <properties>
                           <maximumRowCount value="5"/>
                           <model>
-                            <item value="CRITICAL"/>
-                            <item value="SEVERE"/>
-                            <item value="MODERATE"/>
-                            <item value="FAVORABLE"/>
                             <item value="EXCELLENT"/>
+                            <item value="FAVORABLE"/>
+                            <item value="MODERATE"/>
+                            <item value="SEVERE"/>
+                            <item value="CRITICAL"/>
                           </model>
                           <visible value="false"/>
                         </properties>
@@ -358,11 +358,11 @@
                         <properties>
                           <maximumRowCount value="5"/>
                           <model>
-                            <item value="CRITICAL"/>
-                            <item value="SEVERE"/>
-                            <item value="MODERATE"/>
-                            <item value="FAVORABLE"/>
                             <item value="EXCELLENT"/>
+                            <item value="FAVORABLE"/>
+                            <item value="MODERATE"/>
+                            <item value="SEVERE"/>
+                            <item value="CRITICAL"/>
                           </model>
                           <visible value="false"/>
                         </properties>
@@ -421,11 +421,11 @@
                         <properties>
                           <maximumRowCount value="5"/>
                           <model>
-                            <item value="CRITICAL"/>
-                            <item value="SEVERE"/>
-                            <item value="MODERATE"/>
-                            <item value="FAVORABLE"/>
                             <item value="EXCELLENT"/>
+                            <item value="FAVORABLE"/>
+                            <item value="MODERATE"/>
+                            <item value="SEVERE"/>
+                            <item value="CRITICAL"/>
                           </model>
                           <visible value="false"/>
                         </properties>
@@ -484,11 +484,11 @@
                         <properties>
                           <maximumRowCount value="5"/>
                           <model>
-                            <item value="CRITICAL"/>
-                            <item value="SEVERE"/>
-                            <item value="MODERATE"/>
-                            <item value="FAVORABLE"/>
                             <item value="EXCELLENT"/>
+                            <item value="FAVORABLE"/>
+                            <item value="MODERATE"/>
+                            <item value="SEVERE"/>
+                            <item value="CRITICAL"/>
                           </model>
                           <visible value="false"/>
                         </properties>
@@ -547,11 +547,11 @@
                         <properties>
                           <maximumRowCount value="5"/>
                           <model>
-                            <item value="CRITICAL"/>
-                            <item value="SEVERE"/>
-                            <item value="MODERATE"/>
-                            <item value="FAVORABLE"/>
                             <item value="EXCELLENT"/>
+                            <item value="FAVORABLE"/>
+                            <item value="MODERATE"/>
+                            <item value="SEVERE"/>
+                            <item value="CRITICAL"/>
                           </model>
                           <visible value="false"/>
                         </properties>

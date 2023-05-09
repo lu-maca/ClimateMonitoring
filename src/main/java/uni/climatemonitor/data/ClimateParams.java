@@ -23,9 +23,10 @@ public class ClimateParams {
     private ArrayList<String> date = new ArrayList<>();
     private ArrayList<String> who = new ArrayList<>();
     private ArrayList<String> center = new ArrayList<>();
+    private ArrayList<String> notes = new ArrayList<>();
     private int tot_measure;
     private String geonameID;
-    private String notes;
+
     /* json format */
     private String jsonFormat =
             """
@@ -41,7 +42,7 @@ public class ClimateParams {
     "glaciers_alt": %s,
     "glaciers_mass": %s,
     "tot_measure": %d,
-    "notes": "%s",
+    "notes": %s,
     "date": %s,
     "center": %s,
     "who": %s
@@ -62,7 +63,7 @@ public class ClimateParams {
         this.who = unpackStringToStringArray(o.get("who").toString());
         this.center = unpackStringToStringArray(o.get("center").toString());
         this.tot_measure = Math.toIntExact((long) o.get("tot_measure"));
-        this.notes = o.get("notes").toString();
+        this.notes = unpackStringToStringArray(o.get("notes").toString());
         this.geonameID = o.get("geoname_id").toString();
         this.date = unpackStringToStringArray(o.get("date").toString());
     }
@@ -110,16 +111,14 @@ public class ClimateParams {
         return who;
     }
 
+    public ArrayList<String> getNotes() { return notes; }
+
     public int getTot_measure() {
         return tot_measure;
     }
 
     public String getAscii_name() {
         return ascii_name;
-    }
-
-    public String getNotes() {
-        return notes;
     }
 
     public String getState() {
@@ -140,10 +139,6 @@ public class ClimateParams {
 
     public void setGeonameID(String geonameID) {
         this.geonameID = geonameID;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 
     public void setState(String state) {

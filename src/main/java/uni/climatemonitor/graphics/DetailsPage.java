@@ -94,13 +94,16 @@ public class DetailsPage {
     private Location location;
     private ClimateParams params;
 
+    /* operator info */
+    boolean isOperatorEnabled = false;
+
     /* weather criticality levels */
     HashMap<String, String> criticality = new HashMap<>();
 
     /* info about last record (to be formatted) */
     private String aboutLastRecord =
             """
-The last detection has been recorded by operator %s, from Monitoring Center "%s", on %s.
+This detection has been recorded by operator %s, from Monitoring Center "%s", on %s.
 
 %s is a monitoring center based in %s and is currently monitoring the following areas:
 %s.
@@ -113,6 +116,15 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         criticality.put("3", "MODERATE");
         criticality.put("2", "FAVORABLE");
         criticality.put("1", "EXCELLENT");
+
+        /* some graphics settings */
+        NotesTextArea.setSize(new Dimension(150, 50));
+        NotesTextArea.setMaximumSize(new Dimension(150, 50));
+        NotesTextArea.setMinimumSize(new Dimension(150, 50));
+        NotesTextArea.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
+        NotesPnl.setSize(new Dimension(150,50));
+        NotesPnl.setMaximumSize(new Dimension(150,50));
+        NotesPnl.setMinimumSize(new Dimension(150,50));
 
         /*
             Callbacks for the detailed location page
@@ -199,14 +211,20 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         UtilsSingleton utils = UtilsSingleton.getInstance();
         Operator operator = utils.getWhoisLoggedIn();
         params = utils.getGeoData().getClimateParamsFor(location.getGeonameID());
+        isOperatorEnabled = isOperatorEnabledForThisPlace();
+
+        NotesErrorPnl.setVisible(false);
 
         /* set info about the last detection and the monitoring center */
-        setAboutLastRecordTestArea(0);
+        AboutLastRecordPnl.setVisible(!isOperatorEnabled);
+        if (!isOperatorEnabled) {
+            setAboutLastRecordTestArea(0);
+        }
 
         PlaceNameLbl.setText(location.toStringNoCoordinates());
 
         DateComboBox.setPreferredSize(new Dimension(185, 24));
-        if (!isOperatorEnabledForThisPlace() && params != null) {
+        if (!isOperatorEnabled && params != null) {
             DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
             for (String s : params.getDate()) {
                 /* remove quotes if any */
@@ -222,7 +240,7 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
 
         /* if an operator is logged in, set the combo box for detections and remove current values */
         NotesTextArea.setBackground(new Color(238, 238, 238));
-        if (isOperatorEnabledForThisPlace()) {
+        if (isOperatorEnabled) {
             setOperatorsView();
             MostRecentTitleLbl.setText("Set new record");
 
@@ -231,29 +249,24 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         } else if (operator != null) {
             AddBtn.setVisible(true);
         }
-        NotesTextArea.setSize(new Dimension(150, 50));
-        NotesTextArea.setMaximumSize(new Dimension(150, 50));
-        NotesTextArea.setMinimumSize(new Dimension(150, 50));
-        NotesTextArea.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
-        NotesPnl.setSize(new Dimension(150,50));
-        NotesPnl.setMaximumSize(new Dimension(150,50));
-        NotesPnl.setMinimumSize(new Dimension(150,50));
-        NotesErrorPnl.setVisible(false);
 
         /* if climate params is null (i.e. when no detections are found, maintain the "unknown" state */
-        if (params == null){
+        if (params == null && !isOperatorEnabled){
             NotesTextArea.setText("None.");
             return;
+        } else if (params == null) {
+            NotesTextArea.setText("");
+            return;
         }
-        NotesTextArea.setText("");
 
         /* if history on climate params exists, set it */
         setParamsFromHistory(0);
-
     }
 
     private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
-        current.setText(currentValue);
+        if (!isOperatorEnabled) {
+            current.setText(currentValue);
+        }
         average.setText(averageValue);
     }
 
@@ -324,7 +337,9 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
         setLblValues(GMassMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getGlacier_mass().get(idx)),
                 GMassAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getGlacier_mass())));
         /* set notes */
-        NotesTextArea.setText(params.getNotes());
+        if (!isOperatorEnabled) {
+            NotesTextArea.setText(params.getNotes().get(idx).replaceAll("\"", ""));
+        }
     }
 
     private void setOperatorsView(){
@@ -534,7 +549,7 @@ The last detection has been recorded by operator %s, from Monitoring Center "%s"
                     if (i >= Constants.NOTES_MAX_CHAR_NUM) {break;}
                     filteredNotes += notes.charAt(i);
                 }
-                params.setNotes(filteredNotes);
+                params.getNotes().add(0, quoteString(filteredNotes));
 
                 /* update file */
                 utils.getGeoData().updateClimateParamsFile();
