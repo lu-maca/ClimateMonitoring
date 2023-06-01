@@ -6,6 +6,9 @@
 
 package uni.climatemonitor.generics;
 
+/**
+ * Class for constants
+ */
 public final class Constants {
     /* some generic constants for graphics */
     public static final String APP_NAME_S = "ClimaScope";

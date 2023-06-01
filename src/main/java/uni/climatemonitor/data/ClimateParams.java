@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/**
+ * Represents a set of measurements for an area
+ */
 public class ClimateParams {
     private String ascii_name;
     private String state;
@@ -149,6 +152,10 @@ public class ClimateParams {
         this.tot_measure = tot_measure;
     }
 
+    /**
+     * Format a json string in order to write it in the climate params file.
+     * @return String
+     */
     public String toJson() {
         String out = String.format(
                     jsonFormat,

@@ -21,6 +21,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class for the main page of the UI
+ */
 public class MainPage {
     private JPanel ParentPnl;
     private JPanel MainPnl;
@@ -178,17 +181,28 @@ public class MainPage {
 
      */
 
+    /**
+     * Show the hidden message on the low-right corner
+     * @param message
+     */
     private void showMessage(String message) {
         WelcomeBackLbl.setText(message);
         UserMessagesPnl.setVisible(true);
     }
 
+    /**
+     * set/reset the log mode (logged in/logged out, accordingly to the parameter)
+     * @param isLoggedInModeActive
+     */
     private void setLoggedInMode(boolean isLoggedInModeActive){
         LoginBtnsPnl.setVisible(!isLoggedInModeActive);
         LogoutBtnPnl.setVisible(isLoggedInModeActive);
         UserMessagesPnl.setVisible(isLoggedInModeActive);
     }
 
+    /**
+     * Reset the registration form when it is closed
+     */
     public void resetRegistrationForm(){
         /* new operator options reset */
         NameTextField.setText("");
@@ -328,6 +342,10 @@ public class MainPage {
 
         }
 
+        /**
+         * Filter by name
+         * @param filter
+         */
         private void filterModel(String filter) {
             UtilsSingleton utils = UtilsSingleton.getInstance();
             for (Location l : utils.getGeoData().getGeoLocationsList()) {
@@ -343,6 +361,10 @@ public class MainPage {
             }
         }
 
+        /**
+         * Filter by coordinates
+         * @param coordinates
+         */
         private void filterModelByCoordinates(Coordinates coordinates) {
             /* local variables */
             UtilsSingleton utils = UtilsSingleton.getInstance();

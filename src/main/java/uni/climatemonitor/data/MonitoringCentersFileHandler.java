@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Handler for Monitoring centers file
+ */
 public class MonitoringCentersFileHandler extends FileHandler{
     private ArrayList<MonitoringCenter> monitoringCenters = new ArrayList<>();
 

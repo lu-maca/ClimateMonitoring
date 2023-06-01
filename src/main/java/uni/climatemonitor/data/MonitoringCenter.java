@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/**
+ * Class for monitoring center, with relative methods.
+ */
 public class MonitoringCenter {
     private String name;
     private String address;
@@ -57,6 +60,11 @@ public class MonitoringCenter {
         return name;
     }
 
+    /**
+     * Produce a json formatted string with the information about the
+     * monitoring center
+     * @return String
+     */
     public String toJson(){
         String out = String.format(
                 jsonFormat,

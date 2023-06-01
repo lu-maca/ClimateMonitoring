@@ -9,6 +9,9 @@ import uni.climatemonitor.generics.Constants;
 import javax.swing.*;
 import java.net.URL;
 
+/**
+ * About dialog with the info about the author
+ */
 public class AboutDialog extends JDialog {
     private JPanel contentPane;
     private JPanel AboutPnl;

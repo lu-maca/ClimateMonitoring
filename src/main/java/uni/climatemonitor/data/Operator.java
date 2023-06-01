@@ -9,6 +9,9 @@ package uni.climatemonitor.data;
 
 import java.util.HashMap;
 
+/**
+ * Class that represents an operator and the associated methods
+ */
 public class Operator {
     private String name;
     private String taxCode;
@@ -64,6 +67,10 @@ public class Operator {
     @Override
     public String toString(){ return getUsername(); }
 
+    /**
+     * Format a json string with the information about the operator
+     * @return String
+     */
     public String toJson(){
         String out = String.format(
                 jsonFormat,

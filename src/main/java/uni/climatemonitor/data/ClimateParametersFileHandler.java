@@ -16,6 +16,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+/**
+ * Handler for Climate Parameters file
+ */
 public class ClimateParametersFileHandler extends FileHandler {
     private ArrayList<ClimateParams> climateParamsList = new ArrayList<>();
 
@@ -23,10 +26,18 @@ public class ClimateParametersFileHandler extends FileHandler {
         super(fileName);
     }
 
+    /**
+     * Getter for the list of climate params
+     * @return ArrayList<ClimateParams>
+     */
     public ArrayList<ClimateParams> getClimateParams() {
         return climateParamsList;
     }
 
+    /**
+     * Add new measure to climate params list
+     * @param climateParams
+     */
     public void addClimateParams(ClimateParams climateParams) {
         climateParamsList.add(climateParams);
     }

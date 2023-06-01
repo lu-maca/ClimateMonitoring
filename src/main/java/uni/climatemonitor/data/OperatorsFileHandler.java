@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Handler for the operators file
+ */
 public class OperatorsFileHandler extends FileHandler{
     private ArrayList<Operator> operators = new ArrayList<>();
 

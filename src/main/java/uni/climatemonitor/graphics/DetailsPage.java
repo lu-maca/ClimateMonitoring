@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-
+/**
+ * Details page graphics class
+ */
 public class DetailsPage {
     private JLabel PlaceNameLbl;
     private JButton CloseBtn;
@@ -109,6 +111,7 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
 %s.
 """;
 
+
     public DetailsPage(){
         /* set criticality levels */
         criticality.put("5", "CRITICAL");
@@ -149,6 +152,12 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         UTILS
 
      */
+    /**
+     * Compute the average on a given list of measures and return it as
+     * a string
+     * @param measures
+     * @return String
+     */
     private String computeAverage(ArrayList<String> measures){
         float average = 0f;
         int numOfMeasures = measures.size();
@@ -161,6 +170,10 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         return averageStr;
     }
 
+    /**
+     * Check if the operator is enabled for the current location
+     * @return true if it is, false otherwise
+     */
     private boolean isOperatorEnabledForThisPlace(){
         /* local variables */
         boolean out = false;
@@ -181,6 +194,10 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         return out;
     }
 
+    /**
+     * Set the about field for the idx-th record
+     * @param idx
+     */
     private void setAboutLastRecordTestArea(int idx){
         UtilsSingleton utils = UtilsSingleton.getInstance();
         AboutLastRecordTextArea.setBackground(new Color(238,238,238));
@@ -206,6 +223,10 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         }
     }
 
+    /**
+     * Set up the full UI for the given location
+     * @param loc
+     */
     public void setUIPnl(Location loc){
         location = loc;
         UtilsSingleton utils = UtilsSingleton.getInstance();
@@ -263,6 +284,13 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         setParamsFromHistory(0);
     }
 
+    /**
+     * Set labels for the parameters, both for current values and for averages
+     * @param current
+     * @param currentValue
+     * @param average
+     * @param averageValue
+     */
     private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
         if (!isOperatorEnabled) {
             current.setText(currentValue);
@@ -270,6 +298,12 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         average.setText(averageValue);
     }
 
+    /**
+     * Compute the criticality level from the given number. If the decimal part is
+     * different from 0, it computes sublevels too.
+     * @param number
+     * @return String
+     */
     private String assignCriticalityLevelFromNumber(String number) {
         String integerPart;
         Integer decimalPart = 0;
@@ -307,11 +341,20 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         return currentCriticality;
     }
 
+    /**
+     * Double quote a string s
+     * @param s
+     * @return String
+     */
     private String quoteString(String s){
         String out = "\"" + s + "\"";
         return out;
     }
 
+    /**
+     * Set parameters from historical values for idx-th record
+     * @param idx
+     */
     private void setParamsFromHistory(int idx){
         AverageTitleLbl.setText("Average (on a total of " + params.getTot_measure() + " records)");
 
@@ -342,6 +385,9 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         }
     }
 
+    /**
+     * Set the operator UI view
+     */
     private void setOperatorsView(){
         /* set combo boxes visible */
         WindMostRecentValueLbl.setVisible(false);
@@ -363,6 +409,9 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         SaveBtn.setVisible(true);
     }
 
+    /**
+     * Reset all the fields to their default value
+     */
     private void resetAllFields(){
         AverageTitleLbl.setText("Average (no detection found)");
         MostRecentTitleLbl.setText("Most recent detection");

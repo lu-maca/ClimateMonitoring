@@ -13,6 +13,10 @@ import uni.climatemonitor.generics.Constants;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * This class exposes some methods for the handling of geophysical data
+ * (geographical and climate params)
+ */
 public class GeoData {
     /* files */
     private LocationsFileHandler geoFile;
@@ -25,10 +29,19 @@ public class GeoData {
         climateInfoFile.readFile();
     }
 
+    /**
+     * Add the given climate param measurament to the list of params.
+     * @param climateParams
+     */
     public void addClimateParams(ClimateParams climateParams){
         climateInfoFile.addClimateParams(climateParams);
     }
 
+    /**
+     * Get climate params for the area with given geoname ID
+     * @param geonameID
+     * @return {@link ClimateParams}
+     */
     public ClimateParams getClimateParamsFor(String geonameID){
         for (ClimateParams cp : climateInfoFile.getClimateParams()){
             if (cp.getGeonameID().equals(geonameID)){
@@ -38,6 +51,11 @@ public class GeoData {
         return null;
     }
 
+    /**
+     * Get {@link Location} instance for the given geoname ID
+     * @param id
+     * @return {@link Location}
+     */
     public Location getLocationFromGeoID(String id) {
         for (Location l : getGeoLocationsList()){
             if (l.getGeonameID().equals(id)) { return l; }
@@ -45,8 +63,15 @@ public class GeoData {
         return null;
     }
 
+    /**
+     * Get the list of all the locations
+     * @return ArrayList<Location>
+     */
     public ArrayList<Location> getGeoLocationsList(){ return geoFile.getLocationsList(); }
 
+    /**
+     * Update the file of climate parameters
+     */
     public void updateClimateParamsFile(){
         climateInfoFile.writeFile();
     }
