@@ -9,6 +9,7 @@ package uni.climatemonitor.graphics;
 import org.json.simple.parser.ParseException;
 import uni.climatemonitor.generics.Constants;
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 
@@ -31,8 +32,10 @@ public class MainWindow extends JFrame {
      */
     public MainWindow() throws ParseException, IOException {
         setTitle(Constants.APP_NAME_S);
-        setSize(1200,650);
-        setResizable(false);
+        setPreferredSize(new Dimension(1200,650));
+        setMinimumSize(new Dimension(1200,650));
+        pack();
+
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 

@@ -57,7 +57,8 @@
                     <properties>
                       <borderPainted value="false"/>
                       <contentAreaFilled value="false"/>
-                      <horizontalTextPosition value="2"/>
+                      <horizontalAlignment value="4"/>
+                      <horizontalTextPosition value="4"/>
                       <opaque value="false"/>
                       <text value="Close"/>
                     </properties>
