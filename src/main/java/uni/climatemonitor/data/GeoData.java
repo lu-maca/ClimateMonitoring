@@ -38,6 +38,14 @@ public class GeoData {
     }
 
     /**
+     * Add the given location to the list of locations.
+     * @param loc
+     */
+    public void addLocation(Location loc){
+        geoFile.addLocation(loc);
+    }
+
+    /**
      * Get climate params for the area with given geoname ID
      * @param geonameID
      * @return {@link ClimateParams}
@@ -75,5 +83,13 @@ public class GeoData {
     public void updateClimateParamsFile(){
         climateInfoFile.writeFile();
     }
+
+    /**
+     * Update the file of locations
+     */
+    public void updateLocationsFile(){
+        geoFile.writeFile();
+    }
+
 
 }

@@ -65,7 +65,7 @@ public class Location {
      *
      */
     public String toCSV(){
-        String out = getGeonameID() + ";" + getAsciiName() + ";"  + getAsciiName() + ";"  + getState() + ";"  + getCoordinates().toRawString();
+        String out = getGeonameID() + ";" + getAsciiName() + ";"  + getAsciiName() + ";"  + getState() + ";" + getState() + ";"  + getCoordinates().toRawString();
         return out;
     }
 

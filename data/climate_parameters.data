@@ -50,5 +50,22 @@
   "center": ["Centro Climatico Como", "Centro Climatico Como"],
   "who": ["Pippo Bear", "Pippo Bear"]
 },
+{
+  "state": "IT",
+  "geoname_id": 452324329342,
+  "ascii_name": "Rovellasca",
+  "wind": [3],
+  "humidity": [1],
+  "pressure": [3],
+  "temperature": [1],
+  "rainfall": [1],
+  "glaciers_alt": [1],
+  "glaciers_mass": [1],
+  "tot_measure": 1,
+  "notes": ["prova"],
+  "date": ["02-06-2023 | 18:00:13"],
+  "center": ["Centro Climatico Como"],
+  "who": ["Pippo Bear"]
+},
 
 ]

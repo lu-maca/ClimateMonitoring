@@ -77,6 +77,21 @@ public class NewArea extends JDialog {
         return false;
     }
 
+    private boolean areCoordsValid(){
+        boolean out;
+        try {
+            out = ! (
+                LatTextField.getText().isEmpty() ||
+                LongTextField.getText().isEmpty() ||
+                Double.parseDouble(LatTextField.getText()) > 90.0 ||
+                Double.parseDouble(LongTextField.getText()) > 180.0
+            );
+        }
+        catch (Exception err){
+            return false;
+        }
+        return out;
+    }
     /**
      * Callback for ok button:
      * - check if the new place already exists
@@ -87,23 +102,51 @@ public class NewArea extends JDialog {
     private void ok_at_click() {
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (NameTextField.getText().isEmpty() || StateTextField.getText().isEmpty()){
+                    JOptionPane.showMessageDialog(new JFrame(), "Invalid name or country code.", "",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (! areCoordsValid() ){
+                    JOptionPane.showMessageDialog(new JFrame(), "Latitude or longitude are not valid.", "",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 /* check the place existance */
                 double latSign = LatComboBox.getSelectedIndex() == 0 ? 1.0 : -1.0;
                 double longSign = LongComboBox.getSelectedIndex() == 0 ? 1.0 : -1.0;
+                double lat, lon;
+                lat = Double.parseDouble(LatTextField.getText()) * latSign;
+                lon = Double.parseDouble(LongTextField.getText()) * longSign;
 
-                double lat = Double.parseDouble(LatTextField.getText()) * latSign;
-                double lon = Double.parseDouble(LongTextField.getText()) * longSign;
                 Coordinates c = new Coordinates(lat, lon);
                 boolean isExisting = isAlreadyExisting(NameTextField.getText(), StateTextField.getText(), c.toString());
 
                 if (isExisting){
-                    JOptionPane.showMessageDialog(new JFrame(), "This area is already existing!", "Dialog",
+                    JOptionPane.showMessageDialog(new JFrame(), "This area is already existing!", "",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 /* save on csv and on place array */
+                UtilsSingleton utils = UtilsSingleton.getInstance();
 
+                /* for the geoname id, a unique representation shall be chosen: it can be directly a string formed by appending
+                * the coordinates of the place, since coordinates are unique; in order to be able to parse the string
+                * in the json files, replace all the dashes with zeros (to avoid equal coordinates from - removal), and dots */
+                String geoID = c.toRawString().
+                                replaceAll("-","0").
+                                replaceAll("\\.", "").
+                                replaceAll(",", "").
+                                replaceAll(" ", "");
+
+                String[] arr = {geoID, NameTextField.getText(), NameTextField.getText(), StateTextField.getText(), StateTextField.getText(), c.toRawString()};
+                Location newLoc = new Location(arr);
+                utils.getGeoData().addLocation(newLoc);
+
+                utils.getGeoData().updateLocationsFile();
                 /* close the dialog */
                 dispose();
             }

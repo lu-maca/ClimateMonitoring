@@ -58,11 +58,11 @@ public class Coordinates {
     public String toRawString(){
         String lat = String.valueOf(Math.abs(latitude));
         String lon = String.valueOf(Math.abs(longitude));
-        String NS = "+";
-        String EW = "+";
+        String NS = "";
+        String EW = "";
         if (latitude < 0){ NS = "-"; }
         if (longitude < 0){ EW = "-"; }
-        String out = NS + lat + "," + EW + lon;
+        String out = NS + lat + ", " + EW + lon;
         return out;
     }
 

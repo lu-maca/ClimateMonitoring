@@ -29,9 +29,17 @@ public class LocationsFileHandler extends FileHandler {
     }
 
     /**
+     * Add new location
+     * @param loc
+     */
+    public void addLocation(Location loc) {
+        locationsList.add(loc);
+    }
+
+    /**
      * This method reads the CSV file and stores locations in a list of
      * Location objects.
-     * @see <a href="https://www.geeksforgeeks.org/reading-csv-file-java-using-opencsv/">...</a>
+     * @see <a href="https://www.geeksforgeeks.org/reading-csv-file-java-using-opencsv/">open-csv</a>
      */
     @Override
     public void readFile(){
@@ -76,5 +84,5 @@ public class LocationsFileHandler extends FileHandler {
 
         }
     }
-    
+
 }
