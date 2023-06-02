@@ -22,7 +22,5 @@ public class ClimateMonitor {
 
     public static void main(String[] args) throws ParseException, IOException {
         ClimateMonitor program = new ClimateMonitor();
-
-
     }
 }

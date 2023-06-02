@@ -83,6 +83,7 @@ public class MainPage {
     private JList NewMonitoredAreasList;
     private JPanel NewMonitoredAreasPnl;
     private JLabel SelectedAreasLbl;
+    private JButton AddNewBtn;
 
     /* utilities for locations */
     private DefaultListModel<Location> searchListModel;
@@ -173,6 +174,8 @@ public class MainPage {
         exitFromRegistrationBtn_at_click();
         /* restore main page to initial condition when logout button is pushed */
         logoutBtn_at_click();
+        /* add new area */
+        addNewBtn_at_click();
     }
 
     /*************************************************************
@@ -767,6 +770,19 @@ public class MainPage {
                 userLoginTextField.setForeground(new Color(187,187,187));
                 pwdLoginTextField.setText(Constants.PWD_S);
                 pwdLoginTextField.setForeground(new Color(187,187,187));
+            }
+        });
+    }
+
+    /**
+     * Callback for add new area button, opens a new dialog where you can set the info
+     *
+     */
+    private void addNewBtn_at_click(){
+        AddNewBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new NewArea();
             }
         });
     }

@@ -61,6 +61,15 @@ public class Location {
     }
 
     /**
+     * Return a CSV formatted representation of the location
+     *
+     */
+    public String toCSV(){
+        String out = getGeonameID() + ";" + getAsciiName() + ";"  + getAsciiName() + ";"  + getState() + ";"  + getCoordinates().toRawString();
+        return out;
+    }
+
+    /**
      * state getter
      */
     public String getState() {

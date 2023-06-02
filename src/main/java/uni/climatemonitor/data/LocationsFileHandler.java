@@ -56,12 +56,25 @@ public class LocationsFileHandler extends FileHandler {
         }
     }
 
-    public void writeFile(){}
+    public void writeFile() {
+        try {
+            FileWriter myWriter = new FileWriter(fileName);
+            int size = locationsList.size();
+            int i = 0;
+            for (Location l : locationsList) {
+                if (i == size) {
+                    break;
+                }
+                i++;
+                myWriter.write(l.toCSV());
+                myWriter.write("\n");
+            }
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
 
-    /**
-     * test
-     */
-    public static void main(String[] args) {
-
+        }
     }
+    
 }

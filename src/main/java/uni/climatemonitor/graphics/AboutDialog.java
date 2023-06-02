@@ -27,6 +27,7 @@ public class AboutDialog extends JDialog {
         URL imgURL = getClass().getResource(Constants.EARTH_LOGO_PATH_S);
         ImageIcon image = new ImageIcon(imgURL);
         logoEarthLbl.setIcon(image);
+        setIconImage(image.getImage());
     }
 
 }
