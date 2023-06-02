@@ -586,7 +586,7 @@ public class MainPage {
                 if (! IsNewCheckBox.isSelected()){ return true; }
 
                 /* instead, when it's new, check the data */
-                if (NewNameTextField.getText() == "" || AddressTextField.getText() == ""){
+                if (NewNameTextField.getText().isEmpty() || AddressTextField.getText().isEmpty()){
                     showMessage("Assign a non empty name to the center!");
                     return false;
                 } else if (newSelectedAreasModel.isEmpty()) {
