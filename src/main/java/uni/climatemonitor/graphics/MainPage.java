@@ -228,6 +228,11 @@ public class MainPage {
         /* restore the main page in the initial condition */
         ButtonsPnl.setVisible(true);
         RegistrationPnl.setVisible(false);
+
+        /* reset new monitoring center options */
+        NewNameTextField.setText("");
+        AddressTextField.setText("");
+        newSelectedAreasModel.clear();
     }
 
     /*************************************************************
@@ -413,29 +418,29 @@ public class MainPage {
     private void searchList_at_selection(){
         SearchList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                if (evt.getClickCount() == 2) {
-                    UtilsSingleton utils = UtilsSingleton.getInstance();
-                    clickedElement = (Location) SearchList.getSelectedValue();
-                    if (clickedElement == null) { return; }
+            if (evt.getClickCount() == 2) {
+                UtilsSingleton utils = UtilsSingleton.getInstance();
+                clickedElement = (Location) SearchList.getSelectedValue();
+                if (clickedElement == null) { return; }
 
-                    /* if registration mode is active, add the clicked element to the list of selected areas,
-                    * else open the details page */
-                    if (! isRegistrationModeActive) {
-                        utils.getDetailsPnl().setUIPnl(clickedElement);
-                        utils.switchPage("Location Details Page");
-                    } else {
-                        if (! newSelectedAreasModel.contains(clickedElement)) {
-                            newSelectedAreasModel.addElement(clickedElement);
-                        }
-                        SearchListPnl.setVisible(false);
+                /* if registration mode is active, add the clicked element to the list of selected areas,
+                * else open the details page */
+                if (! isRegistrationModeActive) {
+                    utils.getDetailsPnl().setUIPnl(clickedElement);
+                    utils.switchPage("Location Details Page");
+                } else {
+                    if (! newSelectedAreasModel.contains(clickedElement)) {
+                        newSelectedAreasModel.addElement(clickedElement);
                     }
-
-                    /* remove the document listener to avoid infinite loops */
-                    typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
-                    typeAPlaceTextField.setText("");
-                    utils.textFieldExit(typeAPlaceTextField, "Type a place...");
-                    typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
+                    SearchListPnl.setVisible(false);
                 }
+
+                /* remove the document listener to avoid infinite loops */
+                typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
+                typeAPlaceTextField.setText("");
+                utils.textFieldExit(typeAPlaceTextField, "Type a place...");
+                typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
+            }
             }
         });
     }
@@ -465,9 +470,11 @@ public class MainPage {
         RegisterBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                UtilsSingleton utils = UtilsSingleton.getInstance();
                 ButtonsPnl.setVisible(false);
                 CenterCreationOptionPnl.setVisible(false);
                 RegistrationPnl.setVisible(true);
+                MonitoringCenterComboBox.setEnabled(! utils.getCentersData().getMonitoringCentersList().isEmpty());
             }
         });
     }
@@ -544,18 +551,30 @@ public class MainPage {
                 showMessage(String.format("Welcome, %s! Login to operate.", newOperator.getName()));
                 resetRegistrationForm();
 
+                /* add the new monitoring center to the combo box list */
+                for (MonitoringCenter mc : utils.getCentersData().getMonitoringCentersList()){
+                    monitoringCenterComboBoxModel.addElement(mc);
+                }
+                MonitoringCenterComboBox.setModel(monitoringCenterComboBoxModel);
             }
 
             private boolean areUserDataValid(){
+                UtilsSingleton utils = UtilsSingleton.getInstance();
                 /* check if data are valid */
-                if  (! (
-                        NameTextField.getText() != "" &&
-                        SurnameTextFIeld.getText() != "" &&
-                        TaxCodeTextField.getText() != "" &&
-                        EmailTextField.getText() != "" &&
-                        UsernameTextField.getText() != ""
-                )){
+                if  (
+                        NameTextField.getText().isEmpty() &&
+                        SurnameTextFIeld.getText().isEmpty() &&
+                        TaxCodeTextField.getText().isEmpty() &&
+                        EmailTextField.getText().isEmpty() &&
+                        UsernameTextField.getText().isEmpty()
+                ){
                     showMessage("Fill all the fields!");
+                    return false;
+                }
+
+                /* check if the username already exists */
+                if (utils.usernameAlreadyExist(UsernameTextField.getText())) {
+                    showMessage("Username already existing");
                     return false;
                 }
 
@@ -583,7 +602,7 @@ public class MainPage {
 
             private boolean areCenterDataValid(){
                 /* data center data are always valid if the center already exists */
-                if (! IsNewCheckBox.isSelected()){ return true; }
+                if (! IsNewCheckBox.isSelected() && ! MonitoringCenterComboBox.isEnabled()){ return true; }
 
                 /* instead, when it's new, check the data */
                 if (NewNameTextField.getText().isEmpty() || AddressTextField.getText().isEmpty()){

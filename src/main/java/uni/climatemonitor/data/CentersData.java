@@ -140,4 +140,12 @@ public class CentersData {
     public void updateMonitoringCentersFile(){
         monitoringCentersFile.writeFile();
     }
+
+    /**
+     * Getter for the operator list
+     * @return the operator list
+     */
+    public ArrayList<Operator> getOperatorsList() {
+        return operatorsList;
+    }
 }

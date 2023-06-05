@@ -105,8 +105,25 @@ public final class UtilsSingleton {
         }
     }
 
+    /**
+     * Getter for the details panel object
+     * @return DetailsPage
+     */
     public DetailsPage getDetailsPnl() {
         return DetailsPnl;
+    }
+
+    /**
+     * Check if the username already exists
+     * @return true if exists already, false otherwise
+     */
+    public boolean usernameAlreadyExist(String username){
+        for (Operator o: centersData.getOperatorsList()){
+            if (o.getUsername().equals(username)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
