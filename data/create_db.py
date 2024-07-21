@@ -59,12 +59,11 @@ if DB_ACTIONS:
     # monitoring_centers
     mycursor.execute(
         """CREATE TABLE monitoring_centers
-            (name VARCHAR(50) NOT NULL,
-            address VARCHAR(70) NOT NULL,
-            id VARCHAR(10) PRIMARY KEY,
-            monitored_area_id VARCHAR(12) NOT NULL,
-            UNIQUE (name, address, monitored_area_id),
-            FOREIGN KEY (monitored_area_id) REFERENCES locations(id)
+            (name VARCHAR(50) UNIQUE NOT NULL,
+            address VARCHAR(70) UNIQUE NOT NULL,            
+            monitored_area_id VARCHAR(12),
+            id VARCHAR(10),
+            PRIMARY KEY (id, monitored_area_id)
             )"""
     )
     
@@ -72,11 +71,12 @@ if DB_ACTIONS:
     mycursor.execute(
         """CREATE TABLE operators
             (name VARCHAR (50) NOT NULL,
-            tax_code VARCHAR(20) PRIMARY KEY,
+            tax_code VARCHAR(20),
             email VARCHAR(30) NOT NULL,
             username VARCHAR(20) UNIQUE,
             pwd VARCHAR(20) NOT NULL,
             center VARCHAR(10) NOT NULL,
+            PRIMARY KEY (tax_code, center),
             FOREIGN KEY (center) REFERENCES monitoring_centers(id)
             )"""
     )
