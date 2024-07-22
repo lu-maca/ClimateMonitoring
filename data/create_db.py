@@ -1,6 +1,15 @@
 import mysql.connector
 import csv
 
+"""
+MonitoringCenter( id, name, address )
+Location( id, name, ascii_name, state, state_code, latitude, longitude )
+Monitors( id^Location, id^MonitoringCenter)
+Operator( tax_code, id^MonitoringCenter, name, username, pwd, email )
+ClimateParameter( date,  idLocation, wind, humidity, pressure, temperature, rainfall, glaciers_alt, glaciers_mass, notes, who^Operator )
+
+"""
+
 DB_ACTIONS = True
 
 if DB_ACTIONS:
@@ -18,7 +27,7 @@ if DB_ACTIONS:
 if DB_ACTIONS:
     mycursor.execute(
         # the combination of 4 columns shall be unique! the primary key is id
-        """CREATE TABLE locations 
+        """CREATE TABLE Location 
             (id VARCHAR(12) PRIMARY KEY, 
             name VARCHAR(120), 
             ascii_name VARCHAR(120) NOT NULL, 
@@ -31,7 +40,7 @@ if DB_ACTIONS:
     )
 
     # read monitoring_coordinates.csv
-    command = "INSERT INTO locations (id, name, ascii_name, state_code, state, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    command = "INSERT INTO Location (id, name, ascii_name, state_code, state, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
 with open("monitoring_coordinates.csv", "r") as f:
     locations = csv.reader(f, delimiter=';')
@@ -58,33 +67,39 @@ with open("monitoring_coordinates.csv", "r") as f:
 if DB_ACTIONS:
     # monitoring_centers
     mycursor.execute(
-        """CREATE TABLE monitoring_centers
-            (name VARCHAR(50) UNIQUE NOT NULL,
-            address VARCHAR(70) UNIQUE NOT NULL,            
-            monitored_area_id VARCHAR(12),
-            id VARCHAR(10),
-            PRIMARY KEY (id, monitored_area_id)
+        """CREATE TABLE MonitoringCenter
+            (name VARCHAR(50) NOT NULL,
+            address VARCHAR(70) NOT NULL,
+            id VARCHAR(10) PRIMARY KEY
             )"""
+    )
+    
+    mycursor.execute(
+        """CREATE TABLE Monitors
+        (area_id VARCHAR(12) REFERENCES Location(id),
+        center_id VARCHAR(10) REFERENCES MonitoringCenter(id),
+        PRIMARY KEY (area_id, center_id)            
+        )
+        """
     )
     
     # registered_operators
     mycursor.execute(
-        """CREATE TABLE operators
-            (name VARCHAR (50) NOT NULL,
-            tax_code VARCHAR(20),
+        """CREATE TABLE Operator
+            (tax_code VARCHAR(20) PRIMARY KEY,
+            id VARCHAR(10) REFERENCES MonitoringCenter(id),
+            name VARCHAR (50) NOT NULL,
             email VARCHAR(30) NOT NULL,
-            username VARCHAR(20) UNIQUE,
-            pwd VARCHAR(20) NOT NULL,
-            center VARCHAR(10) NOT NULL,
-            PRIMARY KEY (tax_code, center),
-            FOREIGN KEY (center) REFERENCES monitoring_centers(id)
+            username VARCHAR(20) UNIQUE NOT NULL,
+            pwd VARCHAR(20) NOT NULL
             )"""
     )
     
     # # climate_parameters
     mycursor.execute(
-        """CREATE TABLE climate_parameters 
-            (geoname_id VARCHAR(12) NOT NULL, 
+        """CREATE TABLE ClimateParameter 
+            (geoname_id VARCHAR(12),
+            date DATE, 
             wind TINYINT NOT NULL,
             humidity TINYINT NOT NULL,
             pressure TINYINT NOT NULL,
@@ -93,12 +108,10 @@ if DB_ACTIONS:
             glaciers_alt TINYINT NOT NULL,
             glaciers_mass TINYINT NOT NULL,
             notes VARCHAR(255) DEFAULT "",
-            date DATE,
             center_id VARCHAR(10) NOT NULL,
             who VARCHAR(50) NOT NULL,
             PRIMARY KEY (geoname_id, date),
-            FOREIGN KEY (geoname_id) REFERENCES locations(id),
-            FOREIGN KEY (center_id) REFERENCES monitoring_centers(id),
-            FOREIGN KEY (who) REFERENCES operators(tax_code)
+            FOREIGN KEY (geoname_id) REFERENCES Location(id),
+            FOREIGN KEY (who) REFERENCES Operator(tax_code)
             )"""
     )
