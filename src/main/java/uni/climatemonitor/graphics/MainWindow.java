@@ -6,12 +6,15 @@
 
 package uni.climatemonitor.graphics;
 
-import org.json.simple.parser.ParseException;
+import uni.climatemonitor.common.IDatabaseService;
 import uni.climatemonitor.generics.Constants;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.rmi.NotBoundException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class MainWindow extends JFrame {
 
@@ -30,7 +33,7 @@ public class MainWindow extends JFrame {
     /**
      * Constructor for the MainWindow object.
      */
-    public MainWindow() throws ParseException, IOException {
+    public MainWindow() throws IOException {
         setTitle(Constants.APP_NAME_S);
         setPreferredSize(new Dimension(1200,650));
         setMinimumSize(new Dimension(1200,650));
@@ -62,8 +65,12 @@ public class MainWindow extends JFrame {
      * main method
      *
      */
-    public static void main(String[] args) throws ParseException, IOException {
-        uni.climatemonitor.graphics.MainWindow mainWindow = new MainWindow();
+    public static void main(String[] args) throws IOException, NotBoundException {
+        Registry registry = LocateRegistry.getRegistry("localhost");
+        IDatabaseService stub = (IDatabaseService) registry.lookup("dbService");
+        UtilsSingleton.getInstance().setDbService(stub);
+
+        new MainWindow();
     }
 
 }

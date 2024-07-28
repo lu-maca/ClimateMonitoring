@@ -6,15 +6,13 @@
 
 package uni.climatemonitor.graphics;
 
-import org.json.simple.parser.ParseException;
-import uni.climatemonitor.data.CentersData;
-import uni.climatemonitor.data.GeoData;
-import uni.climatemonitor.data.Operator;
+import uni.climatemonitor.common.IDatabaseService;
+import uni.climatemonitor.common.Operator;
 import uni.climatemonitor.generics.Constants;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 /**
  * Singleton for utilities
@@ -26,16 +24,14 @@ public final class UtilsSingleton {
     private DetailsPage DetailsPnl;
     private boolean isLoggedIn;
     private Operator whoisLoggedIn;
-    private GeoData geoData;
-    private CentersData centersData;
+    private IDatabaseService dbService;
 
     private static UtilsSingleton INSTANCE = null;
 
-    private UtilsSingleton() throws ParseException, IOException {
-        geoData = new GeoData();
-        centersData  = new CentersData();
+    private UtilsSingleton() throws IOException {
         whoisLoggedIn = null;
         isLoggedIn = false;
+        dbService = null;
     }
 
     /**
@@ -114,19 +110,6 @@ public final class UtilsSingleton {
     }
 
     /**
-     * Check if the username already exists
-     * @return true if exists already, false otherwise
-     */
-    public boolean usernameAlreadyExist(String username){
-        for (Operator o: centersData.getOperatorsList()){
-            if (o.getUsername().equals(username)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Check if someone is already logged in
      * @return true if someone is already logged in
      * @throws Exception
@@ -169,11 +152,11 @@ public final class UtilsSingleton {
         isLoggedIn = false;
     }
 
-    public CentersData getCentersData() {
-        return centersData;
+    public void setDbService(IDatabaseService dbService) {
+        this.dbService = dbService;
     }
 
-    public GeoData getGeoData() {
-        return geoData;
+    public IDatabaseService getDbService() {
+        return dbService;
     }
 }

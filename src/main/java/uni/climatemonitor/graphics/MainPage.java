@@ -6,8 +6,11 @@
 
 package uni.climatemonitor.graphics;
 
-import uni.climatemonitor.data.*;
 import uni.climatemonitor.generics.Constants;
+import uni.climatemonitor.common.Location;
+import uni.climatemonitor.common.MonitoringCenter;
+import uni.climatemonitor.common.Coordinates;
+import uni.climatemonitor.common.Operator;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -17,6 +20,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -106,10 +110,6 @@ public class MainPage {
         Logo.setIcon(image);
 
         /* set initial search list and its gui options */
-        searchListModel = new DefaultListModel<>();
-        for (Location elem : utils.getGeoData().getGeoLocationsList()) {
-            searchListModel.addElement(elem);
-        }
         SearchList.setModel(searchListModel);
         SearchList.setVisibleRowCount(16);
         SearchList.setBackground(new Color(238, 238, 238));
@@ -356,16 +356,16 @@ public class MainPage {
          */
         private void filterModel(String filter) {
             UtilsSingleton utils = UtilsSingleton.getInstance();
-            for (Location l : utils.getGeoData().getGeoLocationsList()) {
-                if (!l.toString().contains(filter)) {
-                    if (searchListModel.contains(l)) {
-                        searchListModel.removeElement(l);
-                    }
-                } else {
-                    if (!searchListModel.contains(l)) {
-                        searchListModel.addElement(l);
-                    }
-                }
+            ArrayList<Location> filteredLocations;
+            try {
+                filteredLocations = utils.getDbService().filterLocationsByName(filter);
+            } catch (RemoteException e) {
+                return;
+            }
+            /* clear the search list model and populate it */
+            searchListModel.clear();
+            for (Location l : filteredLocations) {
+                searchListModel.addElement(l);
             }
         }
 
@@ -374,30 +374,17 @@ public class MainPage {
          * @param coordinates
          */
         private void filterModelByCoordinates(Coordinates coordinates) {
-            /* local variables */
             UtilsSingleton utils = UtilsSingleton.getInstance();
-
-            double dist;
-            Map<Double, Location> sortedMap;
-            Map<Double, Location> unsortedMap = new HashMap<>();
-
-            /* remove all elements just to be sure the list is empty */
-            searchListModel.removeAllElements();
-
-            for (Location l : utils.getGeoData().getGeoLocationsList()) {
-                dist = coordinates.distance(l.getCoordinates());
-                /* accept only those locations with a distance <= 50km */
-                if (dist <= Constants.MAX_DIST) {
-                    unsortedMap.put(dist, l);
-                }
+            ArrayList<Location> filteredLocations;
+            try {
+                filteredLocations = utils.getDbService().filterLocationsByCoordinates(coordinates);
+            } catch (RemoteException e) {
+                return;
             }
-            /* get a sorted map by keys: keys are distances from the searched
-            * coordinates to the ones in the locations' file. */
-            sortedMap = new TreeMap<Double, Location>(unsortedMap);
-            /* at the end we can add to the suggestion list in the right order,
-            * from the nearest to the furthest */
-            for (Map.Entry<Double, Location> entry : sortedMap.entrySet()){
-                searchListModel.addElement(entry.getValue());
+            /* clear the search list model and populate it */
+            searchListModel.clear();
+            for (Location l : filteredLocations){
+                searchListModel.addElement(l);
             }
         }
     };
@@ -474,7 +461,12 @@ public class MainPage {
                 ButtonsPnl.setVisible(false);
                 CenterCreationOptionPnl.setVisible(false);
                 RegistrationPnl.setVisible(true);
-                MonitoringCenterComboBox.setEnabled(! utils.getCentersData().getMonitoringCentersList().isEmpty());
+                boolean noMonitoringCenters = false;
+                try {
+                    noMonitoringCenters = utils.getDbService().isMonitoringCentersTableEmpty();
+                } catch (RemoteException ex) {
+                }
+                MonitoringCenterComboBox.setEnabled(! noMonitoringCenters);
             }
         });
     }
@@ -515,8 +507,8 @@ public class MainPage {
 
     /**
      * Callback for Confirm registration button:
-     *  - if is a new center, add the operator to the operator file
-     *     and add the operator to the monitoring centers file
+     *  - if is a new center, add the operator to the operator table
+     *     and add the operator to the monitoring centers table
      *  - if is a new center, add operator and center
      */
     private void confirmRegisterBtn_at_click(){
@@ -529,8 +521,16 @@ public class MainPage {
                     return;
                 }
 
-                /* update operators file */
-                Operator newOperator = new Operator(newOperator(IsNewCheckBox.isSelected()));
+                /* update operators table */
+                String name = NameTextField.getText() + " " + SurnameTextFIeld.getText();
+                String tax_code = TaxCodeTextField.getText();
+                String email = EmailTextField.getText();
+                String username = UsernameTextField.getText();
+                String password = PwdTextField.getText();
+                String monitoring_center_name = IsNewCheckBox.isSelected()? NewNameTextField.getText() : MonitoringCenterComboBox.getSelectedItem().toString();
+                MonitoringCenter monitoring_center = new MonitoringCenter(monitoring_center_name, );
+
+                Operator newOperator = new Operator(name, tax_code, email, username, password, monitoring_center);
                 utils.getCentersData().addOperator(newOperator);
                 utils.getCentersData().updateOperatorsFile();
 
@@ -572,9 +572,14 @@ public class MainPage {
                     return false;
                 }
 
-                /* check if the username already exists */
-                if (utils.usernameAlreadyExist(UsernameTextField.getText())) {
-                    showMessage("Username already existing");
+                /* check if the username already exists, if a remote exception is thrown,
+                * simply return false */
+                try {
+                    if (utils.getDbService().operatorExists(UsernameTextField.getText())) {
+                        showMessage("Username already existing");
+                        return false;
+                    }
+                } catch (RemoteException e) {
                     return false;
                 }
 
@@ -615,21 +620,6 @@ public class MainPage {
                 return true;
             }
 
-            private HashMap newOperator(boolean isNewCenter){
-                HashMap<String, String> operator = new HashMap<>();
-
-                operator.put("name", NameTextField.getText() + " " + SurnameTextFIeld.getText());
-                operator.put("tax_code", TaxCodeTextField.getText());
-                operator.put("email", EmailTextField.getText());
-                operator.put("username", UsernameTextField.getText());
-                operator.put("password", PwdTextField.getText());
-                if (isNewCenter){
-                    operator.put("monitoring_center", NewNameTextField.getText());
-                } else {
-                    operator.put("monitoring_center", MonitoringCenterComboBox.getSelectedItem().toString());
-                }
-                return operator;
-            }
 
             private HashMap newMonitoringCenter(){
                 HashMap<String, String> monitoredAreas = new HashMap<>();

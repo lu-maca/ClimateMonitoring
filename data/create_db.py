@@ -68,7 +68,7 @@ if DB_ACTIONS:
     # monitoring_centers
     mycursor.execute(
         """CREATE TABLE MonitoringCenter
-            (name VARCHAR(50) NOT NULL,
+            (name VARCHAR(50) UNIQUE NOT NULL,
             address VARCHAR(70) NOT NULL,
             id VARCHAR(10) PRIMARY KEY
             )"""
@@ -108,7 +108,6 @@ if DB_ACTIONS:
             glaciers_alt TINYINT NOT NULL,
             glaciers_mass TINYINT NOT NULL,
             notes VARCHAR(255) DEFAULT "",
-            center_id VARCHAR(10) NOT NULL,
             who VARCHAR(50) NOT NULL,
             PRIMARY KEY (geoname_id, date),
             FOREIGN KEY (geoname_id) REFERENCES Location(id),

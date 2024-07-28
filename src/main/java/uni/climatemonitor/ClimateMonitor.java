@@ -6,7 +6,6 @@
 
 
 package uni.climatemonitor;
-import org.json.simple.parser.ParseException;
 import uni.climatemonitor.graphics.MainWindow;
 
 import java.io.IOException;
@@ -20,7 +19,7 @@ public class ClimateMonitor {
         }
     }
 
-    public static void main(String[] args) throws ParseException, IOException {
+    public static void main(String[] args) throws IOException {
         ClimateMonitor program = new ClimateMonitor();
     }
 }
