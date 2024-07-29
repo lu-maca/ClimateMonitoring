@@ -411,6 +411,7 @@
                                 <properties>
                                   <caretColor color="-16777216"/>
                                   <foreground color="-16777216"/>
+                                  <text value=""/>
                                   <visible value="true"/>
                                 </properties>
                               </component>

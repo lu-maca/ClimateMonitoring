@@ -528,23 +528,26 @@ public class MainPage {
                 String username = UsernameTextField.getText();
                 String password = PwdTextField.getText();
                 String monitoring_center_name = IsNewCheckBox.isSelected()? NewNameTextField.getText() : MonitoringCenterComboBox.getSelectedItem().toString();
-                MonitoringCenter monitoring_center = new MonitoringCenter(monitoring_center_name, );
-
+                MonitoringCenter monitoring_center = new MonitoringCenter(monitoring_center_name, AddressTextField.getText(), "0");
                 Operator newOperator = new Operator(name, tax_code, email, username, password, monitoring_center);
-                utils.getCentersData().addOperator(newOperator);
-                utils.getCentersData().updateOperatorsFile();
 
-                /* update monitoring centers file (only if a new center is added) */
+                /* update monitoring centers table (only if a new center is added) */
                 if (IsNewCheckBox.isSelected()) {
-                    MonitoringCenter newMonitoringCenter = new MonitoringCenter(newMonitoringCenter());
                     ArrayList<String> newMonitoredAreasArrayList = new ArrayList<>();
                     for (int i = 0; i < newSelectedAreasModel.getSize(); i++) {
                         String geonameID = newSelectedAreasModel.getElementAt(i).getGeonameID();
+
                         newMonitoredAreasArrayList.add(geonameID);
                     }
-                    newMonitoringCenter.setMonitoredAreas(newMonitoredAreasArrayList);
-                    utils.getCentersData().addMonitoringCenter(newMonitoringCenter);
-                    utils.getCentersData().updateMonitoringCentersFile();
+
+                    try {
+                        utils.getDbService().pushMonitoringCenter(monitoring_center, newMonitoredAreasArrayList);
+                    } catch (RemoteException ex) {
+                        showMessage(String.format("Something went wrong! Try again.", newOperator.getName()));
+                        resetRegistrationForm();
+                        return;
+                    }
+
                 }
 
                 /* exit from the registration panel */
@@ -620,15 +623,6 @@ public class MainPage {
                 return true;
             }
 
-
-            private HashMap newMonitoringCenter(){
-                HashMap<String, String> monitoredAreas = new HashMap<>();
-                monitoredAreas.put("name", NewNameTextField.getText());
-                monitoredAreas.put("address", AddressTextField.getText());
-                /* set a fictitious monitored area, will be overwritten */
-                monitoredAreas.put("monitored_areas", "");
-                return monitoredAreas;
-            }
         });
     }
 

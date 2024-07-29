@@ -1,8 +1,7 @@
 package uni.climatemonitor.graphics;
 
-import uni.climatemonitor.data.Coordinates;
-import uni.climatemonitor.data.GeoData;
-import uni.climatemonitor.data.Location;
+import uni.climatemonitor.common.Coordinates;
+import uni.climatemonitor.common.Location;
 import uni.climatemonitor.generics.Constants;
 
 import javax.swing.*;

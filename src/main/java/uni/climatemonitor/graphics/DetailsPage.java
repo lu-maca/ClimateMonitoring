@@ -6,10 +6,10 @@
 
 package uni.climatemonitor.graphics;
 
-import uni.climatemonitor.data.ClimateParams;
-import uni.climatemonitor.data.Location;
-import uni.climatemonitor.data.MonitoringCenter;
-import uni.climatemonitor.data.Operator;
+import uni.climatemonitor.common.ClimateParameter;
+import uni.climatemonitor.common.Location;
+import uni.climatemonitor.common.MonitoringCenter;
+import uni.climatemonitor.common.Operator;
 import uni.climatemonitor.generics.Constants;
 
 import javax.swing.*;
