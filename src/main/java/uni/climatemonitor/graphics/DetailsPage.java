@@ -17,6 +17,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -94,7 +95,7 @@ public class DetailsPage {
 
     /* location info */
     private Location location;
-    private ClimateParams params;
+    private ClimateParameter params;
 
     /* operator info */
     boolean isOperatorEnabled = false;
@@ -171,30 +172,6 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
     }
 
     /**
-     * Check if the operator is enabled for the current location
-     * @return true if it is, false otherwise
-     */
-    private boolean isOperatorEnabledForThisPlace(){
-        /* local variables */
-        boolean out = false;
-        UtilsSingleton utils = UtilsSingleton.getInstance();
-
-        Operator operator = utils.getWhoisLoggedIn();
-
-        if (operator != null){
-            ArrayList<String> monitoredAreas = utils.getCentersData().getEnabledLocationsForOperator(operator);
-            /* check if the chosen location is in the areas monitored by the operator logged in */
-            for (String s : monitoredAreas){
-                if (s.equals(location.getGeonameID())) {
-                    out = true;
-                }
-            }
-        }
-
-        return out;
-    }
-
-    /**
      * Set the about field for the idx-th record
      * @param idx
      */
@@ -232,7 +209,11 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         UtilsSingleton utils = UtilsSingleton.getInstance();
         Operator operator = utils.getWhoisLoggedIn();
         params = utils.getGeoData().getClimateParamsFor(location.getGeonameID());
-        isOperatorEnabled = isOperatorEnabledForThisPlace();
+        try {
+            isOperatorEnabled = utils.getDbService().isOperatorEnabledForLocation(utils.getWhoisLoggedIn().getUsername(), location);
+        } catch (RemoteException e) {
+            isOperatorEnabled = false;
+        }
 
         NotesErrorPnl.setVisible(false);
 
@@ -502,8 +483,7 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
                 Operator operator = utils.getWhoisLoggedIn();
 
                 /* get monitoring center of the operator */
-                String mc = operator.getMonitoringCenter();
-                MonitoringCenter monitoringCenter = utils.getCentersData().getMonitoringCenterFromName(mc);
+                MonitoringCenter monitoringCenter = operator.getMonitoringCenter();
 
                 /* add the location to the monitoring center */
                 monitoringCenter.getMonitoredAreas().add(location.getGeonameID());

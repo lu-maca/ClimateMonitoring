@@ -117,7 +117,13 @@ public class MainPage {
 
         /* set initial combo box model for the creation of new monitoring centers */
         monitoringCenterComboBoxModel = new DefaultComboBoxModel<>();
-        for (MonitoringCenter mc : utils.getCentersData().getMonitoringCentersList()){
+        ArrayList<MonitoringCenter> mcs;
+        try {
+            mcs = utils.getDbService().getAllMonitoringCenters();
+        } catch (RemoteException e) {
+            mcs = new ArrayList<>();
+        }
+        for (MonitoringCenter mc : mcs){
             monitoringCenterComboBoxModel.addElement(mc);
         }
         MonitoringCenterComboBox.setModel(monitoringCenterComboBoxModel);
@@ -555,7 +561,13 @@ public class MainPage {
                 resetRegistrationForm();
 
                 /* add the new monitoring center to the combo box list */
-                for (MonitoringCenter mc : utils.getCentersData().getMonitoringCentersList()){
+                ArrayList<MonitoringCenter> mcs;
+                try {
+                    mcs = utils.getDbService().getAllMonitoringCenters();
+                } catch (RemoteException ee) {
+                    mcs = new ArrayList<>();
+                }
+                for (MonitoringCenter mc : mcs){
                     monitoringCenterComboBoxModel.addElement(mc);
                 }
                 MonitoringCenterComboBox.setModel(monitoringCenterComboBoxModel);
@@ -578,7 +590,7 @@ public class MainPage {
                 /* check if the username already exists, if a remote exception is thrown,
                 * simply return false */
                 try {
-                    if (utils.getDbService().operatorExists(UsernameTextField.getText())) {
+                    if (utils.getDbService().operatorExists(UsernameTextField.getText()) != null) {
                         showMessage("Username already existing");
                         return false;
                     }
@@ -716,8 +728,13 @@ public class MainPage {
                 char[] pwd = pwdLoginTextField.getPassword();
 
                 UtilsSingleton utils = UtilsSingleton.getInstance();
+                Operator operator;
                 /* if the user exists and nobody else is logged in, operators features are shown */
-                Operator operator = utils.getCentersData().checkOperatorExistance(username, pwd);
+                try {
+                    operator = utils.getDbService().operatorExists(username);
+                } catch (RemoteException ex) {
+                    operator = null;
+                }
 
                 if (operator != null && utils.giveAccessTo(operator)) {
                     WelcomeBackLbl.setText("Welcome back, " + operator);

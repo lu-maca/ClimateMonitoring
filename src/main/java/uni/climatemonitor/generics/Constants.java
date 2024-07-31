@@ -21,7 +21,6 @@ public final class Constants {
 
     /* generics data */
     public static final String NONE = "NONE";
-
-
+    public static final int NOTES_MAX_CHAR_NUM = 256;
 }
 
