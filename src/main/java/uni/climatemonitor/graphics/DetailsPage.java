@@ -18,7 +18,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.rmi.RemoteException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,7 +95,11 @@ public class DetailsPage {
 
     /* location info */
     private Location location;
-    private ClimateParameter params;
+    private ArrayList<ClimateParameter> params;
+
+    // singleton
+    private UtilsSingleton utils;
+
 
     /* operator info */
     boolean isOperatorEnabled = false;
@@ -145,6 +149,9 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         dateComboBox_at_item_change();
         /* notes text area max number of characters check */
         notesTextArea_at_change();
+
+        utils = UtilsSingleton.getInstance();
+
     }
 
 
@@ -159,11 +166,11 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
      * @param measures
      * @return String
      */
-    private String computeAverage(ArrayList<String> measures){
+    private String computeAverage(ArrayList<Integer> measures){
         float average = 0f;
         int numOfMeasures = measures.size();
-        for (String measure : measures){
-            average += Float.parseFloat(measure);
+        for (Integer measure : measures){
+            average += (float) measure;
         }
         average = average / ((float) numOfMeasures);
 
@@ -176,15 +183,19 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
      * @param idx
      */
     private void setAboutLastRecordTestArea(int idx){
-        UtilsSingleton utils = UtilsSingleton.getInstance();
         AboutLastRecordTextArea.setBackground(new Color(238,238,238));
         if (params != null) {
-            String monCenter = params.getCenter().get(idx).replaceAll("\"", "");
-            String who =  params.getWho().get(idx);
-            String date = params.getDate().get(idx).replaceAll("\"", "");
-            MonitoringCenter mc = utils.getCentersData().getMonitoringCenterFromName(monCenter);
-            String monCenterInfo = mc.getAddress();
-            ArrayList<String> monCenterArea = mc.getMonitoredAreas();
+            String who =  params.get(idx).getWho();
+            MonitoringCenter monCenter = null;
+            try {
+                monCenter = utils.getDbService().getMonitoringCenterForOperator(who);
+            } catch (RemoteException e) {
+                // don't know what to do
+                throw new RuntimeException(e);
+            }
+            LocalDate date = params.get(idx).getDate();
+            String monCenterInfo = monCenter.getAddress();
+            ArrayList<String> monCenterArea = monCenter.getMonitoredAreas();
             ArrayList<String> monitoredAreas = new ArrayList<>();
             for (String s : monCenterArea) {
                 monitoredAreas.add(utils.getGeoData().getLocationFromGeoID(s).getAsciiName());
@@ -206,9 +217,15 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
      */
     public void setUIPnl(Location loc){
         location = loc;
-        UtilsSingleton utils = UtilsSingleton.getInstance();
+
+        try {
+            params = utils.getDbService().getClimateParameterHistory(location);
+        } catch (RemoteException e) {
+            // throw, I don't know what to do here at the moment
+            throw new RuntimeException(e);
+        }
+
         Operator operator = utils.getWhoisLoggedIn();
-        params = utils.getGeoData().getClimateParamsFor(location.getGeonameID());
         try {
             isOperatorEnabled = utils.getDbService().isOperatorEnabledForLocation(utils.getWhoisLoggedIn().getUsername(), location);
         } catch (RemoteException e) {
@@ -337,32 +354,50 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
      * @param idx
      */
     private void setParamsFromHistory(int idx){
-        AverageTitleLbl.setText("Average (on a total of " + params.getTot_measure() + " records)");
+        AverageTitleLbl.setText("Average (on a total of " + params.size() + " records)");
 
+        // get all values for statistics
+        ArrayList<Integer> winds = new ArrayList<>();
+        ArrayList<Integer> humidities = new ArrayList<>();
+        ArrayList<Integer> pressures = new ArrayList<>();
+        ArrayList<Integer> temperatures = new ArrayList<>();
+        ArrayList<Integer> rainfalls = new ArrayList<>();
+        ArrayList<Integer> alts = new ArrayList<>();
+        ArrayList<Integer> masses = new ArrayList<>();
+
+        for (int j = 0; j < params.size(); j++ ) {
+            winds.add(params.get(j).getWind());
+            humidities.add(params.get(j).getHumidity());
+            pressures.add(params.get(j).getPressure());
+            temperatures.add(params.get(j).getTemperature());
+            rainfalls.add(params.get(j).getRainfall());
+            alts.add(params.get(j).getGlaciersAlt());
+            masses.add(params.get(j).getGlaciersMass());
+        }
         /* set wind */
-        setLblValues(WindMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getWind().get(idx)),
-                WindAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getWind())));
+        setLblValues(WindMostRecentValueLbl, assignCriticalityLevelFromNumber(String.valueOf(params.get(idx).getWind())),
+                WindAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(winds)));
         /* set humidity */
-        setLblValues(HumidityMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getHumidity().get(idx)),
-                HumidityAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getHumidity())));
+        setLblValues(HumidityMostRecentValueLbl, assignCriticalityLevelFromNumber(String.valueOf(params.get(idx).getHumidity())),
+                HumidityAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(humidities)));
         /* set pressure */
-        setLblValues(PressureMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getPressure().get(idx)),
-                PressureAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getPressure())));
+        setLblValues(PressureMostRecentValueLbl, assignCriticalityLevelFromNumber(String.valueOf(params.get(idx).getPressure())),
+                PressureAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(pressures)));
         /* set temperature */
-        setLblValues(TemperatureMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getTemperature().get(idx)),
-                TemperatureAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getTemperature())));
+        setLblValues(TemperatureMostRecentValueLbl, assignCriticalityLevelFromNumber(String.valueOf(params.get(idx).getTemperature())),
+                TemperatureAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(temperatures)));
         /* set rainfall */
-        setLblValues(RainfallMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getRainfall().get(idx)),
-                RainfallAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getRainfall())));
+        setLblValues(RainfallMostRecentValueLbl, assignCriticalityLevelFromNumber(String.valueOf(params.get(idx).getRainfall())),
+                RainfallAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(rainfalls)));
         /* set glaciers alt */
-        setLblValues(GAltMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getGlacier_alt().get(idx)),
-                GAltAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getGlacier_alt())));
+        setLblValues(GAltMostRecentValueLbl, assignCriticalityLevelFromNumber(String.valueOf(params.get(idx).getGlaciersAlt())),
+                GAltAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(alts)));
         /* set glaciers mass */
-        setLblValues(GMassMostRecentValueLbl, assignCriticalityLevelFromNumber(params.getGlacier_mass().get(idx)),
-                GMassAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(params.getGlacier_mass())));
+        setLblValues(GMassMostRecentValueLbl, assignCriticalityLevelFromNumber(String.valueOf(params.get(idx).getGlaciersMass())),
+                GMassAverageValueLbl, assignCriticalityLevelFromNumber(computeAverage(masses)));
         /* set notes */
         if (!isOperatorEnabled) {
-            NotesTextArea.setText(params.getNotes().get(idx).replaceAll("\"", ""));
+            NotesTextArea.setText(params.get(idx).getNotes().replaceAll("\"", ""));
         }
     }
 
@@ -537,52 +572,28 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
                 int galtItem = GAltComboBox.getSelectedIndex() + 1;
                 int gmassItem = GMassComboBox.getSelectedIndex() + 1;
 
-                /* compute new averages:
-                * note that tot_measure is increased by 1,
-                * because when you call the save button
-                * you are actually adding a new measurement */
-                if (params != null) {
-                    params.setTot_measure(params.getTot_measure() + 1);
-                } else {
-                    /* this is the case in which the climate params object for the selected location does not exist. In this case,
-                    * create it */
-                    params = new ClimateParams();
-                    params.setTot_measure(1);
-                    params.setGeonameID(location.getGeonameID());
-                    params.setState(location.getState());
-                    params.setAscii_name(location.getAsciiName());
-                    utils.getGeoData().addClimateParams(params);
-                }
-
-                /* overwrite the object */
-                params.getWind().add(0, String.format("%d", windItem));
-                params.getHumidity().add(0, String.format("%d", humidityItem));
-                params.getPressure().add(0, String.format("%d", pressureItem));
-                params.getTemperature().add(0, String.format("%d", temperatureItem));
-                params.getRainfall().add(0, String.format("%d", rainfallItem));
-                params.getGlacier_alt().add(0, String.format("%d", galtItem));
-                params.getGlacier_mass().add(0, String.format("%d", gmassItem));
-                params.getWho().add(0,  quoteString(utils.getWhoisLoggedIn().getName()));
-                params.getCenter().add(0, quoteString(utils.getWhoisLoggedIn().getMonitoringCenter() ));
-
                 /* set today */
-                LocalDateTime ld = LocalDateTime.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy | HH:mm:ss");
-                String dateString = quoteString(ld.format(formatter));
+                LocalDate ld = LocalDate.now();
 
-                params.getDate().add(0, dateString);
                 /* set also new notes */
                 String notes = NotesTextArea.getText();
                 String filteredNotes = "";
-                for (int i = 0; i < notes.length(); i++){
-                    if (i >= Constants.NOTES_MAX_CHAR_NUM) {break;}
+                for (int i = 0; i < notes.length(); i++) {
+                    if (i >= Constants.NOTES_MAX_CHAR_NUM) {
+                        break;
+                    }
                     filteredNotes += notes.charAt(i);
                 }
-                params.getNotes().add(0, quoteString(filteredNotes));
 
-                /* update file */
-                utils.getGeoData().updateClimateParamsFile();
+                ClimateParameter cp = new ClimateParameter(location.getGeonameID(), windItem, humidityItem, pressureItem, temperatureItem,
+                        rainfallItem, galtItem, gmassItem, filteredNotes, ld, utils.getWhoisLoggedIn().getTaxCode());
 
+                try {
+                    utils.getDbService().pushClimateParameter(cp);
+                } catch (RemoteException ex) {
+                    // sistemare qui
+                    throw new RuntimeException(ex);
+                }
                 utils.switchPage("Main Page");
                 PlaceNameLbl.setText("");
             }
