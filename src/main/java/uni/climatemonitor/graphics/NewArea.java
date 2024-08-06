@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class NewArea extends JDialog {
@@ -48,32 +49,6 @@ public class NewArea extends JDialog {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         setVisible(true);
-    }
-
-    /**
-     * Check if a location with given properties already exists
-     * @param name
-     * @param state
-     * @param coordinates
-     * @return true if exists with same name, same state, same coordinates; false otherwise
-     */
-    private boolean isAlreadyExisting(String name, String state, String coordinates){
-        UtilsSingleton utils = UtilsSingleton.getInstance();
-        GeoData geoData = utils.getGeoData();
-        ArrayList<Location> locations = geoData.getGeoLocationsList();
-        String locName;
-        String locState;
-        String locCoords;
-        for (Location l : locations){
-            locName = l.getAsciiName();
-            locCoords = l.getCoordinates().toString();
-            locState = l.getState();
-
-            if (locName.equals(name) && locState.equals(state) && locCoords.equals(coordinates)){
-                return true;
-            }
-        }
-        return false;
     }
 
     private boolean areCoordsValid(){
@@ -121,13 +96,6 @@ public class NewArea extends JDialog {
                 lon = Double.parseDouble(LongTextField.getText()) * longSign;
 
                 Coordinates c = new Coordinates(lat, lon);
-                boolean isExisting = isAlreadyExisting(NameTextField.getText(), StateTextField.getText(), c.toString());
-
-                if (isExisting){
-                    JOptionPane.showMessageDialog(new JFrame(), "This area is already existing!", "",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
 
                 /* save on csv and on place array */
                 UtilsSingleton utils = UtilsSingleton.getInstance();
@@ -142,10 +110,21 @@ public class NewArea extends JDialog {
                                 replaceAll(" ", "");
 
                 String[] arr = {geoID, NameTextField.getText(), NameTextField.getText(), StateTextField.getText(), StateTextField.getText(), c.toRawString()};
-                Location newLoc = new Location(arr);
-                utils.getGeoData().addLocation(newLoc);
+                Location newLoc = new Location(geoID, NameTextField.getText(), NameTextField.getText(), StateTextField.getText(), lat, lon);
 
-                utils.getGeoData().updateLocationsFile();
+                try {
+                    boolean rc = utils.getDbService().pushLocation(newLoc);
+                    if (!rc){
+                        JOptionPane.showMessageDialog(new JFrame(), "This area is already existing!", "",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                } catch (RemoteException ex) {
+                    /* close the dialog */
+                    dispose();
+                    throw new RuntimeException(ex);
+                }
+
                 /* close the dialog */
                 dispose();
             }

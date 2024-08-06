@@ -195,6 +195,7 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
             }
             LocalDate date = params.get(idx).getDate();
             String monCenterInfo = monCenter.getAddress();
+            /*
             ArrayList<String> monCenterArea = monCenter.getMonitoredAreas();
             ArrayList<String> monitoredAreas = new ArrayList<>();
             for (String s : monCenterArea) {
@@ -204,6 +205,8 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
             for (int i = 1; i < monitoredAreas.size(); i++){
                 areas += ", " + monitoredAreas.get(i);
             }
+            */
+            String areas ="";
             String info = String.format(aboutLastRecord, who, monCenter, date, monCenter, monCenterInfo, areas);
             AboutLastRecordTextArea.setText(info);
         } else {
@@ -245,7 +248,11 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         DateComboBox.setPreferredSize(new Dimension(185, 24));
         if (!isOperatorEnabled && params != null) {
             DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-            for (String s : params.getDate()) {
+            ArrayList<String> dates = new ArrayList<>();
+            for (ClimateParameter cp : params) {
+                dates.add(cp.getDate().toString());
+            }
+            for (String s : dates) {
                 /* remove quotes if any */
                 comboBoxModel.addElement(s.replaceAll("\"", ""));
             }
@@ -507,7 +514,7 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
 
     /**
      * Callback for the add button: add location to the places monitored by the monitoring
-     * center off the operator that is logged in
+     * center of the operator that is logged in
      */
     private void addBtn_at_selection(){
         AddBtn.addActionListener(new ActionListener() {
@@ -521,10 +528,13 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
                 MonitoringCenter monitoringCenter = operator.getMonitoringCenter();
 
                 /* add the location to the monitoring center */
-                monitoringCenter.getMonitoredAreas().add(location.getGeonameID());
 
-                /* rewrite the file */
-                utils.getCentersData().updateMonitoringCentersFile();
+                try {
+                    utils.getDbService().addLocationToMonitoringCenter(location, monitoringCenter);
+                } catch (RemoteException ex) {
+                    // what to do?
+                    throw new RuntimeException(ex);
+                }
 
                 /* close the page */
                 utils.switchPage("Main Page");

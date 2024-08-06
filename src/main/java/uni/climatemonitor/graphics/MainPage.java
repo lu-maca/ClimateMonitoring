@@ -90,12 +90,12 @@ public class MainPage {
     private JButton AddNewBtn;
 
     /* utilities for locations */
-    private DefaultListModel<Location> searchListModel;
+    private DefaultListModel<Location> searchListModel = new DefaultListModel<>();
     private Location clickedElement;
 
     /* utilities for registration */
-    private DefaultComboBoxModel<MonitoringCenter> monitoringCenterComboBoxModel;
-    private DefaultListModel<Location> newSelectedAreasModel;
+    private DefaultComboBoxModel<MonitoringCenter> monitoringCenterComboBoxModel = new DefaultComboBoxModel<>();
+    private DefaultListModel<Location> newSelectedAreasModel = new DefaultListModel<>();
     private boolean isRegistrationModeActive = false;
 
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
