@@ -299,12 +299,16 @@ public class MainPage {
             public void focusGained(FocusEvent e) {
                 UtilsSingleton utils = UtilsSingleton.getInstance();
                 utils.textFieldEnter(typeAPlaceTextField, Constants.TYPE_A_PLACE_S);
+                typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 UtilsSingleton utils = UtilsSingleton.getInstance();
+                typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
                 utils.textFieldExit(typeAPlaceTextField, Constants.TYPE_A_PLACE_S);
+                System.out.println("Esco!");
+
             }
         });
     }
@@ -318,10 +322,16 @@ public class MainPage {
         public void changedUpdate(DocumentEvent e) { }
 
         @Override
-        public void insertUpdate(DocumentEvent e){ suggest(); }
+        public void insertUpdate(DocumentEvent e){
+            if (typeAPlaceTextField.getText().length() > 1) {
+                suggest();
+            }
+        }
 
         @Override
-        public void removeUpdate(DocumentEvent e){ suggest(); }
+        public void removeUpdate(DocumentEvent e){
+            suggest();
+        }
 
         public void suggest() {
             String searched = typeAPlaceTextField.getText();
@@ -400,7 +410,7 @@ public class MainPage {
      * This is the callback for a change in the location text edit field
      */
     private void placeTextField_at_text_change(){
-        typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
+
     }
 
 
@@ -429,10 +439,9 @@ public class MainPage {
                 }
 
                 /* remove the document listener to avoid infinite loops */
-                typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
                 typeAPlaceTextField.setText("");
                 utils.textFieldExit(typeAPlaceTextField, "Type a place...");
-                typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
+
             }
             }
         });

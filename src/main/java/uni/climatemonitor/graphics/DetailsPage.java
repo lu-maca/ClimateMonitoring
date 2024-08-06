@@ -182,9 +182,9 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
      * Set the about field for the idx-th record
      * @param idx
      */
-    private void setAboutLastRecordTestArea(int idx){
+    private void setAboutLastRecordTextArea(int idx){
         AboutLastRecordTextArea.setBackground(new Color(238,238,238));
-        if (params != null) {
+        if (params.size() != 0) {
             String who =  params.get(idx).getWho();
             MonitoringCenter monCenter = null;
             try {
@@ -231,7 +231,7 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         Operator operator = utils.getWhoisLoggedIn();
         try {
             isOperatorEnabled = utils.getDbService().isOperatorEnabledForLocation(utils.getWhoisLoggedIn().getUsername(), location);
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             isOperatorEnabled = false;
         }
 
@@ -240,13 +240,13 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
         /* set info about the last detection and the monitoring center */
         AboutLastRecordPnl.setVisible(!isOperatorEnabled);
         if (!isOperatorEnabled) {
-            setAboutLastRecordTestArea(0);
+            setAboutLastRecordTextArea(0);
         }
 
         PlaceNameLbl.setText(location.toStringNoCoordinates());
 
         DateComboBox.setPreferredSize(new Dimension(185, 24));
-        if (!isOperatorEnabled && params != null) {
+        if (!isOperatorEnabled && params.size() != 0) {
             DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
             ArrayList<String> dates = new ArrayList<>();
             for (ClimateParameter cp : params) {
@@ -276,11 +276,11 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
             AddBtn.setVisible(true);
         }
 
-        /* if climate params is null (i.e. when no detections are found, maintain the "unknown" state */
-        if (params == null && !isOperatorEnabled){
+        /* if climate params is empty (i.e. when no detections are found, maintain the "unknown" state */
+        if (params.size() == 0 && !isOperatorEnabled){
             NotesTextArea.setText("None.");
             return;
-        } else if (params == null) {
+        } else if (params.size() == 0) {
             NotesTextArea.setText("");
             return;
         }
@@ -620,7 +620,7 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
             public void actionPerformed(ActionEvent e) {
                 int selectedIdx = DateComboBox.getSelectedIndex();
                 setParamsFromHistory(selectedIdx);
-                setAboutLastRecordTestArea(selectedIdx);
+                setAboutLastRecordTextArea(selectedIdx);
             }
         });
     }
