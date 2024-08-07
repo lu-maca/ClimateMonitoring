@@ -19,7 +19,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -110,10 +109,9 @@ public class DetailsPage {
     /* info about last record (to be formatted) */
     private String aboutLastRecord =
             """
-This detection has been recorded by operator %s, from Monitoring Center "%s", on %s.
+This detection has been recorded on %s, from Monitoring Center "%s".
 
-%s is a monitoring center based in %s and is currently monitoring the following areas:
-%s.
+%s is a monitoring center based in %s.
 """;
 
 
@@ -195,19 +193,7 @@ This detection has been recorded by operator %s, from Monitoring Center "%s", on
             }
             LocalDate date = params.get(idx).getDate();
             String monCenterInfo = monCenter.getAddress();
-            /*
-            ArrayList<String> monCenterArea = monCenter.getMonitoredAreas();
-            ArrayList<String> monitoredAreas = new ArrayList<>();
-            for (String s : monCenterArea) {
-                monitoredAreas.add(utils.getGeoData().getLocationFromGeoID(s).getAsciiName());
-            }
-            String areas = monitoredAreas.get(0);
-            for (int i = 1; i < monitoredAreas.size(); i++){
-                areas += ", " + monitoredAreas.get(i);
-            }
-            */
-            String areas ="";
-            String info = String.format(aboutLastRecord, who, monCenter, date, monCenter, monCenterInfo, areas);
+            String info = String.format(aboutLastRecord, monCenter, date, monCenter, monCenterInfo);
             AboutLastRecordTextArea.setText(info);
         } else {
             AboutLastRecordTextArea.setText("No record found.");

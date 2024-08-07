@@ -307,8 +307,6 @@ public class MainPage {
                 UtilsSingleton utils = UtilsSingleton.getInstance();
                 typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
                 utils.textFieldExit(typeAPlaceTextField, Constants.TYPE_A_PLACE_S);
-                System.out.println("Esco!");
-
             }
         });
     }
@@ -545,6 +543,13 @@ public class MainPage {
                 String monitoring_center_name = IsNewCheckBox.isSelected()? NewNameTextField.getText() : MonitoringCenterComboBox.getSelectedItem().toString();
                 MonitoringCenter monitoring_center = new MonitoringCenter(monitoring_center_name, AddressTextField.getText(), "0");
                 Operator newOperator = new Operator(name, tax_code, email, username, password, monitoring_center);
+                try {
+                    utils.getDbService().pushOperator(newOperator);
+                } catch (RemoteException ex) {
+                    showMessage(String.format("Something went wrong! Try again.", newOperator.getName()));
+                    resetRegistrationForm();
+                    return;
+                }
 
                 /* update monitoring centers table (only if a new center is added) */
                 if (IsNewCheckBox.isSelected()) {
@@ -631,7 +636,7 @@ public class MainPage {
 
             private boolean areCenterDataValid(){
                 /* data center data are always valid if the center already exists */
-                if (! IsNewCheckBox.isSelected() && ! MonitoringCenterComboBox.isEnabled()){ return true; }
+                if (! IsNewCheckBox.isSelected() && MonitoringCenterComboBox.isEnabled()){ return true; }
 
                 /* instead, when it's new, check the data */
                 if (NewNameTextField.getText().isEmpty() || AddressTextField.getText().isEmpty()){
