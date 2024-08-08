@@ -118,14 +118,14 @@ public class MainPage {
         /* set initial combo box model for the creation of new monitoring centers */
         monitoringCenterComboBoxModel = new DefaultComboBoxModel<>();
         ArrayList<MonitoringCenter> mcs;
-        try {
+        /* try {
             mcs = utils.getDbService().getAllMonitoringCenters();
         } catch (RemoteException e) {
             mcs = new ArrayList<>();
         }
         for (MonitoringCenter mc : mcs){
             monitoringCenterComboBoxModel.addElement(mc);
-        }
+        } */
         MonitoringCenterComboBox.setModel(monitoringCenterComboBoxModel);
         newSelectedAreasModel = new DefaultListModel<>();
         NewMonitoredAreasList.setModel(newSelectedAreasModel);

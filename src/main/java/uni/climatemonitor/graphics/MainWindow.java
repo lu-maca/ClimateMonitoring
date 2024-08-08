@@ -33,7 +33,16 @@ public class MainWindow extends JFrame {
     /**
      * Constructor for the MainWindow object.
      */
-    public MainWindow() throws IOException {
+    public MainWindow() throws IOException, NotBoundException {
+        Registry registry = LocateRegistry.getRegistry("localhost");
+        IDatabaseService stub = (IDatabaseService) registry.lookup("dbService");
+
+        if (stub == null) {
+            System.out.println("Stub not found!");
+            return;
+        }
+        UtilsSingleton.getInstance().setDbService(stub);
+
         setTitle(Constants.APP_NAME_S);
         setPreferredSize(new Dimension(1200,650));
         setMinimumSize(new Dimension(1200,650));
@@ -66,10 +75,6 @@ public class MainWindow extends JFrame {
      *
      */
     public static void main(String[] args) throws IOException, NotBoundException {
-        Registry registry = LocateRegistry.getRegistry("localhost");
-        IDatabaseService stub = (IDatabaseService) registry.lookup("dbService");
-        UtilsSingleton.getInstance().setDbService(stub);
-
         new MainWindow();
     }
 
