@@ -540,16 +540,11 @@ public class MainPage {
                 String email = EmailTextField.getText();
                 String username = UsernameTextField.getText();
                 String password = PwdTextField.getText();
-                String monitoring_center_name = IsNewCheckBox.isSelected()? NewNameTextField.getText() : MonitoringCenterComboBox.getSelectedItem().toString();
-                MonitoringCenter monitoring_center = new MonitoringCenter(monitoring_center_name, AddressTextField.getText(), "0");
+                MonitoringCenter selected_mc = (MonitoringCenter) MonitoringCenterComboBox.getSelectedItem();
+                String monitoring_center_name = IsNewCheckBox.isSelected()? NewNameTextField.getText() : selected_mc.toString();
+                String monitoring_center_id = IsNewCheckBox.isSelected()? "0" : selected_mc.getId();
+                MonitoringCenter monitoring_center = new MonitoringCenter(monitoring_center_name, AddressTextField.getText(), monitoring_center_id);
                 Operator newOperator = new Operator(name, tax_code, email, username, password, monitoring_center);
-                try {
-                    utils.getDbService().pushOperator(newOperator);
-                } catch (RemoteException ex) {
-                    showMessage(String.format("Something went wrong! Try again.", newOperator.getName()));
-                    resetRegistrationForm();
-                    return;
-                }
 
                 /* update monitoring centers table (only if a new center is added) */
                 if (IsNewCheckBox.isSelected()) {
@@ -561,13 +556,27 @@ public class MainPage {
                     }
 
                     try {
-                        utils.getDbService().pushMonitoringCenter(monitoring_center, newMonitoredAreasArrayList);
+                        monitoring_center_id = utils.getDbService().pushMonitoringCenter(monitoring_center, newMonitoredAreasArrayList);
+                        if (monitoring_center_id.equals("-1")) {
+                            showMessage(String.format("Something went wrong! Try again.", newOperator.getName()));
+                            return;
+                        }
                     } catch (RemoteException ex) {
                         showMessage(String.format("Something went wrong! Try again.", newOperator.getName()));
                         resetRegistrationForm();
                         return;
                     }
+                }
 
+                monitoring_center = new MonitoringCenter(monitoring_center_name, AddressTextField.getText(), monitoring_center_id);
+                newOperator = new Operator(name, tax_code, email, username, password, monitoring_center);
+
+                try {
+                    utils.getDbService().pushOperator(newOperator);
+                } catch (RemoteException ex) {
+                    showMessage(String.format("Something went wrong! Try again.", newOperator.getName()));
+                    resetRegistrationForm();
+                    return;
                 }
 
                 /* exit from the registration panel */
@@ -581,6 +590,9 @@ public class MainPage {
                 } catch (RemoteException ee) {
                     mcs = new ArrayList<>();
                 }
+
+                // update list of existing monitoring centers
+                monitoringCenterComboBoxModel.removeAllElements();
                 for (MonitoringCenter mc : mcs){
                     monitoringCenterComboBoxModel.addElement(mc);
                 }
