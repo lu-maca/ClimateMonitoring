@@ -94,6 +94,7 @@ public class MainPage {
     private Location clickedElement;
 
     /* utilities for registration */
+    ArrayList<MonitoringCenter> mcs;
     private DefaultComboBoxModel<MonitoringCenter> monitoringCenterComboBoxModel = new DefaultComboBoxModel<>();
     private DefaultListModel<Location> newSelectedAreasModel = new DefaultListModel<>();
     private boolean isRegistrationModeActive = false;
@@ -101,8 +102,11 @@ public class MainPage {
     private final Border userLoginTextFieldBorder = userLoginTextField.getBorder();
     private final Border pwdLoginTextFieldBorder = pwdLoginTextField.getBorder();
 
+    /* utils */
+    UtilsSingleton utils;
+
     public MainPage() {
-        UtilsSingleton utils = UtilsSingleton.getInstance();
+        utils = UtilsSingleton.getInstance();
 
         /* set the logo */
         URL imgURL = getClass().getResource(Constants.LOGO_PATH_S);
@@ -117,15 +121,7 @@ public class MainPage {
 
         /* set initial combo box model for the creation of new monitoring centers */
         monitoringCenterComboBoxModel = new DefaultComboBoxModel<>();
-        ArrayList<MonitoringCenter> mcs;
-        /* try {
-            mcs = utils.getDbService().getAllMonitoringCenters();
-        } catch (RemoteException e) {
-            mcs = new ArrayList<>();
-        }
-        for (MonitoringCenter mc : mcs){
-            monitoringCenterComboBoxModel.addElement(mc);
-        } */
+
         MonitoringCenterComboBox.setModel(monitoringCenterComboBoxModel);
         newSelectedAreasModel = new DefaultListModel<>();
         NewMonitoredAreasList.setModel(newSelectedAreasModel);
@@ -297,14 +293,12 @@ public class MainPage {
         typeAPlaceTextField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                UtilsSingleton utils = UtilsSingleton.getInstance();
                 utils.textFieldEnter(typeAPlaceTextField, Constants.TYPE_A_PLACE_S);
                 typeAPlaceTextField.getDocument().addDocumentListener(searchFieldListener);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                UtilsSingleton utils = UtilsSingleton.getInstance();
                 typeAPlaceTextField.getDocument().removeDocumentListener(searchFieldListener);
                 utils.textFieldExit(typeAPlaceTextField, Constants.TYPE_A_PLACE_S);
             }
@@ -369,7 +363,6 @@ public class MainPage {
          * @param filter
          */
         private void filterModel(String filter) {
-            UtilsSingleton utils = UtilsSingleton.getInstance();
             ArrayList<Location> filteredLocations;
             try {
                 filteredLocations = utils.getDbService().filterLocationsByName(filter);
@@ -388,7 +381,6 @@ public class MainPage {
          * @param coordinates
          */
         private void filterModelByCoordinates(Coordinates coordinates) {
-            UtilsSingleton utils = UtilsSingleton.getInstance();
             ArrayList<Location> filteredLocations;
             try {
                 filteredLocations = utils.getDbService().filterLocationsByCoordinates(coordinates);
@@ -420,7 +412,6 @@ public class MainPage {
         SearchList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
             if (evt.getClickCount() == 2) {
-                UtilsSingleton utils = UtilsSingleton.getInstance();
                 clickedElement = (Location) SearchList.getSelectedValue();
                 if (clickedElement == null) { return; }
 
@@ -470,7 +461,18 @@ public class MainPage {
         RegisterBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                UtilsSingleton utils = UtilsSingleton.getInstance();
+                // get all monitoring centers
+                monitoringCenterComboBoxModel.removeAllElements();
+                try {
+                    mcs = utils.getDbService().getAllMonitoringCenters();
+                } catch (RemoteException ee) {
+                    mcs = new ArrayList<>();
+                }
+                for (MonitoringCenter mc : mcs){
+                    monitoringCenterComboBoxModel.addElement(mc);
+                }
+                MonitoringCenterComboBox.setModel(monitoringCenterComboBoxModel);
+
                 ButtonsPnl.setVisible(false);
                 CenterCreationOptionPnl.setVisible(false);
                 RegistrationPnl.setVisible(true);
@@ -528,8 +530,6 @@ public class MainPage {
         ConfirmRegisterBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                UtilsSingleton utils = UtilsSingleton.getInstance();
-
                 if (! areUserDataValid() || ! areCenterDataValid()){
                     return;
                 }
@@ -582,25 +582,9 @@ public class MainPage {
                 /* exit from the registration panel */
                 showMessage(String.format("Welcome, %s! Login to operate.", newOperator.getName()));
                 resetRegistrationForm();
-
-                /* add the new monitoring center to the combo box list */
-                ArrayList<MonitoringCenter> mcs;
-                try {
-                    mcs = utils.getDbService().getAllMonitoringCenters();
-                } catch (RemoteException ee) {
-                    mcs = new ArrayList<>();
-                }
-
-                // update list of existing monitoring centers
-                monitoringCenterComboBoxModel.removeAllElements();
-                for (MonitoringCenter mc : mcs){
-                    monitoringCenterComboBoxModel.addElement(mc);
-                }
-                MonitoringCenterComboBox.setModel(monitoringCenterComboBoxModel);
             }
 
             private boolean areUserDataValid(){
-                UtilsSingleton utils = UtilsSingleton.getInstance();
                 /* check if data are valid */
                 if  (
                         NameTextField.getText().isEmpty() &&
@@ -699,13 +683,11 @@ public class MainPage {
         userLoginTextField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                UtilsSingleton utils = UtilsSingleton.getInstance();
                 utils.textFieldEnter(userLoginTextField, Constants.USERNAME_S);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                UtilsSingleton utils = UtilsSingleton.getInstance();
                 utils.textFieldExit(userLoginTextField, Constants.USERNAME_S);
             }
         });
@@ -753,7 +735,6 @@ public class MainPage {
                 String username = userLoginTextField.getText();
                 char[] pwd = pwdLoginTextField.getPassword();
 
-                UtilsSingleton utils = UtilsSingleton.getInstance();
                 Operator operator;
                 /* if the user exists and nobody else is logged in, operators features are shown */
                 try {
@@ -805,7 +786,6 @@ public class MainPage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* reset all the info for logged in users */
-                UtilsSingleton utils = UtilsSingleton.getInstance();
                 utils.logoutUser();
 
                 /* gui elements */
