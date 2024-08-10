@@ -111,6 +111,9 @@ public class NewArea extends JDialog {
                         JOptionPane.showMessageDialog(new JFrame(), "This area is already existing!", "",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
+                    } else {
+                        JOptionPane.showMessageDialog(new JFrame(), "Area correctly created.", "",
+                                JOptionPane.INFORMATION_MESSAGE);
                     }
                 } catch (RemoteException ex) {
                     /* close the dialog */
