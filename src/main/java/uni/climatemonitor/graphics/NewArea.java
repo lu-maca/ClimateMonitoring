@@ -100,16 +100,9 @@ public class NewArea extends JDialog {
                 /* save on csv and on place array */
                 UtilsSingleton utils = UtilsSingleton.getInstance();
 
-                /* for the geoname id, a unique representation shall be chosen: it can be directly a string formed by appending
-                * the coordinates of the place, since coordinates are unique; in order to be able to parse the string
-                * in the json files, replace all the dashes with zeros (to avoid equal coordinates from - removal), and dots */
-                String geoID = c.toRawString().
-                                replaceAll("-","0").
-                                replaceAll("\\.", "").
-                                replaceAll(",", "").
-                                replaceAll(" ", "");
+                /* don't need to compute the id, it will be computed by the server itself */
+                String geoID = "0";
 
-                String[] arr = {geoID, NameTextField.getText(), NameTextField.getText(), StateTextField.getText(), StateTextField.getText(), c.toRawString()};
                 Location newLoc = new Location(geoID, NameTextField.getText(), NameTextField.getText(), StateTextField.getText(), lat, lon);
 
                 try {
