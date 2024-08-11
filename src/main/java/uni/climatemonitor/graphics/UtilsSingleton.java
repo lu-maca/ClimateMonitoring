@@ -22,6 +22,7 @@ import java.rmi.RemoteException;
 public final class UtilsSingleton {
     private JPanel PageSelector;
     private DetailsPage DetailsPnl;
+    private MainPage MainPnl;
     private boolean isLoggedIn;
     private Operator whoisLoggedIn;
     private IDatabaseService dbService;
@@ -56,9 +57,10 @@ public final class UtilsSingleton {
      * @param pageSelector
      * @param detailsPnl
      */
-    public void setMExCInfo(JPanel pageSelector, DetailsPage detailsPnl){
+    public void setMExCInfo(JPanel pageSelector, DetailsPage detailsPnl, MainPage mainPnl){
         PageSelector = pageSelector;
         DetailsPnl = detailsPnl;
+        MainPnl = mainPnl;
     }
 
     /**
@@ -108,6 +110,15 @@ public final class UtilsSingleton {
     public DetailsPage getDetailsPnl() {
         return DetailsPnl;
     }
+
+    /**
+     * Getter for the main panel object
+     * @return MainPnl
+     */
+    public MainPage getMainPnl() {
+        return MainPnl;
+    }
+
 
     /**
      * Check if someone is already logged in

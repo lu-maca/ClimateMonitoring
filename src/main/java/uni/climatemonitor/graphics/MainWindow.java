@@ -24,7 +24,7 @@ public class MainWindow extends JFrame {
     private DetailsPage DetailsPnl;
     private JPanel DetailsParentPnl;
     private JPanel MainParentPnl;
-    private JPanel MainPnl;
+    private MainPage MainPnl;
 
     /* utils */
     private UtilsSingleton u;
@@ -62,7 +62,7 @@ public class MainWindow extends JFrame {
 
         /* utils */
         u = UtilsSingleton.getInstance();
-        u.setMExCInfo( MainMExC, DetailsPnl);
+        u.setMExCInfo( MainMExC, DetailsPnl, MainPnl);
 
         /* set visibility */
         setContentPane(MainWindow);

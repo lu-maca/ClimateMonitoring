@@ -204,7 +204,6 @@ public class MainPage {
      */
     public void updateAvailableLocations(Location newLocation) {
         operatorLocationsListModel.addElement(newLocation);
-        AvailableLocationsList.setModel(operatorLocationsListModel);
     }
 
     /**
@@ -773,7 +772,7 @@ public class MainPage {
                             operatorLocationsListModel.addElement(availableLocation);
                         }
                     } catch (RemoteException ex) {
-                        JOptionPane.showMessageDialog(new JFrame(), "Something wrong happened, try again!", "",
+                        JOptionPane.showMessageDialog(MainPnl, "Something wrong happened, try again!", "",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }

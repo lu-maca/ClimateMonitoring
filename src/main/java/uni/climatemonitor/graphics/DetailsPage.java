@@ -193,7 +193,7 @@ This detection has been recorded on %s, from Monitoring Center "%s".
             }
             LocalDate date = params.get(idx).getDate();
             String monCenterInfo = monCenter.getAddress();
-            String info = String.format(aboutLastRecord, monCenter, date, monCenter, monCenterInfo);
+            String info = String.format(aboutLastRecord, date, monCenter, monCenter, monCenterInfo);
             AboutLastRecordTextArea.setText(info);
         } else {
             AboutLastRecordTextArea.setText("No record found.");
@@ -522,15 +522,15 @@ This detection has been recorded on %s, from Monitoring Center "%s".
                 }
 
                 if (rc){
-                    JOptionPane.showMessageDialog(new JFrame(), "This area is now registered in your monitoring center!", "",
+                    JOptionPane.showMessageDialog(DetailsPnl, "This area is now registered in your monitoring center!", "",
                             JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(new JFrame(), "Something went wrong, try again", "",
+                    JOptionPane.showMessageDialog(DetailsPnl, "Something went wrong, try again", "",
                             JOptionPane.ERROR_MESSAGE);
                 }
 
                 /* close the page */
-              //  utils.getMainPnl().updateAvailableLocations(location);
+                utils.getMainPnl().updateAvailableLocations(location);
                 utils.switchPage("Main Page");
                 PlaceNameLbl.setText("");
             }
@@ -592,12 +592,17 @@ This detection has been recorded on %s, from Monitoring Center "%s".
                 ClimateParameter cp = new ClimateParameter(location.getGeonameID(), windItem, humidityItem, pressureItem, temperatureItem,
                         rainfallItem, galtItem, gmassItem, filteredNotes, ld, utils.getWhoisLoggedIn().getTaxCode());
 
+                boolean rc = false;
                 try {
-                    utils.getDbService().pushClimateParameter(cp);
+                    rc = utils.getDbService().pushClimateParameter(cp);
                 } catch (RemoteException ex) {
-                    // sistemare qui
-                    throw new RuntimeException(ex);
                 }
+
+                if (!rc) {
+                    JOptionPane.showMessageDialog(DetailsPnl, "Something went wrong, try again", "",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
                 utils.switchPage("Main Page");
                 PlaceNameLbl.setText("");
             }
