@@ -514,15 +514,23 @@ This detection has been recorded on %s, from Monitoring Center "%s".
                 MonitoringCenter monitoringCenter = operator.getMonitoringCenter();
 
                 /* add the location to the monitoring center */
-
+                boolean rc = false;
                 try {
-                    utils.getDbService().addLocationToMonitoringCenter(location, monitoringCenter);
+                    rc = utils.getDbService().addLocationToMonitoringCenter(location, monitoringCenter);
                 } catch (RemoteException ex) {
-                    // what to do?
-                    throw new RuntimeException(ex);
+                    // what to do
+                }
+
+                if (rc){
+                    JOptionPane.showMessageDialog(new JFrame(), "This area is now registered in your monitoring center!", "",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(new JFrame(), "Something went wrong, try again", "",
+                            JOptionPane.ERROR_MESSAGE);
                 }
 
                 /* close the page */
+              //  utils.getMainPnl().updateAvailableLocations(location);
                 utils.switchPage("Main Page");
                 PlaceNameLbl.setText("");
             }

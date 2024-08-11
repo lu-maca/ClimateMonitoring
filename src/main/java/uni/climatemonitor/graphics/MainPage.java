@@ -88,10 +88,16 @@ public class MainPage {
     private JPanel NewMonitoredAreasPnl;
     private JLabel SelectedAreasLbl;
     private JButton AddNewBtn;
+    private JList AvailableLocationsList;
+    private JScrollPane AvailableListPnl;
+    private JPanel AvailableLocationsPnl;
+    private JLabel AvailableLocationsLabel;
 
     /* utilities for locations */
     private DefaultListModel<Location> searchListModel = new DefaultListModel<>();
     private Location clickedElement;
+    private DefaultListModel<Location> operatorLocationsListModel = new DefaultListModel<>();
+
 
     /* utilities for registration */
     ArrayList<MonitoringCenter> mcs;
@@ -118,6 +124,11 @@ public class MainPage {
         SearchList.setVisibleRowCount(16);
         SearchList.setBackground(new Color(238, 238, 238));
         SearchListPnl.setVisible(false);
+
+        /* set lists backgrounds and lengths */
+        AvailableLocationsList.setBackground(new Color(238, 238, 238));
+        AvailableLocationsList.setVisibleRowCount(16);
+        NewMonitoredAreasList.setBackground(new Color(238, 238, 238));
 
         /* set initial combo box model for the creation of new monitoring centers */
         monitoringCenterComboBoxModel = new DefaultComboBoxModel<>();
@@ -164,6 +175,8 @@ public class MainPage {
          */
         loginEnterBtn_at_click();
         loginExitBtn_at_click();
+        /* available list at selection */
+        availableLocations_at_selection();
         /* registration panel management */
         registerBtn_at_click();
         /* new center options */
@@ -181,10 +194,18 @@ public class MainPage {
     }
 
     /*************************************************************
+     *
+     *        UTILS
+     *
+     *************************************************************/
 
-     UTILS
-
+    /**
+     * update available locations
      */
+    public void updateAvailableLocations(Location newLocation) {
+        operatorLocationsListModel.addElement(newLocation);
+        AvailableLocationsList.setModel(operatorLocationsListModel);
+    }
 
     /**
      * Show the hidden message on the low-right corner
@@ -208,7 +229,7 @@ public class MainPage {
     /**
      * Reset the registration form when it is closed
      */
-    public void resetRegistrationForm(){
+    private void resetRegistrationForm(){
         /* new operator options reset */
         NameTextField.setText("");
         SurnameTextFIeld.setText("");
@@ -744,6 +765,23 @@ public class MainPage {
                 }
 
                 if (operator != null && utils.giveAccessTo(operator)) {
+                    // add list of available places
+                    try {
+                        ArrayList<Location> availableLocations = utils.getDbService().getLocationsFromMonitoringCenter(operator.getMonitoringCenter().getId());
+                        operatorLocationsListModel.clear();
+                        for (Location availableLocation : availableLocations) {
+                            operatorLocationsListModel.addElement(availableLocation);
+                        }
+                    } catch (RemoteException ex) {
+                        JOptionPane.showMessageDialog(new JFrame(), "Something wrong happened, try again!", "",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    // create the scrollable list
+                    AvailableLocationsPnl.setVisible(true);
+                    AvailableLocationsList.setModel(operatorLocationsListModel);
+
                     WelcomeBackLbl.setText("Welcome back, " + operator);
                     LoginPnl.setVisible(false);
                     ButtonsPnl.setVisible(true);
@@ -751,6 +789,22 @@ public class MainPage {
                 } else {
                     userLoginTextField.setBorder(new LineBorder(Color.RED, 3));
                     pwdLoginTextField.setBorder(new LineBorder(Color.RED, 3));
+                }
+            }
+        });
+    }
+
+    /**
+     * callback to available places list selection
+      */
+    private void availableLocations_at_selection(){
+        AvailableLocationsList.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    clickedElement = (Location) AvailableLocationsList.getSelectedValue();
+                    if (clickedElement == null) { return; }
+                    utils.getDetailsPnl().setUIPnl(clickedElement);
+                    utils.switchPage("Location Details Page");
                 }
             }
         });
@@ -789,6 +843,7 @@ public class MainPage {
                 utils.logoutUser();
 
                 /* gui elements */
+                AvailableLocationsPnl.setVisible(false);
                 setLoggedInMode(false);
                 ButtonsPnl.setVisible(true);
                 /* restore initial configuration for username and pwd */
