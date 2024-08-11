@@ -6,6 +6,8 @@
 
 package uni.climatemonitor.graphics;
 
+import uni.climatemonitor.Client;
+import uni.climatemonitor.common.IClient;
 import uni.climatemonitor.common.IDatabaseService;
 import uni.climatemonitor.common.Operator;
 import uni.climatemonitor.generics.Constants;
@@ -26,6 +28,7 @@ public final class UtilsSingleton {
     private boolean isLoggedIn;
     private Operator whoisLoggedIn;
     private IDatabaseService dbService;
+    private Client thisClient;
 
     private static UtilsSingleton INSTANCE = null;
 
@@ -33,6 +36,7 @@ public final class UtilsSingleton {
         whoisLoggedIn = null;
         isLoggedIn = false;
         dbService = null;
+        thisClient = new Client();
     }
 
     /**
@@ -49,6 +53,13 @@ public final class UtilsSingleton {
             }
         }
         return INSTANCE;
+    }
+
+    /**
+     * Return the attribute `thisClient`
+     */
+    public Client getClient() {
+        return thisClient;
     }
 
     /**

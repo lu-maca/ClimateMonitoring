@@ -6,6 +6,7 @@
 
 package uni.climatemonitor.graphics;
 
+import uni.climatemonitor.Client;
 import uni.climatemonitor.common.IDatabaseService;
 import uni.climatemonitor.generics.Constants;
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -76,6 +78,23 @@ public class MainWindow extends JFrame {
      */
     public static void main(String[] args) throws IOException, NotBoundException {
         new MainWindow();
+
+        Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+            @Override
+            public void run()
+            {
+                UtilsSingleton utils = UtilsSingleton.getInstance();
+                try {
+                    Client client = utils.getClient();
+                    if (client != null) {
+                        utils.getDbService().unregisterClientForLocation(client);
+                    }
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
 }

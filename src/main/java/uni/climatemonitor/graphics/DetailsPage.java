@@ -95,10 +95,12 @@ public class DetailsPage {
     /* location info */
     private Location location;
     private ArrayList<ClimateParameter> params;
+    // ocmbo box for dates
+    DefaultComboBoxModel<String> comboBoxModel;
+
 
     // singleton
     private UtilsSingleton utils;
-
 
     /* operator info */
     boolean isOperatorEnabled = false;
@@ -132,6 +134,8 @@ This detection has been recorded on %s, from Monitoring Center "%s".
         NotesPnl.setMaximumSize(new Dimension(150,50));
         NotesPnl.setMinimumSize(new Dimension(150,50));
 
+        comboBoxModel = new DefaultComboBoxModel<>();
+
         /*
             Callbacks for the detailed location page
          */
@@ -151,13 +155,18 @@ This detection has been recorded on %s, from Monitoring Center "%s".
         utils = UtilsSingleton.getInstance();
 
     }
-
+    /********************************************************
+     * PUBLIC METHODS
+     ********************************************************/
+    public void updateDate(ClimateParameter cp) {
+        params.add(0, cp);
+        setUIGenericUser(false);
+    }
 
     /*********************************************************
-
-        UTILS
-
+     * UTILS
      */
+
     /**
      * Compute the average on a given list of measures and return it as
      * a string
@@ -215,40 +224,21 @@ This detection has been recorded on %s, from Monitoring Center "%s".
         }
 
         Operator operator = utils.getWhoisLoggedIn();
+        // if we are not in operator mode, register the client in the server for this location
+        if (operator == null) {
+            try {
+                utils.getDbService().registerClientForLocation(utils.getClient(), location);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         try {
             isOperatorEnabled = utils.getDbService().isOperatorEnabledForLocation(utils.getWhoisLoggedIn().getUsername(), location);
         } catch (Exception e) {
             isOperatorEnabled = false;
         }
-
         NotesErrorPnl.setVisible(false);
-
-        /* set info about the last detection and the monitoring center */
-        AboutLastRecordPnl.setVisible(!isOperatorEnabled);
-        if (!isOperatorEnabled) {
-            setAboutLastRecordTextArea(0);
-        }
-
-        PlaceNameLbl.setText(location.toStringNoCoordinates());
-
-        DateComboBox.setPreferredSize(new Dimension(185, 24));
-        if (!isOperatorEnabled && params.size() != 0) {
-            DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-            ArrayList<String> dates = new ArrayList<>();
-            for (ClimateParameter cp : params) {
-                dates.add(cp.getDate().toString());
-            }
-            for (String s : dates) {
-                /* remove quotes if any */
-                comboBoxModel.addElement(s.replaceAll("\"", ""));
-            }
-            DateComboBox.setModel(comboBoxModel);
-        } else {
-            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            model.addElement("---");
-            DateComboBox.setModel(model);
-            DateComboBox.setEnabled(false);
-        }
 
         /* if an operator is logged in, set the combo box for detections and remove current values */
         NotesTextArea.setBackground(new Color(238, 238, 238));
@@ -260,6 +250,41 @@ This detection has been recorded on %s, from Monitoring Center "%s".
             NotesTextArea.setBackground(new Color(255, 255, 255));
         } else if (operator != null) {
             AddBtn.setVisible(true);
+        }
+
+        setUIGenericUser(isOperatorEnabled);
+    }
+
+    private void setUIGenericUser(boolean isOperatorEnabled) {
+        /* set info about the last detection and the monitoring center */
+        AboutLastRecordPnl.setVisible(!isOperatorEnabled);
+        if (!isOperatorEnabled) {
+            setAboutLastRecordTextArea(0);
+        }
+
+        PlaceNameLbl.setText(location.toStringNoCoordinates());
+
+        DateComboBox.setPreferredSize(new Dimension(185, 24));
+        if (!isOperatorEnabled && params.size() != 0) {
+            ArrayList<String> dates = new ArrayList<>();
+            for (ClimateParameter cp : params) {
+                dates.add(cp.getDate().toString());
+            }
+            // before changing DateComboBox, disable the listener, the re-enable it
+            DateComboBox.removeActionListener(dateComboBoxItemChangeListener);
+            comboBoxModel.removeAllElements();
+            for (String s : dates) {
+                /* remove quotes if any */
+                comboBoxModel.addElement(s.replaceAll("\"", ""));
+            }
+            DateComboBox.setModel(comboBoxModel);
+            DateComboBox.setEnabled(true);
+            DateComboBox.addActionListener(dateComboBoxItemChangeListener);
+        } else {
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+            model.addElement("---");
+            DateComboBox.setModel(model);
+            DateComboBox.setEnabled(false);
         }
 
         /* if climate params is empty (i.e. when no detections are found, maintain the "unknown" state */
@@ -546,6 +571,16 @@ This detection has been recorded on %s, from Monitoring Center "%s".
             @Override
             public void actionPerformed(ActionEvent e) {
                 UtilsSingleton utils = UtilsSingleton.getInstance();
+                Operator operator = utils.getWhoisLoggedIn();
+
+                if (operator == null) {
+                    try {
+                        utils.getDbService().unregisterClientForLocation(utils.getClient());
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+
                 utils.switchPage("Main Page");
                 PlaceNameLbl.setText("");
              }
@@ -609,19 +644,21 @@ This detection has been recorded on %s, from Monitoring Center "%s".
         });
     }
 
+    private ActionListener dateComboBoxItemChangeListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int selectedIdx = DateComboBox.getSelectedIndex();
+            setParamsFromHistory(selectedIdx);
+            setAboutLastRecordTextArea(selectedIdx);
+        }
+    };
+
 
     /**
      * Callback called when the selected date changes
      */
     private void dateComboBox_at_item_change() {
-        DateComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedIdx = DateComboBox.getSelectedIndex();
-                setParamsFromHistory(selectedIdx);
-                setAboutLastRecordTextArea(selectedIdx);
-            }
-        });
+        DateComboBox.addActionListener(dateComboBoxItemChangeListener);
     }
 
 
