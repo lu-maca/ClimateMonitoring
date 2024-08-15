@@ -753,7 +753,7 @@ public class MainPage {
                     and warn the user for the wrong login request
                  */
                 String username = userLoginTextField.getText();
-                char[] pwd = pwdLoginTextField.getPassword();
+                String pwd = new String(pwdLoginTextField.getPassword());
 
                 Operator operator;
                 /* if the user exists and nobody else is logged in, operators features are shown */
@@ -763,7 +763,11 @@ public class MainPage {
                     operator = null;
                 }
 
-                if (operator != null && utils.giveAccessTo(operator)) {
+                if (operator != null && !pwd.equals(operator.getPassword())) {
+                    userLoginTextField.setBorder(new LineBorder(Color.RED, 3));
+                    pwdLoginTextField.setBorder(new LineBorder(Color.RED, 3));
+                }
+                else if (operator != null && utils.giveAccessTo(operator)) {
                     // add list of available places
                     try {
                         ArrayList<Location> availableLocations = utils.getDbService().getLocationsFromMonitoringCenter(operator.getMonitoringCenter().getId());
@@ -785,9 +789,6 @@ public class MainPage {
                     LoginPnl.setVisible(false);
                     ButtonsPnl.setVisible(true);
                     setLoggedInMode(true);
-                } else {
-                    userLoginTextField.setBorder(new LineBorder(Color.RED, 3));
-                    pwdLoginTextField.setBorder(new LineBorder(Color.RED, 3));
                 }
             }
         });

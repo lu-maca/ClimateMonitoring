@@ -1,1 +1,0 @@
-# Considerazioni su tabelle 
