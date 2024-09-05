@@ -352,7 +352,7 @@ public class MainPage {
                 it is a simple search, but if contains numbers (or +/-)
                 it is a lat-long search
              */
-            final Pattern pattern = Pattern.compile("(\\d+\\.\\d+)° (N|S) (\\d+\\.\\d+)° (E|W)");
+            final Pattern pattern = Pattern.compile("(\\d+\\.\\d+) (N|S)° (\\d+\\.\\d+)° (E|W)");
             Matcher matcher = pattern.matcher(searched);
             if ( ! matcher.matches() ) {
                 filterModel(searched);
