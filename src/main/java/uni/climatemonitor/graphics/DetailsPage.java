@@ -13,8 +13,11 @@ import uni.climatemonitor.common.Operator;
 import uni.climatemonitor.generics.Constants;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.*;
 import java.rmi.RemoteException;
@@ -111,13 +114,13 @@ public class DetailsPage {
     /* info about last record (to be formatted) */
     private String aboutLastRecord =
             """
-This detection has been recorded on %s, from Monitoring Center "%s".
+                    This detection has been recorded on %s, from Monitoring Center "%s".
 
-%s is a monitoring center based in %s.
-""";
+                    %s is a monitoring center based in %s.
+                    """;
 
 
-    public DetailsPage(){
+    public DetailsPage() {
         /* set criticality levels */
         criticality.put("5", "CRITICAL");
         criticality.put("4", "SEVERE");
@@ -130,9 +133,9 @@ This detection has been recorded on %s, from Monitoring Center "%s".
         NotesTextArea.setMaximumSize(new Dimension(150, 50));
         NotesTextArea.setMinimumSize(new Dimension(150, 50));
         NotesTextArea.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
-        NotesPnl.setSize(new Dimension(150,50));
-        NotesPnl.setMaximumSize(new Dimension(150,50));
-        NotesPnl.setMinimumSize(new Dimension(150,50));
+        NotesPnl.setSize(new Dimension(150, 50));
+        NotesPnl.setMaximumSize(new Dimension(150, 50));
+        NotesPnl.setMinimumSize(new Dimension(150, 50));
 
         comboBoxModel = new DefaultComboBoxModel<>();
 
@@ -155,6 +158,7 @@ This detection has been recorded on %s, from Monitoring Center "%s".
         utils = UtilsSingleton.getInstance();
 
     }
+
     /********************************************************
      * PUBLIC METHODS
      ********************************************************/
@@ -170,13 +174,14 @@ This detection has been recorded on %s, from Monitoring Center "%s".
     /**
      * Compute the average on a given list of measures and return it as
      * a string
+     *
      * @param measures
      * @return String
      */
-    private String computeAverage(ArrayList<Integer> measures){
+    private String computeAverage(ArrayList<Integer> measures) {
         float average = 0f;
         int numOfMeasures = measures.size();
-        for (Integer measure : measures){
+        for (Integer measure : measures) {
             average += (float) measure;
         }
         average = average / ((float) numOfMeasures);
@@ -187,12 +192,13 @@ This detection has been recorded on %s, from Monitoring Center "%s".
 
     /**
      * Set the about field for the idx-th record
+     *
      * @param idx
      */
-    private void setAboutLastRecordTextArea(int idx){
-        AboutLastRecordTextArea.setBackground(new Color(238,238,238));
+    private void setAboutLastRecordTextArea(int idx) {
+        AboutLastRecordTextArea.setBackground(new Color(238, 238, 238));
         if (params.size() != 0) {
-            String who =  params.get(idx).getWho();
+            String who = params.get(idx).getWho();
             MonitoringCenter monCenter = null;
             try {
                 monCenter = utils.getDbService().getMonitoringCenterForOperator(who);
@@ -211,9 +217,10 @@ This detection has been recorded on %s, from Monitoring Center "%s".
 
     /**
      * Set up the full UI for the given location
+     *
      * @param loc
      */
-    public void setUIPnl(Location loc){
+    public void setUIPnl(Location loc) {
         location = loc;
 
         try {
@@ -288,7 +295,7 @@ This detection has been recorded on %s, from Monitoring Center "%s".
         }
 
         /* if climate params is empty (i.e. when no detections are found, maintain the "unknown" state */
-        if (params.size() == 0 && !isOperatorEnabled){
+        if (params.size() == 0 && !isOperatorEnabled) {
             NotesTextArea.setText("None.");
             return;
         } else if (params.size() == 0) {
@@ -302,12 +309,13 @@ This detection has been recorded on %s, from Monitoring Center "%s".
 
     /**
      * Set labels for the parameters, both for current values and for averages
+     *
      * @param current
      * @param currentValue
      * @param average
      * @param averageValue
      */
-    private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue){
+    private void setLblValues(JLabel current, String currentValue, JLabel average, String averageValue) {
         if (!isOperatorEnabled) {
             current.setText(currentValue);
         }
@@ -317,6 +325,7 @@ This detection has been recorded on %s, from Monitoring Center "%s".
     /**
      * Compute the criticality level from the given number. If the decimal part is
      * different from 0, it computes sublevels too.
+     *
      * @param number
      * @return String
      */
@@ -329,24 +338,21 @@ This detection has been recorded on %s, from Monitoring Center "%s".
             decimalPart = Integer.parseInt(number.substring(number.indexOf(".") + 1));
             integerPart = number.substring(0, number.indexOf("."));
             isDecimalPartValid = true;
-        } catch(java.lang.StringIndexOutOfBoundsException e) {
+        } catch (StringIndexOutOfBoundsException e) {
             integerPart = number;
         }
 
         String currentCriticality = criticality.get(integerPart);
         /* set sublevels according to the decimal part */
-        if (isDecimalPartValid){
+        if (isDecimalPartValid) {
             String subLevel;
             if (decimalPart == 0) {
                 subLevel = "";
-            }
-            else if (decimalPart < 10){
+            } else if (decimalPart < 10) {
                 subLevel = "RARELY";
-            }
-            else if (decimalPart < 40){
+            } else if (decimalPart < 40) {
                 subLevel = "OCCASIONALLY";
-            }
-            else if (decimalPart < 70) {
+            } else if (decimalPart < 70) {
                 subLevel = "FREQUENTLY";
             } else {
                 subLevel = "NORMALLY";
@@ -359,19 +365,21 @@ This detection has been recorded on %s, from Monitoring Center "%s".
 
     /**
      * Double quote a string s
+     *
      * @param s
      * @return String
      */
-    private String quoteString(String s){
+    private String quoteString(String s) {
         String out = "\"" + s + "\"";
         return out;
     }
 
     /**
      * Set parameters from historical values for idx-th record
+     *
      * @param idx
      */
-    private void setParamsFromHistory(int idx){
+    private void setParamsFromHistory(int idx) {
         AverageTitleLbl.setText("Average (on a total of " + params.size() + " records)");
 
         // get all values for statistics
@@ -383,7 +391,7 @@ This detection has been recorded on %s, from Monitoring Center "%s".
         ArrayList<Integer> alts = new ArrayList<>();
         ArrayList<Integer> masses = new ArrayList<>();
 
-        for (int j = 0; j < params.size(); j++ ) {
+        for (int j = 0; j < params.size(); j++) {
             winds.add(params.get(j).getWind());
             humidities.add(params.get(j).getHumidity());
             pressures.add(params.get(j).getPressure());
@@ -422,7 +430,7 @@ This detection has been recorded on %s, from Monitoring Center "%s".
     /**
      * Set the operator UI view
      */
-    private void setOperatorsView(){
+    private void setOperatorsView() {
         /* set combo boxes visible */
         WindMostRecentValueLbl.setVisible(false);
         HumidityMostRecentValueLbl.setVisible(false);
@@ -446,7 +454,7 @@ This detection has been recorded on %s, from Monitoring Center "%s".
     /**
      * Reset all the fields to their default value
      */
-    private void resetAllFields(){
+    private void resetAllFields() {
         AverageTitleLbl.setText("Average (no detection found)");
         MostRecentTitleLbl.setText("Most recent detection");
         /* set wind */
@@ -498,36 +506,37 @@ This detection has been recorded on %s, from Monitoring Center "%s".
 
     /***************************************************************
 
-    CALLBACKS
+     CALLBACKS
 
      */
 
     /**
      * When the details page is closed, perform some reset actions,
      * for example:
-     *  - set climate params info to "NONE"
-     *  - reset the combo boxes values when in operator mode
+     * - set climate params info to "NONE"
+     * - reset the combo boxes values when in operator mode
      */
-    private void DetailsPnl_at_visibility_change(){
+    private void DetailsPnl_at_visibility_change() {
         ParentPnl.addHierarchyListener(new HierarchyListener() {
             @Override
-            public void hierarchyChanged(HierarchyEvent e)
-            {
-                JComponent component = (JComponent)e.getSource();
+            public void hierarchyChanged(HierarchyEvent e) {
+                JComponent component = (JComponent) e.getSource();
                 if ((HierarchyEvent.SHOWING_CHANGED & e.getChangeFlags()) != 0
-                        &&  ! component.isShowing()){
+                        && !component.isShowing()) {
                     resetAllFields();
                 }
             }
         });
-    };
+    }
+
+    ;
 
 
     /**
      * Callback for the add button: add location to the places monitored by the monitoring
      * center of the operator that is logged in
      */
-    private void addBtn_at_selection(){
+    private void addBtn_at_selection() {
         AddBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -546,7 +555,7 @@ This detection has been recorded on %s, from Monitoring Center "%s".
                     // what to do
                 }
 
-                if (rc){
+                if (rc) {
                     JOptionPane.showMessageDialog(DetailsPnl, "This area is now registered in your monitoring center!", "",
                             JOptionPane.INFORMATION_MESSAGE);
                 } else {
@@ -566,7 +575,7 @@ This detection has been recorded on %s, from Monitoring Center "%s".
     /**
      * Callback for the close button of the detailed location page
      */
-    private void closeBtn_at_selection(){
+    private void closeBtn_at_selection() {
         CloseBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -583,19 +592,19 @@ This detection has been recorded on %s, from Monitoring Center "%s".
 
                 utils.switchPage("Main Page");
                 PlaceNameLbl.setText("");
-             }
+            }
         });
     }
 
 
     /**
      * Callback for the save button:
-     *  - get all the values
-     *  - overwrite the ClimateParams object
-     *  - overwrite the file
-     *  - close the page
+     * - get all the values
+     * - overwrite the ClimateParams object
+     * - overwrite the file
+     * - close the page
      */
-    private void saveBtn_at_selection(){
+    private void saveBtn_at_selection() {
         SaveBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -665,7 +674,7 @@ This detection has been recorded on %s, from Monitoring Center "%s".
     /**
      * Callback for check on the number of characters in notes
      */
-    private void notesTextArea_at_change(){
+    private void notesTextArea_at_change() {
         NotesTextArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -673,16 +682,18 @@ This detection has been recorded on %s, from Monitoring Center "%s".
             }
 
             @Override
-            public void removeUpdate(DocumentEvent e) { checkMaxNumberReached(); }
+            public void removeUpdate(DocumentEvent e) {
+                checkMaxNumberReached();
+            }
 
             @Override
-            public void changedUpdate(DocumentEvent e) { }
+            public void changedUpdate(DocumentEvent e) {
+            }
 
-            private void checkMaxNumberReached(){
+            private void checkMaxNumberReached() {
                 if (NotesTextArea.getText().length() > Constants.NOTES_MAX_CHAR_NUM) {
                     NotesErrorPnl.setVisible(true);
-                }
-                else {
+                } else {
                     NotesErrorPnl.setVisible(false);
                 }
             }
@@ -692,10 +703,471 @@ This detection has been recorded on %s, from Monitoring Center "%s".
 
     /**
      * main method
-     *
      */
     public static void main(String[] args) {
         DetailsPage detailsPage = new DetailsPage();
     }
 
+    {
+// GUI initializer generated by IntelliJ IDEA GUI Designer
+// >>> IMPORTANT!! <<<
+// DO NOT EDIT OR ADD ANY CODE HERE!
+        $$$setupUI$$$();
+    }
+
+    /**
+     * Method generated by IntelliJ IDEA GUI Designer
+     * >>> IMPORTANT!! <<<
+     * DO NOT edit this method OR call it in your code!
+     *
+     * @noinspection ALL
+     */
+    private void $$$setupUI$$$() {
+        ParentPnl = new JPanel();
+        ParentPnl.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        ParentPnl.setMinimumSize(new Dimension(1200, 800));
+        LocationDetailPnl = new JPanel();
+        LocationDetailPnl.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        ParentPnl.add(LocationDetailPnl, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        ClosePnl = new JPanel();
+        ClosePnl.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
+        LocationDetailPnl.add(ClosePnl, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        ButtonsPnl = new JPanel();
+        ButtonsPnl.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        ClosePnl.add(ButtonsPnl, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        SaveBtn = new JButton();
+        SaveBtn.setBorderPainted(false);
+        SaveBtn.setContentAreaFilled(false);
+        SaveBtn.setHorizontalAlignment(4);
+        SaveBtn.setText("Save");
+        SaveBtn.setVisible(false);
+        ButtonsPnl.add(SaveBtn);
+        AddBtn = new JButton();
+        AddBtn.setBorderPainted(false);
+        AddBtn.setContentAreaFilled(false);
+        AddBtn.setText("Add");
+        AddBtn.setVisible(false);
+        ButtonsPnl.add(AddBtn);
+        CloseBtn = new JButton();
+        CloseBtn.setBorderPainted(false);
+        CloseBtn.setContentAreaFilled(false);
+        CloseBtn.setHorizontalAlignment(4);
+        CloseBtn.setHorizontalTextPosition(4);
+        CloseBtn.setOpaque(false);
+        CloseBtn.setText("Close");
+        ButtonsPnl.add(CloseBtn);
+        DetailsPnl = new JPanel();
+        DetailsPnl.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 2, new Insets(0, 20, 0, 0), -1, -1));
+        LocationDetailPnl.add(DetailsPnl, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(1000, -1), new Dimension(1000, -1), new Dimension(1000, -1), 0, false));
+        PlaceNamePnl = new JPanel();
+        PlaceNamePnl.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(20, 0, 0, 0), -1, -1));
+        DetailsPnl.add(PlaceNamePnl, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTH, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        PlaceNameLbl = new JLabel();
+        PlaceNameLbl.setAutoscrolls(false);
+        Font PlaceNameLblFont = this.$$$getFont$$$(null, Font.BOLD, 24, PlaceNameLbl.getFont());
+        if (PlaceNameLblFont != null) PlaceNameLbl.setFont(PlaceNameLblFont);
+        PlaceNameLbl.setHorizontalAlignment(0);
+        PlaceNameLbl.setText("AAAAA");
+        PlaceNamePnl.add(PlaceNameLbl, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 5, false));
+        ChooseDatePnl = new JPanel();
+        ChooseDatePnl.setLayout(new BorderLayout(0, 0));
+        PlaceNamePnl.add(ChooseDatePnl, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(133, 21), null, 0, false));
+        DateComboBox = new JComboBox();
+        ChooseDatePnl.add(DateComboBox, BorderLayout.CENTER);
+        final JLabel label1 = new JLabel();
+        label1.setText("Go to previous record:");
+        ChooseDatePnl.add(label1, BorderLayout.NORTH);
+        ParamsPnl = new JPanel();
+        ParamsPnl.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(10, 3, new Insets(10, 20, 10, 20), -1, 10));
+        DetailsPnl.add(ParamsPnl, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        ParamsPnl.setBorder(BorderFactory.createTitledBorder(null, "Weather Parameters", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION, null, null));
+        WindMostRecentPnl = new JPanel();
+        WindMostRecentPnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(WindMostRecentPnl, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        WindMostRecentValueLbl = new JLabel();
+        Font WindMostRecentValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, WindMostRecentValueLbl.getFont());
+        if (WindMostRecentValueLblFont != null) WindMostRecentValueLbl.setFont(WindMostRecentValueLblFont);
+        WindMostRecentValueLbl.setText("NONE");
+        GridBagConstraints gbc;
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        WindMostRecentPnl.add(WindMostRecentValueLbl, gbc);
+        WindComboBox = new JComboBox();
+        WindComboBox.setMaximumRowCount(5);
+        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
+        defaultComboBoxModel1.addElement("EXCELLENT");
+        defaultComboBoxModel1.addElement("FAVORABLE");
+        defaultComboBoxModel1.addElement("MODERATE");
+        defaultComboBoxModel1.addElement("SEVERE");
+        defaultComboBoxModel1.addElement("CRITICAL");
+        WindComboBox.setModel(defaultComboBoxModel1);
+        WindComboBox.setVisible(false);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        WindMostRecentPnl.add(WindComboBox, gbc);
+        WindAveragePnl = new JPanel();
+        WindAveragePnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(WindAveragePnl, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        WindAverageValueLbl = new JLabel();
+        Font WindAverageValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, WindAverageValueLbl.getFont());
+        if (WindAverageValueLblFont != null) WindAverageValueLbl.setFont(WindAverageValueLblFont);
+        WindAverageValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        WindAveragePnl.add(WindAverageValueLbl, gbc);
+        AverageTitleLbl = new JLabel();
+        AverageTitleLbl.setText("Average (on a total of ... records)");
+        ParamsPnl.add(AverageTitleLbl, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        MostRecentTitleLbl = new JLabel();
+        MostRecentTitleLbl.setText("Most recent record");
+        ParamsPnl.add(MostRecentTitleLbl, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        WindLbl = new JLabel();
+        WindLbl.setText("Wind");
+        ParamsPnl.add(WindLbl, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        HumidityMostRecentPnl = new JPanel();
+        HumidityMostRecentPnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(HumidityMostRecentPnl, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        HumidityMostRecentValueLbl = new JLabel();
+        Font HumidityMostRecentValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, HumidityMostRecentValueLbl.getFont());
+        if (HumidityMostRecentValueLblFont != null) HumidityMostRecentValueLbl.setFont(HumidityMostRecentValueLblFont);
+        HumidityMostRecentValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        HumidityMostRecentPnl.add(HumidityMostRecentValueLbl, gbc);
+        HumidityComboBox = new JComboBox();
+        HumidityComboBox.setMaximumRowCount(5);
+        final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
+        defaultComboBoxModel2.addElement("EXCELLENT");
+        defaultComboBoxModel2.addElement("FAVORABLE");
+        defaultComboBoxModel2.addElement("MODERATE");
+        defaultComboBoxModel2.addElement("SEVERE");
+        defaultComboBoxModel2.addElement("CRITICAL");
+        HumidityComboBox.setModel(defaultComboBoxModel2);
+        HumidityComboBox.setVisible(false);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        HumidityMostRecentPnl.add(HumidityComboBox, gbc);
+        HumidityLbl = new JLabel();
+        HumidityLbl.setText("Humidity");
+        ParamsPnl.add(HumidityLbl, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        HumidityAveragePnl = new JPanel();
+        HumidityAveragePnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(HumidityAveragePnl, new com.intellij.uiDesigner.core.GridConstraints(2, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        HumidityAverageValueLbl = new JLabel();
+        Font HumidityAverageValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, HumidityAverageValueLbl.getFont());
+        if (HumidityAverageValueLblFont != null) HumidityAverageValueLbl.setFont(HumidityAverageValueLblFont);
+        HumidityAverageValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        HumidityAveragePnl.add(HumidityAverageValueLbl, gbc);
+        PressureMostRecentPnl = new JPanel();
+        PressureMostRecentPnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(PressureMostRecentPnl, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        PressureMostRecentValueLbl = new JLabel();
+        Font PressureMostRecentValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, PressureMostRecentValueLbl.getFont());
+        if (PressureMostRecentValueLblFont != null) PressureMostRecentValueLbl.setFont(PressureMostRecentValueLblFont);
+        PressureMostRecentValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        PressureMostRecentPnl.add(PressureMostRecentValueLbl, gbc);
+        PressureComboBox = new JComboBox();
+        PressureComboBox.setMaximumRowCount(5);
+        final DefaultComboBoxModel defaultComboBoxModel3 = new DefaultComboBoxModel();
+        defaultComboBoxModel3.addElement("EXCELLENT");
+        defaultComboBoxModel3.addElement("FAVORABLE");
+        defaultComboBoxModel3.addElement("MODERATE");
+        defaultComboBoxModel3.addElement("SEVERE");
+        defaultComboBoxModel3.addElement("CRITICAL");
+        PressureComboBox.setModel(defaultComboBoxModel3);
+        PressureComboBox.setVisible(false);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        PressureMostRecentPnl.add(PressureComboBox, gbc);
+        PressureAveragePnl = new JPanel();
+        PressureAveragePnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(PressureAveragePnl, new com.intellij.uiDesigner.core.GridConstraints(3, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        PressureAverageValueLbl = new JLabel();
+        Font PressureAverageValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, PressureAverageValueLbl.getFont());
+        if (PressureAverageValueLblFont != null) PressureAverageValueLbl.setFont(PressureAverageValueLblFont);
+        PressureAverageValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        PressureAveragePnl.add(PressureAverageValueLbl, gbc);
+        PressureLbl = new JLabel();
+        PressureLbl.setText("Pressure");
+        ParamsPnl.add(PressureLbl, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        TemperatureMostRecentPnl = new JPanel();
+        TemperatureMostRecentPnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(TemperatureMostRecentPnl, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        TemperatureMostRecentValueLbl = new JLabel();
+        Font TemperatureMostRecentValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, TemperatureMostRecentValueLbl.getFont());
+        if (TemperatureMostRecentValueLblFont != null)
+            TemperatureMostRecentValueLbl.setFont(TemperatureMostRecentValueLblFont);
+        TemperatureMostRecentValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        TemperatureMostRecentPnl.add(TemperatureMostRecentValueLbl, gbc);
+        TemperatureComboBox = new JComboBox();
+        TemperatureComboBox.setMaximumRowCount(5);
+        final DefaultComboBoxModel defaultComboBoxModel4 = new DefaultComboBoxModel();
+        defaultComboBoxModel4.addElement("EXCELLENT");
+        defaultComboBoxModel4.addElement("FAVORABLE");
+        defaultComboBoxModel4.addElement("MODERATE");
+        defaultComboBoxModel4.addElement("SEVERE");
+        defaultComboBoxModel4.addElement("CRITICAL");
+        TemperatureComboBox.setModel(defaultComboBoxModel4);
+        TemperatureComboBox.setVisible(false);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        TemperatureMostRecentPnl.add(TemperatureComboBox, gbc);
+        TemperatureAveragePnl = new JPanel();
+        TemperatureAveragePnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(TemperatureAveragePnl, new com.intellij.uiDesigner.core.GridConstraints(4, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        TemperatureAverageValueLbl = new JLabel();
+        Font TemperatureAverageValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, TemperatureAverageValueLbl.getFont());
+        if (TemperatureAverageValueLblFont != null) TemperatureAverageValueLbl.setFont(TemperatureAverageValueLblFont);
+        TemperatureAverageValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        TemperatureAveragePnl.add(TemperatureAverageValueLbl, gbc);
+        TemperatureLbl = new JLabel();
+        TemperatureLbl.setText("Temperature");
+        ParamsPnl.add(TemperatureLbl, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        RainfallMostRecentPnl = new JPanel();
+        RainfallMostRecentPnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(RainfallMostRecentPnl, new com.intellij.uiDesigner.core.GridConstraints(5, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        RainfallMostRecentValueLbl = new JLabel();
+        Font RainfallMostRecentValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, RainfallMostRecentValueLbl.getFont());
+        if (RainfallMostRecentValueLblFont != null) RainfallMostRecentValueLbl.setFont(RainfallMostRecentValueLblFont);
+        RainfallMostRecentValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        RainfallMostRecentPnl.add(RainfallMostRecentValueLbl, gbc);
+        RainfallComboBox = new JComboBox();
+        RainfallComboBox.setMaximumRowCount(5);
+        final DefaultComboBoxModel defaultComboBoxModel5 = new DefaultComboBoxModel();
+        defaultComboBoxModel5.addElement("EXCELLENT");
+        defaultComboBoxModel5.addElement("FAVORABLE");
+        defaultComboBoxModel5.addElement("MODERATE");
+        defaultComboBoxModel5.addElement("SEVERE");
+        defaultComboBoxModel5.addElement("CRITICAL");
+        RainfallComboBox.setModel(defaultComboBoxModel5);
+        RainfallComboBox.setVisible(false);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        RainfallMostRecentPnl.add(RainfallComboBox, gbc);
+        RainfallAveragePnl = new JPanel();
+        RainfallAveragePnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(RainfallAveragePnl, new com.intellij.uiDesigner.core.GridConstraints(5, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        RainfallAverageValueLbl = new JLabel();
+        Font RainfallAverageValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, RainfallAverageValueLbl.getFont());
+        if (RainfallAverageValueLblFont != null) RainfallAverageValueLbl.setFont(RainfallAverageValueLblFont);
+        RainfallAverageValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        RainfallAveragePnl.add(RainfallAverageValueLbl, gbc);
+        RainfallLbl = new JLabel();
+        RainfallLbl.setText("Rainfall");
+        ParamsPnl.add(RainfallLbl, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        GAltMostRecentPnl = new JPanel();
+        GAltMostRecentPnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(GAltMostRecentPnl, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        GAltMostRecentValueLbl = new JLabel();
+        Font GAltMostRecentValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, GAltMostRecentValueLbl.getFont());
+        if (GAltMostRecentValueLblFont != null) GAltMostRecentValueLbl.setFont(GAltMostRecentValueLblFont);
+        GAltMostRecentValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        GAltMostRecentPnl.add(GAltMostRecentValueLbl, gbc);
+        GAltComboBox = new JComboBox();
+        GAltComboBox.setMaximumRowCount(5);
+        final DefaultComboBoxModel defaultComboBoxModel6 = new DefaultComboBoxModel();
+        defaultComboBoxModel6.addElement("EXCELLENT");
+        defaultComboBoxModel6.addElement("FAVORABLE");
+        defaultComboBoxModel6.addElement("MODERATE");
+        defaultComboBoxModel6.addElement("SEVERE");
+        defaultComboBoxModel6.addElement("CRITICAL");
+        GAltComboBox.setModel(defaultComboBoxModel6);
+        GAltComboBox.setVisible(false);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        GAltMostRecentPnl.add(GAltComboBox, gbc);
+        GAltAveragePnl = new JPanel();
+        GAltAveragePnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(GAltAveragePnl, new com.intellij.uiDesigner.core.GridConstraints(6, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        GAltAverageValueLbl = new JLabel();
+        Font GAltAverageValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, GAltAverageValueLbl.getFont());
+        if (GAltAverageValueLblFont != null) GAltAverageValueLbl.setFont(GAltAverageValueLblFont);
+        GAltAverageValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        GAltAveragePnl.add(GAltAverageValueLbl, gbc);
+        GAltLbl = new JLabel();
+        GAltLbl.setText("Glaciers Altitude");
+        ParamsPnl.add(GAltLbl, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        GMassMostRecentPnl = new JPanel();
+        GMassMostRecentPnl.setLayout(new GridBagLayout());
+        ParamsPnl.add(GMassMostRecentPnl, new com.intellij.uiDesigner.core.GridConstraints(7, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        GMassMostRecentValueLbl = new JLabel();
+        Font GMassMostRecentValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, GMassMostRecentValueLbl.getFont());
+        if (GMassMostRecentValueLblFont != null) GMassMostRecentValueLbl.setFont(GMassMostRecentValueLblFont);
+        GMassMostRecentValueLbl.setText("NONE");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        GMassMostRecentPnl.add(GMassMostRecentValueLbl, gbc);
+        GMassComboBox = new JComboBox();
+        GMassComboBox.setMaximumRowCount(5);
+        final DefaultComboBoxModel defaultComboBoxModel7 = new DefaultComboBoxModel();
+        defaultComboBoxModel7.addElement("EXCELLENT");
+        defaultComboBoxModel7.addElement("FAVORABLE");
+        defaultComboBoxModel7.addElement("MODERATE");
+        defaultComboBoxModel7.addElement("SEVERE");
+        defaultComboBoxModel7.addElement("CRITICAL");
+        GMassComboBox.setModel(defaultComboBoxModel7);
+        GMassComboBox.setVisible(false);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        GMassMostRecentPnl.add(GMassComboBox, gbc);
+        GMassLbl = new JLabel();
+        GMassLbl.setText("Glaciers Mass");
+        ParamsPnl.add(GMassLbl, new com.intellij.uiDesigner.core.GridConstraints(7, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        GMassAveragePnl = new JPanel();
+        GMassAveragePnl.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        ParamsPnl.add(GMassAveragePnl, new com.intellij.uiDesigner.core.GridConstraints(7, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        GMassAverageValueLbl = new JLabel();
+        Font GMassAverageValueLblFont = this.$$$getFont$$$(null, Font.PLAIN, -1, GMassAverageValueLbl.getFont());
+        if (GMassAverageValueLblFont != null) GMassAverageValueLbl.setFont(GMassAverageValueLblFont);
+        GMassAverageValueLbl.setText("NONE");
+        GMassAveragePnl.add(GMassAverageValueLbl, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        NotesPnl = new JPanel();
+        NotesPnl.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 1, new Insets(20, 60, 0, 40), -1, -1));
+        ParamsPnl.add(NotesPnl, new com.intellij.uiDesigner.core.GridConstraints(9, 1, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        NotesTextArea = new JTextArea();
+        NotesTextArea.setBackground(new Color(-1));
+        NotesTextArea.setEditable(false);
+        NotesTextArea.setEnabled(true);
+        Font NotesTextAreaFont = this.$$$getFont$$$(null, Font.PLAIN, -1, NotesTextArea.getFont());
+        if (NotesTextAreaFont != null) NotesTextArea.setFont(NotesTextAreaFont);
+        NotesTextArea.setForeground(new Color(-16777216));
+        NotesTextArea.setLineWrap(true);
+        NotesTextArea.setMargin(new Insets(2, 2, 2, 2));
+        NotesTextArea.setRows(2);
+        NotesTextArea.setText("");
+        NotesTextArea.setWrapStyleWord(false);
+        NotesPnl.add(NotesTextArea, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 80), null, 0, false));
+        NotesErrorPnl = new JPanel();
+        NotesErrorPnl.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        NotesPnl.add(NotesErrorPnl, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        MaxNumOfCharErrLbl = new JLabel();
+        Font MaxNumOfCharErrLblFont = this.$$$getFont$$$(null, Font.ITALIC, -1, MaxNumOfCharErrLbl.getFont());
+        if (MaxNumOfCharErrLblFont != null) MaxNumOfCharErrLbl.setFont(MaxNumOfCharErrLblFont);
+        MaxNumOfCharErrLbl.setText("Max number of characters reached! Note will be cut!");
+        MaxNumOfCharErrLbl.setVisible(true);
+        NotesErrorPnl.add(MaxNumOfCharErrLbl, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        NotesLbl = new JLabel();
+        NotesLbl.setText("Generic Notes");
+        ParamsPnl.add(NotesLbl, new com.intellij.uiDesigner.core.GridConstraints(9, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
+        ParamsPnl.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(8, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
+        DetailsPnl.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        AboutLastRecordPnl = new JPanel();
+        AboutLastRecordPnl.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        DetailsPnl.add(AboutLastRecordPnl, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        AboutLastRecordPnl.setBorder(BorderFactory.createTitledBorder(null, "About the Monitoring Center", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        AboutLastRecordTextArea = new JTextArea();
+        AboutLastRecordTextArea.setEditable(false);
+        Font AboutLastRecordTextAreaFont = this.$$$getFont$$$(null, Font.PLAIN, -1, AboutLastRecordTextArea.getFont());
+        if (AboutLastRecordTextAreaFont != null) AboutLastRecordTextArea.setFont(AboutLastRecordTextAreaFont);
+        AboutLastRecordTextArea.setForeground(new Color(-16777216));
+        AboutLastRecordTextArea.setLineWrap(true);
+        AboutLastRecordTextArea.setMargin(new Insets(15, 40, 15, 40));
+        AboutLastRecordTextArea.setText("");
+        AboutLastRecordPnl.add(AboutLastRecordTextArea, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
+        LocationDetailPnl.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_SOUTH, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    public JComponent $$$getRootComponent$$$() {
+        return ParentPnl;
+    }
 }

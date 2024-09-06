@@ -23,6 +23,20 @@
             <version>7.0.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.jgoodies</groupId>
+            <artifactId>jgoodies-common</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.jgoodies/jgoodies-forms -->
+    <dependency>
+        <groupId>com.jgoodies</groupId>
+        <artifactId>jgoodies-forms</artifactId>
+        <version>1.9.0</version>
+    </dependency>
+
+
     </dependencies>
 
     <properties>
@@ -47,7 +61,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+            <!-- <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>ideauidesigner-maven-plugin</artifactId>
                 <version>1.0-beta-1</version>
@@ -64,7 +78,7 @@
                     <debug>true</debug>
                     <failOnError>true</failOnError>
                 </configuration>
-            </plugin>
+            </plugin> -->
         </plugins>
     </build>
 
